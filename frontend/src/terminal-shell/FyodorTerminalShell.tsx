@@ -1,9 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ColorThemeButton } from '../appearance/color-theme/ColorThemeButton'
 import { readColorTheme, type ColorTheme } from '../appearance/color-theme/color-theme-preference'
+import {
+  readTimeDisplayPreference,
+  saveTimeDisplayPreference,
+  timeDisplayLabel,
+  type TimeDisplayPreference,
+} from '../appearance/time-display/time-display-preference'
 import { EconomicCalendarPlaceholder } from '../economic-calendar/calendar-dock/EconomicCalendarPlaceholder'
 import { FmsArrowControls } from '../fms/chart-arrows/FmsArrowControls'
-import { FmsChartArrowOverlay } from '../fms/chart-arrows/FmsChartArrowOverlay'
+import { FmsChartMarkers } from '../fms/chart-arrows/FmsChartMarkers'
 import { FmsPastResultPanel } from '../fms/past-result-dock/FmsPastResultPanel'
 import {
   createFmsPlaceholderArrows,
@@ -19,7 +24,6 @@ import { MarketCandlestickChart } from '../market-data/candlestick-chart/MarketC
 import { FloatingDrawingToolbar } from '../market-data/chart-drawings/FloatingDrawingToolbar'
 import type { ChartDrawingPoint } from '../market-data/chart-drawings/chart-drawing-record'
 import type { DrawingToolId } from '../market-data/chart-drawings/drawing-tool'
-import { normalizeDrawingPoints } from '../market-data/chart-drawings/position-drawing-geometry'
 import { useChartDrawings } from '../market-data/chart-drawings/use-chart-drawings'
 import { ChartSettingsPopover } from '../market-data/chart-settings/ChartSettingsPopover'
 import {
@@ -41,6 +45,7 @@ import {
   type LeftDockWindow,
 } from '../workspace-docking/left-dock/left-dock-window'
 import { ChartWorkspaceHeader } from './ChartWorkspaceHeader'
+import { TerminalStatusBar } from './TerminalStatusBar'
 import './terminal-shell.layout.css'
 
 type SelectedFmsResult = FmsChartArrow | FmsDecision
@@ -50,6 +55,7 @@ export function FyodorTerminalShell() {
   const [timeframe, setTimeframe] = useState<ChartTimeframe>('H4')
   const [theme, setTheme] = useState<ColorTheme>(readColorTheme)
   const [chartAppearance, setChartAppearance] = useState<ChartAppearance>(readChartAppearance)
+  const [timeDisplay, setTimeDisplay] = useState<TimeDisplayPreference>(readTimeDisplayPreference)
   const [activeDrawingTool, setActiveDrawingTool] = useState<DrawingToolId | null>(null)
   const [selectedDrawingId, setSelectedDrawingId] = useState<string | null>(null)
   const [bottomDockWindow, setBottomDockWindow] = useState<BottomDockWindow | null>(null)
@@ -119,10 +125,17 @@ export function FyodorTerminalShell() {
     saveChartAppearance(nextAppearance)
   }
 
+  const changeTimeDisplay = (nextPreference: TimeDisplayPreference) => {
+    setTimeDisplay(nextPreference)
+    saveTimeDisplayPreference(nextPreference)
+    appendActivity('Appearance', 'Time display changed', timeDisplayLabel(nextPreference))
+  }
+
   const createDrawing = useCallback(
     (tool: DrawingToolId, points: ChartDrawingPoint[]) => {
-      addDrawing(tool, normalizeDrawingPoints(tool, points))
+      const drawingId = addDrawing(tool, points)
       appendActivity('Drawing', 'Drawing created', `${selectedSymbol} ${timeframe} · ${tool}`)
+      return drawingId
     },
     [addDrawing, appendActivity, selectedSymbol, timeframe],
   )
@@ -168,6 +181,7 @@ export function FyodorTerminalShell() {
           selectedSymbol={selectedSymbol}
           decisions={fmsPlaceholderDecisions}
           setups={fmsPlaceholderSetups}
+          timeDisplay={timeDisplay}
           onSelectWindow={selectLeftDockWindow}
           onSelectSymbol={selectSymbol}
           onOpenResult={openFmsResult}
@@ -182,6 +196,7 @@ export function FyodorTerminalShell() {
               precision={quote.precision}
               theme={theme}
               appearance={chartAppearance}
+              timeDisplay={timeDisplay}
               activeDrawingTool={activeDrawingTool}
               drawings={drawings}
               selectedDrawingId={selectedDrawingId}
@@ -189,9 +204,10 @@ export function FyodorTerminalShell() {
               onCreateDrawing={createDrawing}
               onUpdateDrawingPoint={updateDrawingPoint}
               onUpdatePositionWidth={updatePositionWidth}
+              onExitDrawingMode={() => setActiveDrawingTool(null)}
               onDataApplied={recordChartData}
               renderChartOverlay={(chartApi, seriesApi) => (
-                <FmsChartArrowOverlay
+                <FmsChartMarkers
                   chartApi={chartApi}
                   seriesApi={seriesApi}
                   arrows={visibleFmsArrows}
@@ -229,31 +245,33 @@ export function FyodorTerminalShell() {
           onSelectWindow={setBottomDockWindow}
           onClose={() => setBottomDockWindow(null)}
         >
-          {bottomDockWindow === 'activity' && <ActivityLogPanel entries={entries} onClear={clearActivity} />}
-          {bottomDockWindow === 'calendar' && <EconomicCalendarPlaceholder />}
-          {bottomDockWindow === 'past-result' && <FmsPastResultPanel result={selectedFmsResult} />}
+          {bottomDockWindow === 'activity' && <ActivityLogPanel entries={entries} timeDisplay={timeDisplay} onClear={clearActivity} />}
+          {bottomDockWindow === 'calendar' && <EconomicCalendarPlaceholder timeDisplay={timeDisplay} />}
+          {bottomDockWindow === 'past-result' && <FmsPastResultPanel result={selectedFmsResult} timeDisplay={timeDisplay} />}
         </BottomDockPanel>
       )}
 
-      <footer className="status-bar">
-        <span className="status-message"><i className="status-dot" /> Sample source · {sampleSymbolQuotes.length} symbols</span>
-        <span className="status-selection">{selectedSymbol} · {timeframe} · {bars.length} bars</span>
-        <div className="status-actions">
-          <button className={`status-action${bottomDockWindow === 'activity' ? ' active' : ''}`} type="button" onClick={() => toggleBottomDock('activity')} aria-expanded={bottomDockWindow === 'activity'}>
-            Activity <span className="activity-count">{entries.length}</span>
-          </button>
-          <button className={`status-action${bottomDockWindow === 'calendar' ? ' active' : ''}`} type="button" onClick={() => toggleBottomDock('calendar')} aria-expanded={bottomDockWindow === 'calendar'}>
-            Calendar <span className="preview-label">Sample</span>
-          </button>
-          <ColorThemeButton onThemeChanged={changeTheme} />
-          <button className={`status-action${settingsOpen ? ' active' : ''}`} type="button" onClick={() => setSettingsOpen((open) => !open)} aria-expanded={settingsOpen}>
-            <span aria-hidden="true">⚙</span> Settings
-          </button>
-        </div>
-      </footer>
+      <TerminalStatusBar
+        sourceSymbolCount={sampleSymbolQuotes.length}
+        selectedSymbol={selectedSymbol}
+        timeframe={timeframe}
+        barCount={bars.length}
+        activityCount={entries.length}
+        bottomDockWindow={bottomDockWindow}
+        settingsOpen={settingsOpen}
+        onToggleBottomDock={toggleBottomDock}
+        onThemeChanged={changeTheme}
+        onToggleSettings={() => setSettingsOpen((open) => !open)}
+      />
 
       {settingsOpen && (
-        <ChartSettingsPopover appearance={chartAppearance} onChange={changeChartAppearance} onClose={() => setSettingsOpen(false)} />
+        <ChartSettingsPopover
+          appearance={chartAppearance}
+          timeDisplay={timeDisplay}
+          onChange={changeChartAppearance}
+          onTimeDisplayChange={changeTimeDisplay}
+          onClose={() => setSettingsOpen(false)}
+        />
       )}
     </div>
   )

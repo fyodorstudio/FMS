@@ -7,6 +7,7 @@ import {
   type Time,
 } from 'lightweight-charts'
 import type { ColorTheme } from '../../appearance/color-theme/color-theme-preference'
+import type { TimeDisplayPreference } from '../../appearance/time-display/time-display-preference'
 import { ChartDrawingOverlay } from '../chart-drawings/ChartDrawingOverlay'
 import type { ChartDrawingPoint, ChartDrawingRecord } from '../chart-drawings/chart-drawing-record'
 import type { DrawingToolId } from '../chart-drawings/drawing-tool'
@@ -20,13 +21,15 @@ type MarketCandlestickChartProps = {
   precision: number
   theme: ColorTheme
   appearance: ChartAppearance
+  timeDisplay: TimeDisplayPreference
   activeDrawingTool: DrawingToolId | null
   drawings: ChartDrawingRecord[]
   selectedDrawingId: string | null
   onSelectDrawing: (drawingId: string | null) => void
-  onCreateDrawing: (tool: DrawingToolId, points: ChartDrawingPoint[]) => void
+  onCreateDrawing: (tool: DrawingToolId, points: ChartDrawingPoint[]) => string
   onUpdateDrawingPoint: (drawingId: string, pointIndex: number, point: ChartDrawingPoint, persist: boolean) => void
   onUpdatePositionWidth: (drawingId: string, time: ChartDrawingPoint['time'], persist: boolean) => void
+  onExitDrawingMode: () => void
   onDataApplied: (barCount: number) => void
   renderChartOverlay?: (
     chartApi: IChartApi,
@@ -39,6 +42,7 @@ export function MarketCandlestickChart({
   precision,
   theme,
   appearance,
+  timeDisplay,
   activeDrawingTool,
   drawings,
   selectedDrawingId,
@@ -46,11 +50,13 @@ export function MarketCandlestickChart({
   onCreateDrawing,
   onUpdateDrawingPoint,
   onUpdatePositionWidth,
+  onExitDrawingMode,
   onDataApplied,
   renderChartOverlay,
 }: MarketCandlestickChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const initialAppearanceRef = useRef(appearance)
+  const initialTimeDisplayRef = useRef(timeDisplay)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick', Time> | null>(null)
   const [chartApi, setChartApi] = useState<IChartApi | null>(null)
@@ -61,7 +67,7 @@ export function MarketCandlestickChart({
     if (!container) return
 
     const initialAppearance = initialAppearanceRef.current
-    const chart = createChart(container, lightweightChartOptions(initialAppearance))
+    const chart = createChart(container, lightweightChartOptions(initialAppearance, initialTimeDisplayRef.current))
     const series = chart.addSeries(CandlestickSeries, {
       upColor: initialAppearance.upCandleColor,
       downColor: initialAppearance.downCandleColor,
@@ -87,7 +93,7 @@ export function MarketCandlestickChart({
   }, [])
 
   useEffect(() => {
-    chartRef.current?.applyOptions(lightweightChartOptions(appearance))
+    chartRef.current?.applyOptions(lightweightChartOptions(appearance, timeDisplay))
     seriesRef.current?.applyOptions({
       upColor: appearance.upCandleColor,
       downColor: appearance.downCandleColor,
@@ -97,7 +103,7 @@ export function MarketCandlestickChart({
       wickDownColor: appearance.downCandleColor,
       priceLineColor: appearance.priceLineColor,
     })
-  }, [appearance, theme])
+  }, [appearance, theme, timeDisplay])
 
   useEffect(() => {
     const series = seriesRef.current
@@ -133,6 +139,7 @@ export function MarketCandlestickChart({
           onCreateDrawing={onCreateDrawing}
           onUpdateDrawingPoint={onUpdateDrawingPoint}
           onUpdatePositionWidth={onUpdatePositionWidth}
+          onExitDrawingMode={onExitDrawingMode}
         />
       )}
     </div>

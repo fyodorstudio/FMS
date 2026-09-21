@@ -16,6 +16,7 @@
 .activity-panel-heading > div { display: flex; flex-direction: column; gap: 2px; }
 .activity-panel-heading strong { color: var(--text-strong); font-size: 11px; }
 .activity-panel-heading span { color: var(--text-muted); font-size: 9px; }
+.activity-heading-actions { display: flex; align-items: center; gap: 7px; }
 
 .activity-panel-heading button {
   min-height: 27px;
@@ -31,6 +32,14 @@
 
 .activity-panel-heading button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .activity-panel-heading button:disabled { cursor: default; opacity: 0.45; }
+.activity-source-filter { position: relative; }
+.activity-source-filter summary { min-height: 27px; display: flex; align-items: center; gap: 6px; padding: 0 9px; border: 1px solid var(--border-strong); border-radius: 6px; color: var(--text); background: var(--surface-raised); cursor: pointer; font-size: 9px; font-weight: 650; list-style: none; }
+.activity-source-filter summary::-webkit-details-marker { display: none; }
+.activity-source-filter summary span { padding: 1px 4px; border-radius: 999px; color: var(--accent); background: var(--accent-soft); font-size: 8px; }
+.activity-source-filter > div { position: absolute; z-index: 5; top: calc(100% + 5px); right: 0; width: 164px; display: grid; gap: 2px; padding: 7px; border: 1px solid var(--border-strong); border-radius: 7px; background: var(--surface-panel); box-shadow: var(--shadow); }
+.activity-source-filter label { min-height: 27px; display: flex; align-items: center; gap: 7px; padding: 0 6px; border-radius: 4px; color: var(--text); cursor: pointer; font-size: 9px; }
+.activity-source-filter label:hover { background: var(--surface-hover); }
+.activity-source-filter input { margin: 0; accent-color: var(--accent); }
 .activity-table { min-height: 0; display: grid; grid-template-rows: 26px minmax(0, 1fr); font-size: 10px; }
 
 .activity-table-columns,

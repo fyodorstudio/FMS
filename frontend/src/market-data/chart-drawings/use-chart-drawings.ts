@@ -26,6 +26,7 @@ export function useChartDrawings(symbol: string, timeframe: ChartTimeframe) {
         saveChartDrawings(next)
         return next
       })
+      return nextDrawing.id
     },
     [symbol, timeframe],
   )

@@ -10,7 +10,7 @@ export type FmsDecision = {
   symbol: string
   setupName: string
   eventName: string
-  releaseLabel: string
+  releaseTime: number
   state: FmsDecisionState
   direction: 'long' | 'short'
   result: FmsDecisionResult
@@ -30,7 +30,7 @@ export type FmsChartArrow = {
   version: 'v1' | 'v2'
   setupName: string
   eventName: string
-  releaseLabel: string
+  releaseTime: number
 }
 
 export type FmsRegisteredSetup = {

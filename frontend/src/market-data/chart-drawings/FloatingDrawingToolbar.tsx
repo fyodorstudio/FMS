@@ -115,6 +115,15 @@ export function FloatingDrawingToolbar({
       aria-label="Chart drawing tools"
     >
       <button
+        className="drawing-toolbar-handle"
+        type="button"
+        onPointerDown={startDragging}
+        aria-label="Move drawing toolbar"
+        title="Hold and drag to move toolbar"
+      >
+        <span aria-hidden="true">⠿</span>
+      </button>
+      <button
         className={activeTool === null ? 'drawing-toolbar-crosshair active' : 'drawing-toolbar-crosshair'}
         type="button"
         onClick={onSelectCrosshair}
@@ -124,16 +133,6 @@ export function FloatingDrawingToolbar({
       >
         <span className="crosshair-glyph" aria-hidden="true" />
       </button>
-      <button
-        className="drawing-toolbar-handle"
-        type="button"
-        onPointerDown={startDragging}
-        aria-label="Move drawing toolbar"
-        title="Hold and drag to move toolbar"
-      >
-        <span aria-hidden="true">⠿</span>
-      </button>
-
       {drawingTools.map((tool) => (
         <button
           key={tool.id}

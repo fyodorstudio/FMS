@@ -1,11 +1,19 @@
-import { ColorType, CrosshairMode, type ChartOptions, type DeepPartial } from 'lightweight-charts'
+import { ColorType, CrosshairMode, type ChartOptions, type DeepPartial, type TickMarkType, type Time } from 'lightweight-charts'
+import {
+  formatChartCrosshairTime,
+  formatChartTick,
+  type TimeDisplayPreference,
+} from '../../appearance/time-display/time-display-preference'
 import type { ChartAppearance } from '../chart-settings/chart-appearance-preference'
 
 function cssColor(name: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 }
 
-export function lightweightChartOptions(appearance: ChartAppearance): DeepPartial<ChartOptions> {
+export function lightweightChartOptions(
+  appearance: ChartAppearance,
+  timeDisplay: TimeDisplayPreference,
+): DeepPartial<ChartOptions> {
   const gridColor = appearance.showGrid ? cssColor('--chart-grid') : 'rgba(0, 0, 0, 0)'
   return {
     autoSize: true,
@@ -19,6 +27,9 @@ export function lightweightChartOptions(appearance: ChartAppearance): DeepPartia
     grid: {
       vertLines: { color: gridColor },
       horzLines: { color: gridColor },
+    },
+    localization: {
+      timeFormatter: (time: Time) => formatChartCrosshairTime(time, timeDisplay),
     },
     crosshair: {
       mode: CrosshairMode.Normal,
@@ -41,6 +52,7 @@ export function lightweightChartOptions(appearance: ChartAppearance): DeepPartia
       secondsVisible: false,
       rightOffset: 8,
       barSpacing: appearance.barSpacing,
+      tickMarkFormatter: (time: Time, tickType: TickMarkType) => formatChartTick(time, tickType, timeDisplay),
     },
     handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
     handleScroll: {

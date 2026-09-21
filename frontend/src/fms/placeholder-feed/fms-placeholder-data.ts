@@ -26,7 +26,7 @@ export const fmsPlaceholderDecisions: FmsDecision[] = symbols.flatMap((symbol, s
     symbol,
     setupName: setupNames[symbolIndex % setupNames.length],
     eventName: eventNames[symbolIndex % eventNames.length],
-    releaseLabel: `Sep ${23 + symbolIndex}, 2026 · ${8 + symbolIndex}:30`,
+    releaseTime: Date.UTC(2026, 8, 23 + symbolIndex, 8 + symbolIndex, 30),
     state: 'upcoming' as const,
     direction: symbolIndex % 2 === 0 ? 'long' as const : 'short' as const,
     result: 'open' as const,
@@ -38,7 +38,7 @@ export const fmsPlaceholderDecisions: FmsDecision[] = symbols.flatMap((symbol, s
     symbol,
     setupName: setupNames[(symbolIndex + 1) % setupNames.length],
     eventName: eventNames[(symbolIndex + 2) % eventNames.length],
-    releaseLabel: `Sep ${10 + symbolIndex}, 2026 · ${10 + symbolIndex}:00`,
+    releaseTime: Date.UTC(2026, 8, 10 + symbolIndex, 10 + symbolIndex),
     state: 'recent' as const,
     direction: symbolIndex % 2 === 0 ? 'short' as const : 'long' as const,
     result: symbolIndex % 3 === 0 ? 'tp-reached' as const : symbolIndex % 3 === 1 ? 'sl-reached' as const : 'no-trade' as const,
@@ -52,7 +52,7 @@ fmsPlaceholderDecisions.splice(2, 0, {
   symbol: 'EURUSD',
   setupName: 'Post-release continuation',
   eventName: 'Manufacturing employment',
-  releaseLabel: 'Sep 21, 2026 · 08:00',
+  releaseTime: Date.UTC(2026, 8, 21, 8),
   state: 'current',
   direction: 'long',
   result: 'open',
@@ -90,7 +90,7 @@ export function createFmsPlaceholderArrows(
       version: arrowIndex < 3 ? 'v1' : 'v2',
       setupName: setupNames[arrowIndex % setupNames.length],
       eventName: eventNames[(arrowIndex + 1) % eventNames.length],
-      releaseLabel: `Sample release ${arrowIndex + 1}`,
+      releaseTime: Number(bar.time) * 1000,
     }
   })
 }

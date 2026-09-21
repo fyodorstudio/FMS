@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
+import { formatAppTimestamp, type TimeDisplayPreference } from '../../appearance/time-display/time-display-preference'
 import type { FmsDecision, FmsDecisionState } from '../placeholder-feed/fms-placeholder-types'
 import './fms-trade-dock.css'
 
 type FmsTradeDockProps = {
   decisions: FmsDecision[]
+  timeDisplay: TimeDisplayPreference
   onOpenResult: (decision: FmsDecision) => void
   onGoToArrow: (decision: FmsDecision) => void
 }
@@ -14,7 +16,7 @@ const tabs: { id: FmsDecisionState; label: string }[] = [
   { id: 'recent', label: 'Recent' },
 ]
 
-export function FmsTradeDock({ decisions, onOpenResult, onGoToArrow }: FmsTradeDockProps) {
+export function FmsTradeDock({ decisions, timeDisplay, onOpenResult, onGoToArrow }: FmsTradeDockProps) {
   const [activeState, setActiveState] = useState<FmsDecisionState>('upcoming')
   const visibleDecisions = useMemo(
     () => decisions.filter((decision) => decision.state === activeState),
@@ -48,7 +50,7 @@ export function FmsTradeDock({ decisions, onOpenResult, onGoToArrow }: FmsTradeD
             </header>
             <h3>{decision.eventName}</h3>
             <p>{decision.setupName} · {decision.direction}</p>
-            <time>{decision.releaseLabel}</time>
+            <time dateTime={new Date(decision.releaseTime).toISOString()}>{formatAppTimestamp(decision.releaseTime, timeDisplay)}</time>
             <div className="fms-card-actions">
               <button type="button" onClick={() => onOpenResult(decision)}>Past result</button>
               {activeState === 'recent' && (

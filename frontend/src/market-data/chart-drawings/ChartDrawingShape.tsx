@@ -80,17 +80,37 @@ export function ChartDrawingShape({ drawing, points, width, height }: ChartDrawi
 
   switch (drawing.tool) {
     case 'trend-line':
-      return <line className="drawing-stroke" x1={first.x} y1={first.y} x2={last.x} y2={last.y} />
+      return (
+        <g>
+          <line className="drawing-hit-area" x1={first.x} y1={first.y} x2={last.x} y2={last.y} />
+          <line className="drawing-stroke" x1={first.x} y1={first.y} x2={last.x} y2={last.y} />
+        </g>
+      )
     case 'arrow':
-      return <line className="drawing-stroke" markerEnd="url(#drawing-arrow)" x1={first.x} y1={first.y} x2={last.x} y2={last.y} />
+      return (
+        <g>
+          <line className="drawing-hit-area" x1={first.x} y1={first.y} x2={last.x} y2={last.y} />
+          <line className="drawing-stroke" markerEnd="url(#drawing-arrow)" x1={first.x} y1={first.y} x2={last.x} y2={last.y} />
+        </g>
+      )
     case 'rectangle':
       return <rect className="drawing-stroke drawing-fill" x={left} y={top} width={shapeWidth} height={shapeHeight} />
     case 'circle':
       return <ellipse className="drawing-stroke drawing-fill" cx={(first.x + last.x) / 2} cy={(first.y + last.y) / 2} rx={shapeWidth / 2} ry={shapeHeight / 2} />
     case 'horizontal-line':
-      return <line className="drawing-stroke" x1={0} y1={first.y} x2={width} y2={first.y} />
+      return (
+        <g>
+          <line className="drawing-hit-area" x1={0} y1={first.y} x2={width} y2={first.y} />
+          <line className="drawing-stroke" x1={0} y1={first.y} x2={width} y2={first.y} />
+        </g>
+      )
     case 'vertical-line':
-      return <line className="drawing-stroke" x1={first.x} y1={0} x2={first.x} y2={height} />
+      return (
+        <g>
+          <line className="drawing-hit-area" x1={first.x} y1={0} x2={first.x} y2={height} />
+          <line className="drawing-stroke" x1={first.x} y1={0} x2={first.x} y2={height} />
+        </g>
+      )
     case 'parallel-channel': {
       const offset = 22
       return (
@@ -103,7 +123,12 @@ export function ChartDrawingShape({ drawing, points, width, height }: ChartDrawi
       )
     }
     case 'path':
-      return <polyline className="drawing-stroke" points={points.map((point) => `${point.x},${point.y}`).join(' ')} />
+      return (
+        <g>
+          <polyline className="drawing-hit-area" points={points.map((point) => `${point.x},${point.y}`).join(' ')} />
+          <polyline className="drawing-stroke" points={points.map((point) => `${point.x},${point.y}`).join(' ')} />
+        </g>
+      )
     case 'text':
       return <text className="drawing-text" x={first.x + 5} y={first.y - 6}>Text</text>
     case 'price-note':

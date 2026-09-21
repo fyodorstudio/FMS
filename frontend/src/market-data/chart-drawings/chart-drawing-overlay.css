@@ -12,6 +12,7 @@
 .drawing-object { pointer-events: visiblePainted; cursor: pointer; }
 .chart-drawing-overlay.drawing-active .drawing-object { pointer-events: none; }
 .drawing-object.selected .drawing-stroke { stroke-width: 2; }
+.drawing-hit-area { fill: none; stroke: transparent; stroke-width: 12; pointer-events: stroke; }
 .drawing-stroke { fill: none; stroke: var(--accent); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .drawing-fill { fill: color-mix(in srgb, var(--accent) 9%, transparent); }
 .drawing-arrow-head { fill: var(--accent); }
@@ -41,3 +42,4 @@
 }
 
 .drawing-resize-handle:active { cursor: grabbing; }
+.drawing-ghost-point { fill: var(--surface-panel); stroke: var(--accent); stroke-width: 2; }

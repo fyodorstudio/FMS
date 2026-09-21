@@ -1,29 +1,53 @@
-import type { ActivityLogEntry } from './activity-log-entry'
+import { useMemo, useState } from 'react'
+import { formatAppTimestamp, timeDisplayLabel, type TimeDisplayPreference } from '../../appearance/time-display/time-display-preference'
+import { activitySources, type ActivityLogEntry, type ActivitySource } from './activity-log-entry'
+import { readVisibleActivitySources, saveVisibleActivitySources } from './activity-source-preference'
 import './activity-log-panel.css'
 
 type ActivityLogPanelProps = {
   entries: ActivityLogEntry[]
+  timeDisplay: TimeDisplayPreference
   onClear: () => void
 }
 
-function formatActivityTime(timestamp: number) {
-  return new Intl.DateTimeFormat(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  }).format(timestamp)
-}
+export function ActivityLogPanel({ entries, timeDisplay, onClear }: ActivityLogPanelProps) {
+  const [visibleSources, setVisibleSources] = useState<Set<ActivitySource>>(readVisibleActivitySources)
+  const visibleEntries = useMemo(
+    () => entries.filter((entry) => visibleSources.has(entry.source)),
+    [entries, visibleSources],
+  )
 
-export function ActivityLogPanel({ entries, onClear }: ActivityLogPanelProps) {
+  const toggleSource = (source: ActivitySource) => {
+    setVisibleSources((current) => {
+      const next = new Set(current)
+      if (next.has(source)) next.delete(source)
+      else next.add(source)
+      saveVisibleActivitySources(next)
+      return next
+    })
+  }
+
   return (
     <section className="activity-panel" aria-label="Activity log">
       <header className="activity-panel-heading">
         <div>
           <strong>Activity log</strong>
-          <span>Current application session · newest first</span>
+          <span>Current session · {timeDisplayLabel(timeDisplay)} · newest first</span>
         </div>
-        <button type="button" onClick={onClear} disabled={entries.length === 0}>Clear</button>
+        <div className="activity-heading-actions">
+          <details className="activity-source-filter">
+            <summary>Sources <span>{visibleSources.size}/{activitySources.length}</span></summary>
+            <div>
+              {activitySources.map((source) => (
+                <label key={source}>
+                  <input type="checkbox" checked={visibleSources.has(source)} onChange={() => toggleSource(source)} />
+                  {source}
+                </label>
+              ))}
+            </div>
+          </details>
+          <button type="button" onClick={onClear} disabled={entries.length === 0}>Clear</button>
+        </div>
       </header>
 
       <div className="activity-table" role="log" aria-live="polite">
@@ -31,15 +55,15 @@ export function ActivityLogPanel({ entries, onClear }: ActivityLogPanelProps) {
           <span>Time</span><span>Source</span><span>Action</span><span>Detail</span>
         </div>
         <div className="activity-table-rows">
-          {[...entries].reverse().map((entry) => (
+          {[...visibleEntries].reverse().map((entry) => (
             <div className="activity-row" key={entry.id}>
-              <time dateTime={new Date(entry.occurredAt).toISOString()}>{formatActivityTime(entry.occurredAt)}</time>
+              <time dateTime={new Date(entry.occurredAt).toISOString()}>{formatAppTimestamp(entry.occurredAt, timeDisplay, 'time')}</time>
               <strong>{entry.source}</strong>
               <span>{entry.action}</span>
               <span>{entry.detail ?? '—'}</span>
             </div>
           ))}
-          {entries.length === 0 && <p className="activity-empty">No activity recorded yet.</p>}
+          {visibleEntries.length === 0 && <p className="activity-empty">No activity matches the selected sources.</p>}
         </div>
       </div>
     </section>

@@ -14,6 +14,7 @@
 - `bootstrap` only mounts the application and top-level providers.
 - `terminal-shell` only composes visible application regions and their placement.
 - `appearance/color-theme` owns theme preference, controls, and tokens.
+- `appearance/time-display` owns the single persisted clock preference and universal timestamp formatting used by every surface.
 - `market-data/contracts` owns market-data types shared by market-data surfaces.
 - `market-data/candlestick-chart` owns the chart lifecycle and chart-specific styling.
 - `market-data/chart-drawings` owns drawing gestures, rendering, toolbar position, and drawing persistence.
