@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fyodor-mt5-bridge"
+version = "1.0.0"
+description = "Read-only local MT5 data bridge for Fyodor Terminal"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "MetaTrader5>=5.0.45",
+  "psutil>=6,<8",
+  "uvicorn>=0.34,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

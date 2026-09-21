@@ -25,6 +25,9 @@
 - `system-observability/activity-log` owns the bounded UI activity ledger.
 - `workspace-docking/bottom-dock` owns bottom-window selection, tabs, collapse, and placement; dock content remains owned by its product domain.
 - Future connectivity code belongs under explicit source-specific owners such as `system-connectivity/bridge-status` and `system-connectivity/mt5-status`, not a generic API folder.
+- `system-connectivity/bridge-status` owns the versioned bridge client, reachability polling, and data-heartbeat presentation.
+- `market-data/mt5-feed` owns live Market Watch and selected-chart OHLC requests; it must not fetch chart history for every visible symbol.
+- `economic-calendar/mt5-calendar` owns the MT5 calendar transport contract. `economic-calendar/calendar-dock` owns its table and countdown presentation.
 - `fms/placeholder-feed` owns visibly labeled sample-only FMS records; no production calculation or connectivity belongs there.
 - `fms/trade-dock`, `fms/journal-dock`, and `fms/registered-setup-dock` each own only their named left-dock workflow.
 - `fms/chart-arrows` owns FMS marker controls and chart projection; `fms/past-result-dock` owns selected-result presentation.
@@ -38,6 +41,10 @@
 - Do not duplicate domain types, source status interpretation, or chart lifecycle ownership.
 - Add dependencies only when the authorized behavior cannot be implemented clearly with the existing stack.
 - Runtime-generated files, logs, environments, build output, and dependency directories must not be committed.
+- The sibling `bridge/` directory is a read-only local data adapter. Keep FMS, persistence, order functions, and frontend presentation out of it.
+- `bridge/src/fyodor_bridge/mt5_worker.py` is the sole owner of Python MetaTrader5 calls. Do not bypass its serialized latest-request-wins queue.
+- `bridge/src/fyodor_bridge/calendar_ingestion.py` owns atomic calendar snapshot/delta state. Do not present incomplete snapshot chunks.
+- `/api/v1` is the bridge/frontend compatibility boundary. After owner acceptance, changes require explicit bridge authorization and must preserve v1 behavior.
 
 ## Data and performance
 

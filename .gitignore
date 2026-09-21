@@ -1,1 +1,9 @@
 node_modules/
+dist/
+.venv/
+bridge/.venv/
+__pycache__/
+*.py[cod]
+*.ex5
+bridge/mql5/compile.log
+.pytest_cache/

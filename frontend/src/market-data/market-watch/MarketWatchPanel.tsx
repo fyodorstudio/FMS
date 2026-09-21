@@ -1,10 +1,13 @@
 import { useMemo, useState } from 'react'
 import type { SymbolQuote } from '../contracts/SymbolQuote'
+import type { FeedStatus } from '../mt5-feed/use-mt5-market-data'
 import './market-watch-panel.css'
 
 type MarketWatchPanelProps = {
   symbols: SymbolQuote[]
   selectedSymbol: string
+  status: FeedStatus
+  error: string | null
   onSelect: (symbol: string) => void
 }
 
@@ -12,7 +15,7 @@ function formatPrice(value: number, precision: number) {
   return value.toFixed(precision)
 }
 
-export function MarketWatchPanel({ symbols, selectedSymbol, onSelect }: MarketWatchPanelProps) {
+export function MarketWatchPanel({ symbols, selectedSymbol, status, error, onSelect }: MarketWatchPanelProps) {
   const [query, setQuery] = useState('')
   const filteredSymbols = useMemo(() => {
     const normalized = query.trim().toLowerCase()
@@ -51,6 +54,12 @@ export function MarketWatchPanel({ symbols, selectedSymbol, onSelect }: MarketWa
       </div>
 
       <div className="market-watch-list" role="listbox" aria-label="Available symbols">
+        {status !== 'live' && (
+          <div className={`market-watch-source-state ${status}`} role="status">
+            <i />
+            <span>{status === 'loading' ? 'Loading MT5 Market Watch…' : error ?? 'Waiting for MT5 connection'}</span>
+          </div>
+        )}
         {filteredSymbols.map((quote) => {
           const selected = quote.symbol === selectedSymbol
           const positive = quote.dailyChange >= 0
@@ -76,7 +85,7 @@ export function MarketWatchPanel({ symbols, selectedSymbol, onSelect }: MarketWa
           )
         })}
 
-        {filteredSymbols.length === 0 && <p className="market-watch-empty">No matching symbol</p>}
+        {filteredSymbols.length === 0 && symbols.length > 0 && <p className="market-watch-empty">No matching symbol</p>}
       </div>
     </aside>
   )

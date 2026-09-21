@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { formatAppTimestamp, timeDisplayLabel, type TimeDisplayPreference } from '../../appearance/time-display/time-display-preference'
 import { activitySources, type ActivityLogEntry, type ActivitySource } from './activity-log-entry'
 import { readVisibleActivitySources, saveVisibleActivitySources } from './activity-source-preference'
@@ -8,9 +8,10 @@ type ActivityLogPanelProps = {
   entries: ActivityLogEntry[]
   timeDisplay: TimeDisplayPreference
   onClear: () => void
+  heartbeat?: ReactNode
 }
 
-export function ActivityLogPanel({ entries, timeDisplay, onClear }: ActivityLogPanelProps) {
+export function ActivityLogPanel({ entries, timeDisplay, onClear, heartbeat }: ActivityLogPanelProps) {
   const [visibleSources, setVisibleSources] = useState<Set<ActivitySource>>(readVisibleActivitySources)
   const visibleEntries = useMemo(
     () => entries.filter((entry) => visibleSources.has(entry.source)),
@@ -50,13 +51,15 @@ export function ActivityLogPanel({ entries, timeDisplay, onClear }: ActivityLogP
         </div>
       </header>
 
+      {heartbeat}
+
       <div className="activity-table" role="log" aria-live="polite">
         <div className="activity-table-columns" aria-hidden="true">
           <span>Time</span><span>Source</span><span>Action</span><span>Detail</span>
         </div>
         <div className="activity-table-rows">
           {[...visibleEntries].reverse().map((entry) => (
-            <div className="activity-row" key={entry.id}>
+            <div className={`activity-row ${entry.severity ?? 'info'}`} key={entry.id}>
               <time dateTime={new Date(entry.occurredAt).toISOString()}>{formatAppTimestamp(entry.occurredAt, timeDisplay, 'time')}</time>
               <strong>{entry.source}</strong>
               <span>{entry.action}</span>

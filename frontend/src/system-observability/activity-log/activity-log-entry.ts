@@ -1,6 +1,25 @@
-export type ActivitySource = 'Application' | 'Appearance' | 'Chart' | 'Drawing' | 'Market Watch'
+export type ActivitySource =
+  | 'Application'
+  | 'Appearance'
+  | 'Bridge'
+  | 'Calendar'
+  | 'Chart'
+  | 'Drawing'
+  | 'Market Watch'
+  | 'MT5'
 
-export const activitySources: ActivitySource[] = ['Application', 'Appearance', 'Chart', 'Drawing', 'Market Watch']
+export const activitySources: ActivitySource[] = [
+  'Application',
+  'Bridge',
+  'MT5',
+  'Calendar',
+  'Market Watch',
+  'Chart',
+  'Drawing',
+  'Appearance',
+]
+
+export type ActivitySeverity = 'info' | 'success' | 'warning' | 'error'
 
 export type ActivityLogEntry = {
   id: string
@@ -8,4 +27,5 @@ export type ActivityLogEntry = {
   source: ActivitySource
   action: string
   detail?: string
+  severity?: ActivitySeverity
 }

@@ -1,0 +1,24 @@
+.market-data-notice {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 50%;
+  max-width: min(520px, calc(100% - 40px));
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-panel) 94%, transparent);
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+}
+.market-data-notice > i { width: 7px; height: 7px; margin-top: 4px; flex: 0 0 auto; border-radius: 50%; background: var(--negative); }
+.market-data-notice.loading > i { background: var(--accent); animation: heartbeat-pulse 0.9s ease-in-out infinite alternate; }
+.market-data-notice.waiting > i,
+.market-data-notice.stale > i { background: var(--warning); }
+.market-data-notice div { min-width: 0; display: grid; gap: 2px; }
+.market-data-notice strong { color: var(--text-strong); font-size: 10px; }
+.market-data-notice span { overflow: hidden; color: var(--text-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+

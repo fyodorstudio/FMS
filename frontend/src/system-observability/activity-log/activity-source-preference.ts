@@ -1,6 +1,6 @@
 import { activitySources, type ActivitySource } from './activity-log-entry'
 
-const storageKey = 'fyodor.activity-visible-sources.v1'
+const storageKey = 'fyodor.activity-visible-sources.v2'
 
 export function readVisibleActivitySources() {
   try {

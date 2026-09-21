@@ -1,0 +1,34 @@
+.data-heartbeat {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-inset);
+}
+
+.heartbeat-card {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface-panel);
+}
+
+.heartbeat-card > span { color: var(--text-faint); font-size: 8px; font-weight: 750; letter-spacing: 0.04em; text-transform: uppercase; }
+.heartbeat-card strong { min-width: 0; display: flex; align-items: center; gap: 5px; overflow: hidden; color: var(--text-strong); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.heartbeat-card strong i { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: var(--text-faint); }
+.heartbeat-card small { overflow: hidden; color: var(--text-muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.heartbeat-card.good strong i { background: var(--positive); }
+.heartbeat-card.warn strong i { background: var(--warning); }
+.heartbeat-card.bad strong i { background: var(--negative); }
+.heartbeat-card.busy strong i { background: var(--accent); animation: heartbeat-pulse 0.9s ease-in-out infinite alternate; }
+
+@keyframes heartbeat-pulse { to { opacity: 0.25; transform: scale(0.72); } }
+
+@media (max-width: 1180px) {
+  .data-heartbeat { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+

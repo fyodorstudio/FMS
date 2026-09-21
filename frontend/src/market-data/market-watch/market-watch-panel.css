@@ -133,3 +133,9 @@
 .market-watch-identity strong { color: var(--text-strong); font-size: 12px; letter-spacing: 0.015em; }
 .market-watch-identity small { font-size: 9px; }
 .market-watch-empty { padding: 28px 16px; color: var(--text-muted); text-align: center; font-size: 12px; }
+.market-watch-source-state { display: flex; align-items: flex-start; gap: 7px; margin: 8px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); background: var(--surface-inset); font-size: 9px; line-height: 1.35; }
+.market-watch-source-state i { width: 6px; height: 6px; margin-top: 3px; flex: 0 0 auto; border-radius: 50%; background: var(--negative); }
+.market-watch-source-state.loading i { background: var(--accent); animation: heartbeat-pulse 0.9s ease-in-out infinite alternate; }
+.market-watch-source-state.waiting i,
+.market-watch-source-state.stale i { background: var(--warning); }
+.market-watch-source-state span { min-width: 0; overflow-wrap: anywhere; }

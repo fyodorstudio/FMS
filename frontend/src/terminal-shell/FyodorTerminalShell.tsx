@@ -6,7 +6,8 @@ import {
   timeDisplayLabel,
   type TimeDisplayPreference,
 } from '../appearance/time-display/time-display-preference'
-import { EconomicCalendarPlaceholder } from '../economic-calendar/calendar-dock/EconomicCalendarPlaceholder'
+import { EconomicCalendarPanel } from '../economic-calendar/calendar-dock/EconomicCalendarPanel'
+import { useMt5EconomicCalendar } from '../economic-calendar/mt5-calendar/use-mt5-economic-calendar'
 import { FmsArrowControls } from '../fms/chart-arrows/FmsArrowControls'
 import { FmsChartMarkers } from '../fms/chart-arrows/FmsChartMarkers'
 import { FmsPastResultPanel } from '../fms/past-result-dock/FmsPastResultPanel'
@@ -32,8 +33,10 @@ import {
   type ChartAppearance,
 } from '../market-data/chart-settings/chart-appearance-preference'
 import type { ChartTimeframe } from '../market-data/contracts/ChartTimeframe'
-import { generateSampleBars } from '../market-data/sample-feed/generate-sample-bars'
-import { sampleSymbolQuotes } from '../market-data/sample-feed/sample-symbol-quotes'
+import { MarketDataNotice } from '../market-data/mt5-feed/MarketDataNotice'
+import { useMt5MarketData } from '../market-data/mt5-feed/use-mt5-market-data'
+import { DataHeartbeatPanel } from '../system-connectivity/bridge-status/DataHeartbeatPanel'
+import { useBridgeStatus } from '../system-connectivity/bridge-status/use-bridge-status'
 import { ActivityLogPanel } from '../system-observability/activity-log/ActivityLogPanel'
 import { useActivityLog } from '../system-observability/activity-log/use-activity-log'
 import { BottomDockPanel } from '../workspace-docking/bottom-dock/BottomDockPanel'
@@ -65,12 +68,17 @@ export function FyodorTerminalShell() {
   const [arrowFilter, setArrowFilter] = useState<FmsArrowFilter>('all')
   const [selectedFmsResult, setSelectedFmsResult] = useState<SelectedFmsResult | null>(null)
   const { entries, appendActivity, clearActivity } = useActivityLog()
+  const bridge = useBridgeStatus()
+  const mt5Connected = bridge.health?.mt5.connected === true
+  const marketData = useMt5MarketData(mt5Connected, bridge.health?.mt5.generation ?? 0, selectedSymbol, timeframe)
+  const calendar = useMt5EconomicCalendar(bridge.reachable)
+  const activeSymbol = marketData.activeSymbol
+  const quote = marketData.symbols.find((item) => item.symbol === activeSymbol) ?? null
+  const bars = marketData.bars
 
-  const quote = sampleSymbolQuotes.find((item) => item.symbol === selectedSymbol) ?? sampleSymbolQuotes[0]
-  const bars = useMemo(() => generateSampleBars(quote, timeframe), [quote, timeframe])
   const fmsArrows = useMemo(
-    () => createFmsPlaceholderArrows(selectedSymbol, timeframe, bars),
-    [bars, selectedSymbol, timeframe],
+    () => createFmsPlaceholderArrows(activeSymbol, timeframe, bars),
+    [activeSymbol, bars, timeframe],
   )
   const visibleFmsArrows = useMemo(() => {
     if (!pastArrowsVisible) return []
@@ -89,7 +97,7 @@ export function FyodorTerminalShell() {
     updateDrawingPoint,
     updatePositionWidth,
     clearAllDrawings,
-  } = useChartDrawings(selectedSymbol, timeframe)
+  } = useChartDrawings(activeSymbol, timeframe)
 
   const selectSymbol = (symbol: string) => {
     if (symbol === selectedSymbol) return
@@ -102,7 +110,7 @@ export function FyodorTerminalShell() {
     if (nextTimeframe === timeframe) return
     setTimeframe(nextTimeframe)
     setSelectedDrawingId(null)
-    appendActivity('Chart', 'Timeframe selected', `${selectedSymbol} ${nextTimeframe}`)
+    appendActivity('Chart', 'Timeframe selected', `${activeSymbol} ${nextTimeframe}`)
   }
 
   const selectLeftDockWindow = (window: LeftDockWindow) => {
@@ -111,8 +119,8 @@ export function FyodorTerminalShell() {
   }
 
   const recordChartData = useCallback(
-    (barCount: number) => appendActivity('Chart', 'Candle data applied', `${selectedSymbol} ${timeframe} · ${barCount} bars`),
-    [appendActivity, selectedSymbol, timeframe],
+    (barCount: number) => appendActivity('Chart', 'Candle data applied', `${activeSymbol} ${timeframe} · ${barCount} bars`),
+    [activeSymbol, appendActivity, timeframe],
   )
 
   const changeTheme = (nextTheme: ColorTheme) => {
@@ -134,10 +142,10 @@ export function FyodorTerminalShell() {
   const createDrawing = useCallback(
     (tool: DrawingToolId, points: ChartDrawingPoint[]) => {
       const drawingId = addDrawing(tool, points)
-      appendActivity('Drawing', 'Drawing created', `${selectedSymbol} ${timeframe} · ${tool}`)
+      appendActivity('Drawing', 'Drawing created', `${activeSymbol} ${timeframe} · ${tool}`)
       return drawingId
     },
-    [addDrawing, appendActivity, selectedSymbol, timeframe],
+    [activeSymbol, addDrawing, appendActivity, timeframe],
   )
 
   const chooseDrawingTool = (tool: DrawingToolId | null) => {
@@ -172,13 +180,31 @@ export function FyodorTerminalShell() {
     setBottomDockWindow((current) => current === window ? null : window)
   }
 
+  const sourceState = !bridge.reachable || marketData.marketWatchStatus === 'unavailable'
+    ? 'error'
+    : mt5Connected && marketData.marketWatchStatus === 'live'
+      ? 'live'
+      : 'waiting'
+  const sourceLabel = !bridge.reachable
+    ? 'Bridge unreachable'
+    : mt5Connected
+      ? 'MT5 broker source'
+      : bridge.health?.mt5.process_running
+        ? 'MT5 disconnected'
+        : 'Waiting for MT5'
+  const calendarStatus = bridge.reachable
+    ? calendar.source?.status ?? bridge.health?.calendar.status ?? 'waiting'
+    : 'unavailable'
+
   return (
     <div className={`terminal-shell${bottomDockWindow ? ' bottom-dock-open' : ''}`}>
       <main className="terminal-workspace">
         <LeftDockPanel
           activeWindow={leftDockWindow}
-          symbols={sampleSymbolQuotes}
-          selectedSymbol={selectedSymbol}
+          symbols={marketData.symbols}
+          selectedSymbol={activeSymbol}
+          marketWatchStatus={marketData.marketWatchStatus}
+          marketWatchError={marketData.marketWatchError}
           decisions={fmsPlaceholderDecisions}
           setups={fmsPlaceholderSetups}
           timeDisplay={timeDisplay}
@@ -188,12 +214,13 @@ export function FyodorTerminalShell() {
           onGoToArrow={goToPlaceholderArrow}
         />
 
-        <section className="chart-workspace" aria-label={`${quote.symbol} chart workspace`}>
-          <ChartWorkspaceHeader quote={quote} timeframe={timeframe} onSelectTimeframe={selectTimeframe} />
+        <section className="chart-workspace" aria-label={`${activeSymbol} chart workspace`}>
+          <ChartWorkspaceHeader symbol={activeSymbol} quote={quote} timeframe={timeframe} onSelectTimeframe={selectTimeframe} />
           <div className="chart-frame">
             <MarketCandlestickChart
               bars={bars}
-              precision={quote.precision}
+              fitContentKey={`${activeSymbol}:${timeframe}`}
+              precision={quote?.precision ?? 5}
               theme={theme}
               appearance={chartAppearance}
               timeDisplay={timeDisplay}
@@ -215,6 +242,7 @@ export function FyodorTerminalShell() {
                 />
               )}
             />
+            <MarketDataNotice status={marketData.chartStatus} symbol={activeSymbol} timeframe={timeframe} error={marketData.chartError} />
             <FloatingDrawingToolbar
               activeTool={activeDrawingTool}
               drawingCount={totalDrawingCount}
@@ -230,8 +258,8 @@ export function FyodorTerminalShell() {
               onFilterChange={setArrowFilter}
             />
             <div className="chart-watermark" aria-hidden="true">
-              <strong>{quote.symbol}</strong>
-              <span>{timeframe} · Sample data</span>
+              <strong>{activeSymbol}</strong>
+              <span>{timeframe} · {marketData.chartStatus === 'live' ? 'MT5 broker data' : 'Awaiting MT5 data'}</span>
             </div>
           </div>
         </section>
@@ -245,20 +273,47 @@ export function FyodorTerminalShell() {
           onSelectWindow={setBottomDockWindow}
           onClose={() => setBottomDockWindow(null)}
         >
-          {bottomDockWindow === 'activity' && <ActivityLogPanel entries={entries} timeDisplay={timeDisplay} onClear={clearActivity} />}
-          {bottomDockWindow === 'calendar' && <EconomicCalendarPlaceholder timeDisplay={timeDisplay} />}
+          {bottomDockWindow === 'activity' && (
+            <ActivityLogPanel
+              entries={entries}
+              timeDisplay={timeDisplay}
+              onClear={clearActivity}
+              heartbeat={(
+                <DataHeartbeatPanel
+                  health={bridge.health}
+                  reachable={bridge.reachable}
+                  lastContactAt={bridge.lastContactAt}
+                  roundTripMs={bridge.roundTripMs}
+                  probeStartedAt={bridge.probeStartedAt}
+                />
+              )}
+            />
+          )}
+          {bottomDockWindow === 'calendar' && (
+            <EconomicCalendarPanel
+              events={calendar.events}
+              source={calendar.source}
+              error={calendar.error}
+              clockOffsetMs={bridge.clockOffsetMs}
+              timeDisplay={timeDisplay}
+            />
+          )}
           {bottomDockWindow === 'past-result' && <FmsPastResultPanel result={selectedFmsResult} timeDisplay={timeDisplay} />}
         </BottomDockPanel>
       )}
 
       <TerminalStatusBar
-        sourceSymbolCount={sampleSymbolQuotes.length}
-        selectedSymbol={selectedSymbol}
+        sourceState={sourceState}
+        sourceLabel={sourceLabel}
+        sourceSymbolCount={marketData.symbols.length}
+        selectedSymbol={activeSymbol}
         timeframe={timeframe}
         barCount={bars.length}
         activityCount={entries.length}
         bottomDockWindow={bottomDockWindow}
         settingsOpen={settingsOpen}
+        calendarStatus={calendarStatus}
+        calendarEventCount={calendar.events.length}
         onToggleBottomDock={toggleBottomDock}
         onThemeChanged={changeTheme}
         onToggleSettings={() => setSettingsOpen((open) => !open)}

@@ -1,0 +1,47 @@
+.economic-calendar {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 46px minmax(0, 1fr);
+}
+
+.economic-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+.economic-calendar-heading > div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.economic-calendar-heading strong { color: var(--text-strong); font-size: 11px; }
+.economic-calendar-heading span { overflow: hidden; color: var(--text-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.calendar-source-badge { flex: 0 0 auto; padding: 3px 7px; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--warning) !important; background: var(--surface-inset); font-size: 8px !important; font-weight: 800; letter-spacing: 0.05em; }
+.calendar-source-badge.live { color: var(--positive) !important; border-color: color-mix(in srgb, var(--positive) 40%, var(--border)); }
+.calendar-source-badge.stale { color: var(--negative) !important; }
+
+.calendar-table { min-height: 0; display: grid; grid-template-rows: 27px minmax(0, 1fr); font-size: 10px; }
+.calendar-rows { min-height: 0; overflow-y: auto; }
+.calendar-row {
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 140px 92px 66px 76px minmax(210px, 1fr) 78px 78px 78px;
+  align-items: center;
+  column-gap: 10px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  content-visibility: auto;
+  contain-intrinsic-size: 34px;
+}
+.calendar-columns { min-height: 27px; color: var(--text-faint); background: var(--surface-raised); font-size: 8px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
+.calendar-row time { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.calendar-row strong { color: var(--text-strong); }
+.calendar-row > span:nth-last-child(-n+3) { font-variant-numeric: tabular-nums; }
+.calendar-awaiting { color: var(--warning); font-weight: 700; }
+.calendar-impact { width: fit-content; padding: 2px 6px; border-radius: 999px; background: var(--surface-inset); font-size: 8px; font-weight: 700; text-transform: capitalize; }
+.calendar-impact.high { color: var(--negative); }
+.calendar-impact.medium { color: var(--warning); }
+.calendar-impact.low { color: var(--positive); }
+.calendar-impact.none { color: var(--text-faint); }
+.calendar-empty { margin: 0; padding: 26px 14px; color: var(--text-muted); text-align: center; }
+

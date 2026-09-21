@@ -4,24 +4,25 @@ import type { SymbolQuote } from '../market-data/contracts/SymbolQuote'
 const timeframes: ChartTimeframe[] = ['M1', 'M5', 'M15', 'M30', 'H1', 'H4', 'D1']
 
 type ChartWorkspaceHeaderProps = {
-  quote: SymbolQuote
+  symbol: string
+  quote: SymbolQuote | null
   timeframe: ChartTimeframe
   onSelectTimeframe: (timeframe: ChartTimeframe) => void
 }
 
-export function ChartWorkspaceHeader({ quote, timeframe, onSelectTimeframe }: ChartWorkspaceHeaderProps) {
+export function ChartWorkspaceHeader({ symbol, quote, timeframe, onSelectTimeframe }: ChartWorkspaceHeaderProps) {
   return (
     <div className="chart-toolbar">
       <div className="active-market">
-        <div className="market-icon">{quote.symbol.slice(0, 2)}</div>
+        <div className="market-icon">{symbol.slice(0, 2)}</div>
         <div>
           <div className="market-title-row">
-            <h1>{quote.symbol}</h1>
-            <span className={quote.dailyChange >= 0 ? 'positive' : 'negative'}>
+            <h1>{symbol}</h1>
+            {quote && <span className={quote.dailyChange >= 0 ? 'positive' : 'negative'}>
               {quote.dailyChange >= 0 ? '+' : ''}{quote.dailyChange.toFixed(2)}%
-            </span>
+            </span>}
           </div>
-          <p>{quote.description}</p>
+          <p>{quote?.description ?? 'Waiting for MT5 broker data'}</p>
         </div>
       </div>
 
@@ -40,8 +41,8 @@ export function ChartWorkspaceHeader({ quote, timeframe, onSelectTimeframe }: Ch
       </div>
 
       <div className="quote-summary">
-        <span><small>Bid</small>{quote.bid.toFixed(quote.precision)}</span>
-        <span><small>Ask</small>{quote.ask.toFixed(quote.precision)}</span>
+        <span><small>Bid</small>{quote ? quote.bid.toFixed(quote.precision) : '—'}</span>
+        <span><small>Ask</small>{quote ? quote.ask.toFixed(quote.precision) : '—'}</span>
       </div>
     </div>
   )

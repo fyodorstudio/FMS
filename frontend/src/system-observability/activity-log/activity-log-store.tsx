@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react'
 import { ActivityLogContext } from './activity-log-context'
+import type { AppendActivityOptions } from './activity-log-context'
 import type { ActivityLogEntry, ActivitySource } from './activity-log-entry'
 
 export function ActivityLogProvider({ children }: { children: ReactNode }) {
@@ -16,12 +17,13 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
       occurredAt: Date.now(),
       source: 'Application',
       action: 'Interface started',
-      detail: 'Sample data source',
+      detail: 'Waiting for the local bridge',
+      severity: 'info',
     },
   ])
 
-  const appendActivity = useCallback((source: ActivitySource, action: string, detail?: string) => {
-    const occurredAt = Date.now()
+  const appendActivity = useCallback((source: ActivitySource, action: string, detail?: string, options?: AppendActivityOptions) => {
+    const occurredAt = options?.occurredAt ?? Date.now()
     setEntries((current) => {
       const latest = current.at(-1)
       if (
@@ -40,6 +42,7 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
         source,
         action,
         detail,
+        severity: options?.severity ?? 'info',
       }
       return [...current.slice(-199), next]
     })

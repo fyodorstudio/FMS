@@ -18,6 +18,7 @@ import './market-candlestick-chart.css'
 
 type MarketCandlestickChartProps = {
   bars: OhlcBar[]
+  fitContentKey: string
   precision: number
   theme: ColorTheme
   appearance: ChartAppearance
@@ -39,6 +40,7 @@ type MarketCandlestickChartProps = {
 
 export function MarketCandlestickChart({
   bars,
+  fitContentKey,
   precision,
   theme,
   appearance,
@@ -61,6 +63,7 @@ export function MarketCandlestickChart({
   const seriesRef = useRef<ISeriesApi<'Candlestick', Time> | null>(null)
   const [chartApi, setChartApi] = useState<IChartApi | null>(null)
   const [seriesApi, setSeriesApi] = useState<ISeriesApi<'Candlestick', Time> | null>(null)
+  const fittedKeyRef = useRef<string | null>(null)
 
   useEffect(() => {
     const container = containerRef.current
@@ -119,9 +122,12 @@ export function MarketCandlestickChart({
     })
     series.setData(bars)
     chart.priceScale('right').applyOptions({ autoScale: true })
-    chart.timeScale().fitContent()
-    onDataApplied(bars.length)
-  }, [bars, onDataApplied, precision])
+    if (fittedKeyRef.current !== fitContentKey && bars.length > 0) {
+      fittedKeyRef.current = fitContentKey
+      chart.timeScale().fitContent()
+      onDataApplied(bars.length)
+    }
+  }, [bars, fitContentKey, onDataApplied, precision])
 
   return (
     <div className="market-chart-host">

@@ -15,6 +15,29 @@ A fresh new start. The messy terminal is no longer trusted because how differing
 - Python for bridge and MT5 integration
 - Typescript for UI
 
+## Development startup
+
+First-time bridge setup:
+
+```powershell
+python -m venv bridge/.venv
+bridge/.venv/Scripts/python.exe -m pip install -e ./bridge
+pnpm install
+```
+
+Normal startup:
+
+```powershell
+pnpm run dev:all
+```
+
+The bridge stays alive when MT5 is closed and reports that state to the in-app
+Activity heartbeat. It binds only to `127.0.0.1:8001`, reads visible Market
+Watch symbols and selected-chart OHLC, and accepts economic-calendar data from
+the read-only MQL5 publisher. It has no order endpoint and no persistent market
+data cache. See `bridge/README.md` for the one-time calendar publisher setup and
+the acceptance checklist.
+
 ## Rebuilding plan
 
 1. Data Collection

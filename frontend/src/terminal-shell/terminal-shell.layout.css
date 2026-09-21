@@ -131,7 +131,9 @@
 }
 
 .status-message { gap: 6px; }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--positive); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--warning); }
+.status-dot.live { background: var(--positive); }
+.status-dot.error { background: var(--negative); }
 .status-selection { font-variant-numeric: tabular-nums; }
 .status-actions { margin-left: auto; gap: 5px; }
 
@@ -170,6 +172,7 @@
   background: color-mix(in srgb, var(--warning) 9%, transparent);
   font-size: 8px;
 }
+.preview-label.live { color: var(--positive); background: color-mix(in srgb, var(--positive) 9%, transparent); }
 
 @media (max-width: 1080px) {
   .terminal-workspace { grid-template-columns: 276px minmax(0, 1fr); }
