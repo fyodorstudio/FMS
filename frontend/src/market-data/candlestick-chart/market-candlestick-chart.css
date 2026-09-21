@@ -1,0 +1,5 @@
+.market-chart-host,
+.market-chart-canvas {
+  position: absolute;
+  inset: 0;
+}

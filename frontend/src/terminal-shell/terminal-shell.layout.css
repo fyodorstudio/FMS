@@ -1,0 +1,178 @@
+.terminal-shell {
+  height: 100svh;
+  min-width: 880px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 32px;
+  overflow: hidden;
+  color: var(--text);
+  background: var(--surface-root);
+}
+
+.terminal-shell.bottom-dock-open { grid-template-rows: minmax(0, 1fr) 258px 32px; }
+
+.terminal-workspace {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+
+.chart-workspace {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 66px minmax(0, 1fr);
+  background: var(--chart-background);
+}
+
+.chart-toolbar {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(200px, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-panel);
+}
+
+.active-market,
+.market-title-row,
+.status-bar,
+.status-message,
+.status-actions {
+  display: flex;
+  align-items: center;
+}
+
+.active-market { min-width: 0; gap: 10px; }
+
+.market-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.market-title-row { gap: 8px; }
+.market-title-row h1 { margin: 0; color: var(--text-strong); font-size: 14px; }
+.market-title-row span { font-size: 10px; font-weight: 700; }
+.active-market p { margin: 3px 0 0; color: var(--text-muted); font-size: 10px; }
+.positive { color: var(--positive) !important; }
+.negative { color: var(--negative) !important; }
+
+.timeframe-selector {
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-inset);
+}
+
+.timeframe-selector button {
+  min-width: 34px;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.timeframe-selector button:hover { color: var(--text-strong); background: var(--surface-hover); }
+.timeframe-selector button.active { color: #ffffff; background: var(--accent); box-shadow: 0 3px 12px color-mix(in srgb, var(--accent) 26%, transparent); }
+
+.quote-summary {
+  display: flex;
+  justify-content: flex-end;
+  gap: 22px;
+  color: var(--text-strong);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.quote-summary span { display: flex; flex-direction: column; align-items: flex-end; }
+.quote-summary small { margin-bottom: 2px; color: var(--text-muted); font-size: 8px; font-weight: 750; text-transform: uppercase; }
+
+.chart-frame { min-height: 0; position: relative; }
+
+.chart-watermark {
+  position: absolute;
+  top: 60px;
+  left: 24px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  opacity: 0.52;
+}
+
+.chart-watermark strong { color: var(--text-muted); font-size: 24px; letter-spacing: -0.04em; }
+.chart-watermark span { color: var(--text-faint); font-size: 10px; }
+
+.status-bar {
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 0 8px 0 12px;
+  border-top: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  background: var(--surface-panel);
+  font-size: 9px;
+}
+
+.status-message { gap: 6px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--positive); }
+.status-selection { font-variant-numeric: tabular-nums; }
+.status-actions { margin-left: auto; gap: 5px; }
+
+.status-action {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.status-action:hover,
+.status-action.active { border-color: var(--border-strong); color: var(--text-strong); background: var(--surface-raised); }
+
+.activity-count {
+  min-width: 17px;
+  padding: 1px 4px;
+  border-radius: 999px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  text-align: center;
+}
+
+.preview-label {
+  padding: 1px 5px;
+  border-radius: 999px;
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 9%, transparent);
+  font-size: 8px;
+}
+
+@media (max-width: 1080px) {
+  .terminal-workspace { grid-template-columns: 276px minmax(0, 1fr); }
+  .chart-toolbar { grid-template-columns: minmax(180px, 1fr) auto; }
+  .quote-summary { display: none; }
+}

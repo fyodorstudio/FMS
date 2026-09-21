@@ -1,0 +1,13 @@
+.registered-setup-dock { min-height: 0; height: 100%; display: grid; grid-template-rows: auto auto minmax(0, 1fr); }
+.registered-setup-dock > header { padding: 14px 12px 10px; }
+.registered-setup-dock > header small { color: var(--text-faint); font-size: 8px; font-weight: 750; text-transform: uppercase; }
+.registered-setup-dock h2 { margin: 2px 0 0; color: var(--text-strong); font-size: 15px; }
+.registered-setup-dock > p { margin: 0; padding: 9px 12px; border-block: 1px solid var(--border); color: var(--text-muted); background: var(--surface-raised); font-size: 9px; line-height: 1.45; }
+.registered-setup-dock > div { min-height: 0; overflow-y: auto; }
+.registered-setup-dock article { padding: 12px; border-bottom: 1px solid var(--border); }
+.registered-setup-dock article header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.registered-setup-dock article strong { color: var(--text-strong); font-size: 11px; }
+.registered-setup-dock dl { display: grid; gap: 5px; margin: 9px 0 0; }
+.registered-setup-dock dl div { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 5px; font-size: 9px; }
+.registered-setup-dock dt { color: var(--text-faint); }
+.registered-setup-dock dd { margin: 0; color: var(--text-muted); }

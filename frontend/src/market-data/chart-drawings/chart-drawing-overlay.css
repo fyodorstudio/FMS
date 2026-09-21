@@ -1,0 +1,43 @@
+.chart-drawing-overlay {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.chart-drawing-overlay.drawing-active { pointer-events: auto; cursor: crosshair; }
+.drawing-object { pointer-events: visiblePainted; cursor: pointer; }
+.chart-drawing-overlay.drawing-active .drawing-object { pointer-events: none; }
+.drawing-object.selected .drawing-stroke { stroke-width: 2; }
+.drawing-stroke { fill: none; stroke: var(--accent); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.drawing-fill { fill: color-mix(in srgb, var(--accent) 9%, transparent); }
+.drawing-arrow-head { fill: var(--accent); }
+.drawing-text { fill: var(--text-strong); font-size: 12px; font-weight: 650; paint-order: stroke; stroke: var(--chart-background); stroke-width: 3px; }
+.drawing-note-dot { fill: var(--accent); }
+.drawing-note { fill: var(--text-strong); font-size: 10px; paint-order: stroke; stroke: var(--chart-background); stroke-width: 3px; }
+.position-target-area { fill: color-mix(in srgb, var(--positive) 21%, transparent); }
+.position-stop-area { fill: color-mix(in srgb, var(--negative) 20%, transparent); }
+.position-outline { fill: none; stroke: color-mix(in srgb, var(--text-muted) 62%, transparent); stroke-width: 1; }
+.position-entry-line { stroke: var(--text-strong); stroke-dasharray: 2 2; stroke-width: 1; }
+.position-label-background.target,
+.position-label-background.entry { fill: #079b7f; }
+.position-label-background.stop { fill: #ef3f49; }
+.position-label-text { fill: #ffffff; font-size: 10px; font-weight: 700; }
+.drawing-fib-line { stroke: var(--accent); stroke-width: 1; opacity: 0.8; }
+.drawing-fib-label { fill: var(--text-muted); font-size: 8px; }
+.drawing-range { fill: color-mix(in srgb, var(--accent) 7%, transparent); stroke: var(--accent); stroke-dasharray: 5 3; stroke-width: 1; }
+.drawing-range-label { fill: var(--text-strong); font-size: 9px; font-weight: 700; }
+.drawing-draft { opacity: 0.58; }
+
+.drawing-resize-handle {
+  fill: var(--surface-panel);
+  stroke: #3769f5;
+  stroke-width: 2;
+  pointer-events: all;
+  cursor: grab;
+}
+
+.drawing-resize-handle:active { cursor: grabbing; }

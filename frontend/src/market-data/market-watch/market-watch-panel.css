@@ -1,0 +1,135 @@
+.market-watch {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  background: var(--surface-panel);
+  border-right: 1px solid var(--border);
+}
+
+.market-watch-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 16px 12px;
+}
+
+.market-watch-eyebrow {
+  margin: 0 0 3px;
+  color: var(--text-faint);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.market-watch-heading h2 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.market-watch-count {
+  min-width: 24px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: var(--text-muted);
+  background: var(--surface-inset);
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.market-watch-search {
+  height: 36px;
+  margin: 0 12px 12px;
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-faint);
+  background: var(--surface-inset);
+}
+
+.market-watch-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.market-watch-search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: var(--text-strong);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+}
+
+.market-watch-search input::placeholder { color: var(--text-faint); }
+
+.market-watch-columns,
+.market-watch-row {
+  display: grid;
+  grid-template-columns: minmax(88px, 1fr) 72px 72px;
+  align-items: center;
+}
+
+.market-watch-columns {
+  height: 28px;
+  padding: 0 13px;
+  color: var(--text-faint);
+  background: var(--surface-raised);
+  border-block: 1px solid var(--border);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.market-watch-columns span:not(:first-child) { text-align: right; }
+
+.market-watch-list {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.market-watch-row {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 13px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-left: 2px solid transparent;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  text-align: right;
+}
+
+.market-watch-row:hover { background: var(--surface-hover); }
+
+.market-watch-row.selected {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.market-watch-identity {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.market-watch-identity strong { color: var(--text-strong); font-size: 12px; letter-spacing: 0.015em; }
+.market-watch-identity small { font-size: 9px; }
+.market-watch-empty { padding: 28px 16px; color: var(--text-muted); text-align: center; font-size: 12px; }

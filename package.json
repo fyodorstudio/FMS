@@ -1,0 +1,16 @@
+{
+  "name": "NO-AI",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev:ui": "pnpm --dir frontend dev",
+    "dev:all": "concurrently -k -n UI -c cyan \"pnpm run dev:ui\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

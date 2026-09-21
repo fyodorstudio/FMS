@@ -1,0 +1,89 @@
+.floating-drawing-toolbar {
+  position: absolute;
+  z-index: 12;
+  top: 0;
+  left: 0;
+  max-width: calc(100% - 8px);
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--surface-panel) 96%, transparent);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+  user-select: none;
+}
+
+.floating-drawing-toolbar button {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.floating-drawing-toolbar button:hover:not(:disabled) { color: var(--text-strong); background: var(--surface-hover); }
+.floating-drawing-toolbar button.active { color: #ffffff; background: var(--accent); }
+.floating-drawing-toolbar button:disabled { cursor: default; opacity: 0.32; }
+.floating-drawing-toolbar .drawing-toolbar-crosshair { color: var(--accent); }
+
+.crosshair-glyph { position: relative; width: 17px; height: 17px; display: block; }
+.crosshair-glyph::before,
+.crosshair-glyph::after { position: absolute; content: ''; background: currentColor; }
+.crosshair-glyph::before { top: 0; bottom: 0; left: 8px; width: 1px; }
+.crosshair-glyph::after { top: 8px; right: 0; left: 0; height: 1px; }
+
+.floating-drawing-toolbar .drawing-toolbar-handle {
+  color: var(--text-faint);
+  cursor: grab;
+  touch-action: none;
+  font-size: 17px;
+}
+
+.floating-drawing-toolbar .drawing-toolbar-handle:active { cursor: grabbing; }
+.drawing-toolbar-separator { width: 1px; height: 20px; margin: 0 3px; background: var(--border); }
+.floating-drawing-toolbar .drawing-toolbar-trash { color: var(--negative); font-size: 15px; }
+
+.drawing-delete-popover {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
+  width: 228px;
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--surface-panel);
+  box-shadow: var(--shadow);
+  white-space: normal;
+}
+
+.drawing-delete-popover strong { color: var(--text-strong); font-size: 11px; }
+.drawing-delete-popover > span { color: var(--text-muted); font-size: 9px; line-height: 1.45; }
+.drawing-delete-popover > div { display: flex; justify-content: flex-end; gap: 6px; margin-top: 3px; }
+
+.floating-drawing-toolbar .drawing-delete-popover button {
+  width: auto;
+  height: 25px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  font-size: 9px;
+}
+
+.floating-drawing-toolbar .drawing-delete-popover .confirm-delete {
+  border-color: var(--negative);
+  color: #ffffff;
+  background: var(--negative);
+}
