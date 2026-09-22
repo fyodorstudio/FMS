@@ -107,10 +107,42 @@ This document records the architectural improvements, reliability hardening, and
 
 ---
 
-## 9. Verification Summary
+## 9. Position Tool TradingView Overhaul, Drag Stability & UI Polish
+
+### A. Timeframe-Aware Box Sizing & Ergonomics (`position-drawing-geometry.ts`)
+- Single-clicking with Long/Short Position dynamically spans **15 candles** of the selected timeframe (`M1` to `D1`) and **4.0% price distance** (`defaultDistance = Math.max(Math.abs(entry.price) * 0.040, 0.010)`).
+- Provides spacious headroom where labels and handles never collide or feel tight.
+
+### B. Four Corner/Edge Handles & TP/SL Ratio Resizing (`ChartDrawingSelectionHandles.tsx`, `ChartDrawingOverlay.tsx`)
+- Handles relocated to corners/edges (top-left for target, bottom-left for stop, mid-left for entry, mid-right for width) matching TradingView, eliminating any center dot.
+- The **mid-left handle** (`position-entry-price`) is wired with `cursor: ns-resize`. Dragging it moves the entry price line vertically between target and stop, directly resizing the TP/SL Risk/Reward ratio without altering box width.
+- Moving the entire position box is performed by clicking and dragging anywhere inside the box area (`position-move-all`).
+
+### C. Centered Labels ("Follow the Center") (`ChartDrawingShape.tsx`)
+- Target, entry/risk-reward, and stop labels are all horizontally centered on `boxCenterX = left + positionWidth / 2` and move together smoothly as width is resized.
+
+### D. Invariant Bar Span Drag Tracking (`ChartDrawingOverlay.tsx`)
+- Movement in `position-move-all` is driven by integer logical bar delta (`deltaLogical`), preserving the exact candle distance between entry and target across weekends and gaps with zero width wiggling.
+
+### E. Inline Text Editor Mount-Only Selection (`ChartDrawingOverlay.tsx`)
+- Encapsulated text editing into `InlineTextEditor` with a mount-only `.select()` effect, preventing background 2–3s tick polling re-renders from re-selecting text and overwriting user keystrokes.
+
+### F. Widened Candle History Loading Notice with Elapsed Timer (`MarketDataNotice.tsx`, `market-data-notice.css`, `FyodorTerminalShell.tsx`)
+- Widened the loading banner container to `max-width: min(680px, calc(100% - 32px))` with `padding: 9px 14px`, completely preventing text clipping on longer tickers like `AZN.LSE H4`.
+- Added `CandleHistoryLoadingNotice` subcomponent with a live elapsed timer badge (`market-data-elapsed-badge`) that counts up every 100ms:
+  `Loading older candles 4.2s · Requesting broker candle history for AZN.LSE H4…`
+- Removed `' · loading older history'` from the watermark.
+
+### G. Calendar Range Selector Tooltip (`EconomicCalendarPanel.tsx`, `economic-calendar-panel.css`)
+- Added `(?)` hint next to "Range" indicating that the preset also controls the chart timeline strip.
+
+---
+
+## 10. Verification Summary
 
 - **TypeScript Compilation**: Passed with zero errors (`tsc -b`).
-- **Production Build**: Passed (`vite build`, $216\text{ms}$).
+- **Production Build**: Passed (`vite build`, $223\text{ms}$).
 - **Linter**: Passed with **0 errors and 0 warnings** across all 58 files (`oxlint`).
 - **Python Bridge Compile Check**: Passed with zero syntax/import errors.
+
 

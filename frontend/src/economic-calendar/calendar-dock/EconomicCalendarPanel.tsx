@@ -82,7 +82,16 @@ export function EconomicCalendarPanel({
         </div>
         <div className="calendar-range-controls">
           <label>
-            <span>Range</span>
+            <span>
+              Range
+              <span
+                className="calendar-range-tooltip-hint"
+                title="Also affects the chart timeline strip"
+                aria-label="Also affects the chart timeline strip"
+              >
+                (?)
+              </span>
+            </span>
             <select value={rangePreset} onChange={(event) => setRangePreset(event.target.value as CalendarRangePreset)}>
               <option value="previous-week">Previous week</option>
               <option value="this-week">This week</option>

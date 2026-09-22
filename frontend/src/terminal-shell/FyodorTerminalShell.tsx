@@ -36,7 +36,7 @@ import {
   type ChartAppearance,
 } from '../market-data/chart-settings/chart-appearance-preference'
 import type { ChartTimeframe } from '../market-data/contracts/ChartTimeframe'
-import { MarketDataNotice } from '../market-data/mt5-feed/MarketDataNotice'
+import { CandleHistoryLoadingNotice, MarketDataNotice } from '../market-data/mt5-feed/MarketDataNotice'
 import { useMt5MarketData } from '../market-data/mt5-feed/use-mt5-market-data'
 import { DataHeartbeatPanel } from '../system-connectivity/bridge-status/DataHeartbeatPanel'
 import { useBridgeStatus } from '../system-connectivity/bridge-status/use-bridge-status'
@@ -248,6 +248,7 @@ export function FyodorTerminalShell() {
                 theme={theme}
                 appearance={chartAppearance}
                 timeDisplay={timeDisplay}
+                timeframe={timeframe}
                 activeDrawingTool={activeDrawingTool}
                 drawings={drawings}
                 selectedDrawingId={selectedDrawingId}
@@ -290,6 +291,9 @@ export function FyodorTerminalShell() {
               />
             </MarketChartErrorBoundary>
             <MarketDataNotice status={marketData.chartStatus} symbol={activeSymbol} timeframe={timeframe} error={marketData.chartError} />
+            {marketData.chartStatus === 'live' && marketData.chartHistoryLoading && (
+              <CandleHistoryLoadingNotice symbol={activeSymbol} timeframe={timeframe} />
+            )}
             <FloatingDrawingToolbar
               activeTool={activeDrawingTool}
               drawingCount={totalDrawingCount}
@@ -308,7 +312,7 @@ export function FyodorTerminalShell() {
               <strong>{activeSymbol}</strong>
               <span>
                 {timeframe} · {marketData.chartStatus === 'live' ? 'MT5 broker data' : 'Awaiting MT5 data'}
-                {marketData.chartHistoryLoading ? ' · loading older history' : marketData.chartHistoryComplete ? ' · beginning of MT5 history reached' : ''}
+                {marketData.chartHistoryComplete ? ' · beginning of MT5 history reached' : ''}
               </span>
             </div>
           </div>

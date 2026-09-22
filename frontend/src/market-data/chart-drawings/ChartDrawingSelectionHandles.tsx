@@ -2,7 +2,7 @@ import type { PointerEvent as ReactPointerEvent } from 'react'
 import type { ChartDrawingRecord } from './chart-drawing-record'
 import type { ChartDrawingScreenPoint } from './chart-drawing-screen-point'
 
-export type DrawingHandleKind = 'point' | 'position-price' | 'position-width' | 'position-move-all'
+export type DrawingHandleKind = 'point' | 'position-price' | 'position-entry-price' | 'position-width' | 'position-move-all'
 
 type ChartDrawingSelectionHandlesProps = {
   drawing: ChartDrawingRecord
@@ -42,7 +42,6 @@ export function ChartDrawingSelectionHandles({
     const stop = screenPoints[2]
     const left = Math.min(entry.x, target.x)
     const right = Math.max(entry.x, target.x)
-    const centerX = (left + right) / 2
     const boxTop = Math.min(entry.y, target.y, stop.y)
     const boxBottom = Math.max(entry.y, target.y, stop.y)
     const boxHeight = Math.max(10, boxBottom - boxTop)
@@ -62,37 +61,37 @@ export function ChartDrawingSelectionHandles({
           onPointerDown={(event) => onStartHandleEdit(event, drawing.id, 0, 'position-move-all')}
         />
 
-        {/* Target handle - centered horizontally at target price */}
+        {/* Target handle - top-left corner */}
         <circle
           className="drawing-resize-handle"
-          cx={centerX}
+          cx={left}
           cy={target.y}
           r="5"
           style={{ cursor: 'ns-resize' }}
           onPointerDown={(event) => onStartHandleEdit(event, drawing.id, 1, 'position-price')}
         />
 
-        {/* Stop handle - centered horizontally at stop price */}
+        {/* Stop handle - bottom-left corner */}
         <circle
           className="drawing-resize-handle"
-          cx={centerX}
+          cx={left}
           cy={stop.y}
           r="5"
           style={{ cursor: 'ns-resize' }}
           onPointerDown={(event) => onStartHandleEdit(event, drawing.id, 2, 'position-price')}
         />
 
-        {/* Center entry handle - move entire position */}
+        {/* Entry price handle - mid-left corner (resizes TP/SL ratio) */}
         <circle
           className="drawing-resize-handle"
-          cx={centerX}
+          cx={left}
           cy={entry.y}
-          r="6"
-          style={{ cursor: 'move' }}
-          onPointerDown={(event) => onStartHandleEdit(event, drawing.id, 0, 'position-move-all')}
+          r="5"
+          style={{ cursor: 'ns-resize' }}
+          onPointerDown={(event) => onStartHandleEdit(event, drawing.id, 0, 'position-entry-price')}
         />
 
-        {/* Width handle - on the right edge */}
+        {/* Width handle - mid-right edge */}
         <circle
           className="drawing-resize-handle"
           cx={right}

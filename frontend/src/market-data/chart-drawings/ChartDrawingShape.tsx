@@ -41,18 +41,20 @@ function PositionDrawing({ points, width, height, precision = 5 }: Pick<ChartDra
   const boxBottom = Math.max(target.y, stop.y, entry.y)
   const boxHeight = Math.max(2, boxBottom - boxTop)
   const isTargetAbove = target.y <= entry.y
-  const targetLabelX = Math.min(Math.max(2, left + 4), Math.max(2, width - 277))
-  const stopLabelX = Math.min(Math.max(2, left + 4), Math.max(2, width - 262))
+  const boxCenterX = left + positionWidth / 2
+  const targetLabelWidth = 275
+  const centerLabelWidth = 188
+  const stopLabelWidth = 260
+
+  const targetLabelX = Math.min(Math.max(2, boxCenterX - targetLabelWidth / 2), Math.max(2, width - targetLabelWidth - 2))
+  const centerLabelX = Math.min(Math.max(2, boxCenterX - centerLabelWidth / 2), Math.max(2, width - centerLabelWidth - 2))
+  const stopLabelX = Math.min(Math.max(2, boxCenterX - stopLabelWidth / 2), Math.max(2, width - stopLabelWidth - 2))
   const targetLabelY = isTargetAbove
     ? Math.max(2, target.y - 21)
     : Math.min(Math.max(2, target.y + 2), height - 21)
   const stopLabelY = isTargetAbove
     ? Math.min(Math.max(2, stop.y + 2), height - 21)
     : Math.max(2, stop.y - 21)
-  const centerLabelX = Math.min(
-    Math.max(2, left + positionWidth / 2 - 94),
-    Math.max(2, width - 190),
-  )
 
   return (
     <g>

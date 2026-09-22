@@ -12,6 +12,7 @@ import { ChartDrawingOverlay } from '../chart-drawings/ChartDrawingOverlay'
 import type { ChartDrawingPoint, ChartDrawingRecord } from '../chart-drawings/chart-drawing-record'
 import type { DrawingToolId } from '../chart-drawings/drawing-tool'
 import type { ChartAppearance } from '../chart-settings/chart-appearance-preference'
+import type { ChartTimeframe } from '../contracts/ChartTimeframe'
 import type { OhlcBar } from '../contracts/OhlcBar'
 import { lightweightChartOptions } from './lightweight-chart-options'
 import './market-candlestick-chart.css'
@@ -23,6 +24,7 @@ type MarketCandlestickChartProps = {
   theme: ColorTheme
   appearance: ChartAppearance
   timeDisplay: TimeDisplayPreference
+  timeframe?: ChartTimeframe
   activeDrawingTool: DrawingToolId | null
   drawings: ChartDrawingRecord[]
   selectedDrawingId: string | null
@@ -52,6 +54,7 @@ export function MarketCandlestickChart({
   theme,
   appearance,
   timeDisplay,
+  timeframe,
   activeDrawingTool,
   drawings,
   selectedDrawingId,
@@ -307,6 +310,7 @@ export function MarketCandlestickChart({
           activeTool={activeDrawingTool}
           drawings={drawings}
           selectedDrawingId={selectedDrawingId}
+          timeframe={timeframe}
           precision={precision}
           onSelectDrawing={onSelectDrawing}
           onCreateDrawing={onCreateDrawing}
