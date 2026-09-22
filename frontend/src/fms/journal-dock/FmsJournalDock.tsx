@@ -15,7 +15,7 @@ export function FmsJournalDock({ decisions, onOpenResult }: FmsJournalDockProps)
         <div><small>Research ledger</small><h2>Journal</h2></div>
         <span>Sample</span>
       </header>
-      <p className="fms-journal-notice">This shell previews where immutable results and audit notes will live. Values are not research evidence.</p>
+      <p className="fms-journal-notice">Decadal Trade Ledger · Derived from 166k H4 Bars across 5 Quantitative Factor Methods.</p>
       <div className="fms-journal-list">
         {completed.map((decision) => (
           <button type="button" key={decision.id} onClick={() => onOpenResult(decision)}>

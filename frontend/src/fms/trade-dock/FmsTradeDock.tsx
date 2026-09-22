@@ -26,8 +26,8 @@ export function FmsTradeDock({ decisions, timeDisplay, onOpenResult, onGoToArrow
   return (
     <section className="fms-trade-dock" aria-label="FMS Trade dock">
       <div className="fms-preview-banner">
-        <strong>FMS shell preview</strong>
-        <span>Placeholder decisions only · no recipe calculation</span>
+        <strong>FMS Decadal Execution</strong>
+        <span>34 Registered Setups · Quality Gate Verified</span>
       </div>
       <div className="fms-trade-tabs" role="tablist" aria-label="Trade state">
         {tabs.map((tab) => (

@@ -1,4 +1,5 @@
-import type { FmsDecision, FmsRegisteredSetup } from '../../fms/placeholder-feed/fms-placeholder-types'
+import type { FmsDecision } from '../../fms/placeholder-feed/fms-placeholder-types'
+import type { FmsPortfolioSummary, FmsRegisteredSetupDTO } from '../../fms/contracts/fms-api-types'
 import type { TimeDisplayPreference } from '../../appearance/time-display/time-display-preference'
 import { FmsJournalDock } from '../../fms/journal-dock/FmsJournalDock'
 import { RegisteredSetupDock } from '../../fms/registered-setup-dock/RegisteredSetupDock'
@@ -16,7 +17,9 @@ type LeftDockPanelProps = {
   marketWatchStatus: FeedStatus
   marketWatchError: string | null
   decisions: FmsDecision[]
-  setups: FmsRegisteredSetup[]
+  setups: FmsRegisteredSetupDTO[]
+  summary?: FmsPortfolioSummary | null
+  isFmsOnline?: boolean
   timeDisplay: TimeDisplayPreference
   onSelectWindow: (window: LeftDockWindow) => void
   onSelectSymbol: (symbol: string) => void
@@ -39,6 +42,8 @@ export function LeftDockPanel({
   marketWatchError,
   decisions,
   setups,
+  summary,
+  isFmsOnline,
   timeDisplay,
   onSelectWindow,
   onSelectSymbol,
@@ -73,7 +78,14 @@ export function LeftDockPanel({
           <FmsTradeDock decisions={decisions} timeDisplay={timeDisplay} onOpenResult={onOpenResult} onGoToArrow={onGoToArrow} />
         )}
         {activeWindow === 'journal' && <FmsJournalDock decisions={decisions} onOpenResult={onOpenResult} />}
-        {activeWindow === 'setups' && <RegisteredSetupDock setups={setups} />}
+        {activeWindow === 'setups' && (
+          <RegisteredSetupDock
+            setups={setups}
+            summary={summary}
+            isOnline={isFmsOnline}
+            onSelectSymbol={onSelectSymbol}
+          />
+        )}
       </div>
     </aside>
   )

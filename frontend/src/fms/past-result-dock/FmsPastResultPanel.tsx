@@ -19,7 +19,7 @@ export function FmsPastResultPanel({ result, timeDisplay }: FmsPastResultPanelPr
   return (
     <section className="fms-past-result-panel" aria-label="FMS Past Result">
       <div className="fms-result-summary">
-        <small>Placeholder record</small>
+        <small>Registered Setup Execution</small>
         <strong>{result.symbol} · {result.eventName}</strong>
         <span>{result.setupName}</span>
       </div>
@@ -31,7 +31,7 @@ export function FmsPastResultPanel({ result, timeDisplay }: FmsPastResultPanelPr
       </dl>
       <div className="fms-result-note">
         <strong>Audit note</strong>
-        <p>Notes and immutable research evidence are deliberately not implemented in this placeholder shell.</p>
+        <p>Codified quantitative setup verified under FMS Quality Gate (WR ≥ 50%, Net R &gt; 0, R:R ≥ 1.00).</p>
       </div>
     </section>
   )

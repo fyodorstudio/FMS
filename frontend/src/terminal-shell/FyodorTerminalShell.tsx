@@ -16,13 +16,14 @@ import { FmsPastResultPanel } from '../fms/past-result-dock/FmsPastResultPanel'
 import {
   createFmsPlaceholderArrows,
   fmsPlaceholderDecisions,
-  fmsPlaceholderSetups,
 } from '../fms/placeholder-feed/fms-placeholder-data'
 import type {
   FmsArrowFilter,
   FmsChartArrow,
   FmsDecision,
 } from '../fms/placeholder-feed/fms-placeholder-types'
+import type { UTCTimestamp } from 'lightweight-charts'
+import { useFmsData } from '../fms/use-fms-data'
 import { MarketCandlestickChart } from '../market-data/candlestick-chart/MarketCandlestickChart'
 import { MarketChartErrorBoundary } from '../market-data/candlestick-chart/MarketChartErrorBoundary'
 import { FloatingDrawingToolbar } from '../market-data/chart-drawings/FloatingDrawingToolbar'
@@ -83,10 +84,27 @@ export function FyodorTerminalShell() {
   const quote = marketData.symbols.find((item) => item.symbol === activeSymbol) ?? null
   const bars = marketData.bars
 
-  const fmsArrows = useMemo(
-    () => createFmsPlaceholderArrows(activeSymbol, timeframe, bars),
-    [activeSymbol, bars, timeframe],
-  )
+  const fmsData = useFmsData(activeSymbol)
+
+  const fmsArrows = useMemo(() => {
+    if (fmsData.isOnline && fmsData.signals.length > 0) {
+      return fmsData.signals.map((sig) => ({
+        id: sig.id,
+        symbol: activeSymbol,
+        timeframe,
+        time: sig.time as UTCTimestamp,
+        price: sig.price,
+        direction: sig.direction,
+        result: sig.result,
+        resultR: sig.result_r,
+        version: sig.version,
+        setupName: sig.setup_name,
+        eventName: sig.event_name,
+        releaseTime: sig.releaseTime,
+      }))
+    }
+    return createFmsPlaceholderArrows(activeSymbol, timeframe, bars)
+  }, [activeSymbol, bars, fmsData.isOnline, fmsData.signals, timeframe])
   const visibleFmsArrows = useMemo(() => {
     if (!pastArrowsVisible) return []
     return fmsArrows.filter((arrow) => {
@@ -225,7 +243,9 @@ export function FyodorTerminalShell() {
           marketWatchStatus={marketData.marketWatchStatus}
           marketWatchError={marketData.marketWatchError}
           decisions={fmsPlaceholderDecisions}
-          setups={fmsPlaceholderSetups}
+          setups={fmsData.setups}
+          summary={fmsData.summary}
+          isFmsOnline={fmsData.isOnline}
           timeDisplay={timeDisplay}
           onSelectWindow={selectLeftDockWindow}
           onSelectSymbol={selectSymbol}
@@ -371,6 +391,7 @@ export function FyodorTerminalShell() {
         settingsOpen={settingsOpen}
         calendarStatus={calendarStatus}
         calendarEventCount={bridge.health?.calendar.event_count ?? 0}
+        fmsStatus={{ isOnline: fmsData.isOnline, setupCount: fmsData.setups.length }}
         onToggleBottomDock={toggleBottomDock}
         onThemeChanged={changeTheme}
         onToggleSettings={() => setSettingsOpen((open) => !open)}
