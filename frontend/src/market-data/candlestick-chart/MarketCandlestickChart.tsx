@@ -29,7 +29,10 @@ type MarketCandlestickChartProps = {
   onSelectDrawing: (drawingId: string | null) => void
   onCreateDrawing: (tool: DrawingToolId, points: ChartDrawingPoint[]) => string
   onUpdateDrawingPoint: (drawingId: string, pointIndex: number, point: ChartDrawingPoint, persist: boolean) => void
+  onUpdateDrawingPoints?: (drawingId: string, points: ChartDrawingPoint[], persist: boolean) => void
   onUpdatePositionWidth: (drawingId: string, time: ChartDrawingPoint['time'], persist: boolean) => void
+  onDeleteSelectedDrawing?: () => void
+  onDeleteDrawing?: (drawingId: string) => void
   onExitDrawingMode: () => void
   onDataApplied: (barCount: number) => void
   hasOlderData: boolean
@@ -54,7 +57,10 @@ export function MarketCandlestickChart({
   onSelectDrawing,
   onCreateDrawing,
   onUpdateDrawingPoint,
+  onUpdateDrawingPoints,
   onUpdatePositionWidth,
+  onDeleteSelectedDrawing,
+  onDeleteDrawing,
   onExitDrawingMode,
   onDataApplied,
   hasOlderData,
@@ -70,6 +76,7 @@ export function MarketCandlestickChart({
   const [chartApi, setChartApi] = useState<IChartApi | null>(null)
   const [seriesApi, setSeriesApi] = useState<ISeriesApi<'Candlestick', Time> | null>(null)
   const fittedKeyRef = useRef<string | null>(null)
+  const prevBarsRef = useRef<OhlcBar[]>([])
   const historyPagingArmedRef = useRef(false)
   const historyStateRef = useRef({ hasOlderData, isLoadingOlderData })
   const requestOlderDataRef = useRef(onRequestOlderData)
@@ -153,19 +160,131 @@ export function MarketCandlestickChart({
         minMove: 10 ** -precision,
       },
     })
-    const preserveRange = fittedKeyRef.current === fitContentKey
-      ? chart.timeScale().getVisibleRange()
-      : null
-    series.setData(bars)
-    chart.priceScale('right').applyOptions({ autoScale: true })
-    if (fittedKeyRef.current !== fitContentKey && bars.length > 0) {
-      fittedKeyRef.current = fitContentKey
-      chart.timeScale().fitContent()
-      onDataApplied(bars.length)
-    } else if (preserveRange) {
-      chart.timeScale().setVisibleRange(preserveRange)
+
+    if (bars.length === 0) {
+      series.setData([])
+      prevBarsRef.current = []
+      fittedKeyRef.current = null
+      return
     }
+
+    const prevBars = prevBarsRef.current
+    const isNewKey = fittedKeyRef.current !== fitContentKey
+
+    if (isNewKey) {
+      series.setData(bars)
+      chart.priceScale('right').applyOptions({ autoScale: true })
+      chart.timeScale().fitContent()
+      fittedKeyRef.current = fitContentKey
+      prevBarsRef.current = bars
+      onDataApplied(bars.length)
+      return
+    }
+
+    // Check if older history was prepended (history demand-paging)
+    if (prevBars.length > 0 && bars.length > prevBars.length) {
+      const prependedCount = bars.length - prevBars.length
+      if (bars[prependedCount]?.time === prevBars[0]?.time) {
+        const prevLogical = chart.timeScale().getVisibleLogicalRange()
+        series.setData(bars)
+        if (prevLogical) {
+          try {
+            chart.timeScale().setVisibleLogicalRange({
+              from: prevLogical.from + prependedCount,
+              to: prevLogical.to + prependedCount,
+            })
+          } catch {
+            // Best effort logical range restoration
+          }
+        }
+        prevBarsRef.current = bars
+        return
+      }
+    }
+
+    // Check if single bar was appended or latest live bar was updated
+    if (
+      prevBars.length > 0 &&
+      bars[0]?.time === prevBars[0]?.time &&
+      (bars.length === prevBars.length || bars.length === prevBars.length + 1)
+    ) {
+      const latestBar = bars[bars.length - 1]
+      series.update(latestBar)
+      prevBarsRef.current = bars
+      return
+    }
+
+    // Otherwise, full dataset update with safe range preservation
+    const preserveRange = chart.timeScale().getVisibleRange()
+    series.setData(bars)
+    if (preserveRange && preserveRange.from !== null && preserveRange.to !== null) {
+      try {
+        chart.timeScale().setVisibleRange(preserveRange)
+      } catch {
+        // Safe fallback
+      }
+    }
+    prevBarsRef.current = bars
   }, [bars, fitContentKey, onDataApplied, precision])
+
+  const isPanningRef = useRef(false)
+  const lastClientYRef = useRef<number | null>(null)
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    historyPagingArmedRef.current = true
+    if (event.button !== 0 || activeDrawingTool) return
+
+    const container = containerRef.current
+    if (!container) return
+    const rect = container.getBoundingClientRect()
+    // Do not intercept if clicking on the right price scale area
+    if (event.clientX > rect.right - 55) return
+
+    isPanningRef.current = true
+    lastClientYRef.current = event.clientY
+
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      if (!isPanningRef.current || lastClientYRef.current === null) return
+      const deltaY = moveEvent.clientY - lastClientYRef.current
+      if (Math.abs(deltaY) < 1) return
+
+      const chart = chartRef.current
+      const series = seriesRef.current
+      if (!chart || !series) return
+
+      const p1 = series.coordinateToPrice(lastClientYRef.current)
+      const p2 = series.coordinateToPrice(moveEvent.clientY)
+      if (p1 !== null && p2 !== null) {
+        const deltaPrice = p1 - p2
+        const currentRange = chart.priceScale('right').getVisibleRange()
+        if (currentRange) {
+          chart.priceScale('right').applyOptions({ autoScale: false })
+          chart.priceScale('right').setVisibleRange({
+            from: currentRange.from + deltaPrice,
+            to: currentRange.to + deltaPrice,
+          })
+        }
+      }
+      lastClientYRef.current = moveEvent.clientY
+    }
+
+    const onPointerUp = () => {
+      isPanningRef.current = false
+      lastClientYRef.current = null
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
+    }
+
+    window.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('pointerup', onPointerUp)
+    window.addEventListener('pointercancel', onPointerUp)
+  }
+
+  const handleDoubleClick = () => {
+    chartRef.current?.priceScale('right').applyOptions({ autoScale: true })
+    chartRef.current?.timeScale().fitContent()
+  }
 
   return (
     <div className="market-chart-host">
@@ -173,7 +292,8 @@ export function MarketCandlestickChart({
         ref={containerRef}
         className="market-chart-canvas"
         aria-label="Candlestick chart"
-        onPointerDown={() => { historyPagingArmedRef.current = true }}
+        onPointerDown={handlePointerDown}
+        onDoubleClick={handleDoubleClick}
         onWheel={() => { historyPagingArmedRef.current = true }}
       />
       {chartApi && seriesApi && renderChartOverlay?.(chartApi, seriesApi)}
@@ -185,10 +305,14 @@ export function MarketCandlestickChart({
           activeTool={activeDrawingTool}
           drawings={drawings}
           selectedDrawingId={selectedDrawingId}
+          precision={precision}
           onSelectDrawing={onSelectDrawing}
           onCreateDrawing={onCreateDrawing}
           onUpdateDrawingPoint={onUpdateDrawingPoint}
+          onUpdateDrawingPoints={onUpdateDrawingPoints}
           onUpdatePositionWidth={onUpdatePositionWidth}
+          onDeleteSelectedDrawing={onDeleteSelectedDrawing}
+          onDeleteDrawing={onDeleteDrawing}
           onExitDrawingMode={onExitDrawingMode}
         />
       )}

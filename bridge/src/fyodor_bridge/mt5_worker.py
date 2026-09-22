@@ -150,9 +150,9 @@ class Mt5Worker:
                 self._ensure_connected()
                 result = self._request_adapter(queued.operation, queued.arguments)
             except Exception as error:
-                self._record_operation_error(error)
+                mapped_error = self._record_operation_error(error)
                 if not queued.future.cancelled():
-                    queued.future.set_exception(error)
+                    queued.future.set_exception(mapped_error)
             else:
                 if not queued.future.cancelled():
                     queued.future.set_result(result)
@@ -372,18 +372,36 @@ class Mt5Worker:
         if changed:
             self._activity.append("MT5", "Connection unavailable", message, "error")
 
-    def _record_operation_error(self, error: Exception) -> None:
+    def _record_operation_error(self, error: Exception) -> Exception:
         message = str(error)
         adapter_failure = isinstance(error, Mt5AdapterFailure)
-        ipc_failure = any(code in message for code in ("[-10000]", "[-10001]", "[-10002]", "[-10003]", "[-10005]"))
-        if not adapter_failure and not ipc_failure:
-            return
-        self._stop_adapter()
-        with self._status_lock:
-            self._status.connected = False
-            self._status.state = "adapter-recovery"
-            self._status.last_error = message
-        action = "Native adapter timeout" if adapter_failure else "IPC failure detected"
-        self._activity.append("MT5", action, message, "error")
-        self._last_status_check = 0.0
-        self._retry_not_before = monotonic() + 1
+
+        terminal_running = False
+        try:
+            terminal_running = find_terminal_process(self._settings.mt5_terminal_path) is not None
+        except Exception:
+            pass
+
+        if not terminal_running:
+            self._stop_adapter()
+            with self._status_lock:
+                self._status.connected = False
+                self._status.state = "waiting-for-terminal"
+                self._status.last_error = "MT5 terminal process is not running"
+            self._activity.append("MT5", "Terminal disconnected", message, severity="warning")
+            self._last_status_check = 0.0
+            self._retry_not_before = monotonic() + 1
+            return Mt5UnavailableError(message)
+
+        if adapter_failure:
+            self._stop_adapter()
+            with self._status_lock:
+                self._status.connected = False
+                self._status.state = "adapter-recovery"
+                self._status.last_error = message
+            self._activity.append("MT5", "Native adapter timeout", message, severity="error")
+            self._last_status_check = 0.0
+            self._retry_not_before = monotonic() + 1
+            return Mt5UnavailableError(message)
+
+        return error

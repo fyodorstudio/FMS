@@ -6,9 +6,10 @@ type ChartDrawingShapeProps = {
   points: ChartDrawingScreenPoint[]
   width: number
   height: number
+  precision?: number
 }
 
-function PositionDrawing({ points, width, height }: Pick<ChartDrawingShapeProps, 'points' | 'width' | 'height'>) {
+function PositionDrawing({ points, width, height, precision = 5 }: Pick<ChartDrawingShapeProps, 'points' | 'width' | 'height' | 'precision'>) {
   const entry = points[0]
   const target = points[1]
   const stop = points[2]
@@ -21,7 +22,14 @@ function PositionDrawing({ points, width, height }: Pick<ChartDrawingShapeProps,
   const risk = Math.max(Math.abs(entry.price - stop.price), Number.EPSILON)
   const rewardPercent = (reward / entry.price) * 100
   const riskPercent = (risk / entry.price) * 100
-  const pipSize = entry.price > 20 ? 0.01 : 0.0001
+
+  const point = 10 ** -precision
+  const isGold = entry.price > 500 || (precision === 2 && entry.price > 100)
+  const pipSize = isGold
+    ? 0.10
+    : (precision === 5 || precision === 3)
+      ? point * 10
+      : point
   const rewardPips = reward / pipSize
   const riskPips = risk / pipSize
   const riskReward = reward / risk
@@ -29,10 +37,18 @@ function PositionDrawing({ points, width, height }: Pick<ChartDrawingShapeProps,
   const targetHeight = Math.abs(entry.y - target.y)
   const stopTop = Math.min(stop.y, entry.y)
   const stopHeight = Math.abs(stop.y - entry.y)
+  const boxTop = Math.min(target.y, stop.y, entry.y)
+  const boxBottom = Math.max(target.y, stop.y, entry.y)
+  const boxHeight = Math.max(2, boxBottom - boxTop)
+  const isTargetAbove = target.y <= entry.y
   const targetLabelX = Math.min(Math.max(2, left + 4), Math.max(2, width - 277))
   const stopLabelX = Math.min(Math.max(2, left + 4), Math.max(2, width - 262))
-  const targetLabelY = Math.max(2, target.y - 20)
-  const stopLabelY = Math.min(Math.max(2, stop.y + 3), Math.max(2, height - 21))
+  const targetLabelY = isTargetAbove
+    ? Math.max(2, target.y - 21)
+    : Math.min(Math.max(2, target.y + 2), height - 21)
+  const stopLabelY = isTargetAbove
+    ? Math.min(Math.max(2, stop.y + 2), height - 21)
+    : Math.max(2, stop.y - 21)
   const centerLabelX = Math.min(
     Math.max(2, left + positionWidth / 2 - 94),
     Math.max(2, width - 190),
@@ -42,13 +58,13 @@ function PositionDrawing({ points, width, height }: Pick<ChartDrawingShapeProps,
     <g>
       <rect className="position-target-area" x={left} y={targetTop} width={positionWidth} height={targetHeight} />
       <rect className="position-stop-area" x={left} y={stopTop} width={positionWidth} height={stopHeight} />
-      <rect className="position-outline" x={left} y={Math.min(target.y, stop.y)} width={positionWidth} height={Math.abs(stop.y - target.y)} />
+      <rect className="position-outline" x={left} y={boxTop} width={positionWidth} height={boxHeight} />
       <line className="position-entry-line" x1={left} y1={entry.y} x2={right} y2={entry.y} />
 
       <g transform={`translate(${targetLabelX} ${targetLabelY})`}>
         <rect className="position-label-background target" width="275" height="19" rx="3" />
         <text className="position-label-text" x="5" y="13">
-          Target: {reward.toFixed(5)} ({rewardPercent.toFixed(3)}%) {rewardPips.toFixed(1)}, Amount: {(100 + riskReward).toFixed(2)}
+          Target: {reward.toFixed(precision)} ({rewardPercent.toFixed(3)}%) {rewardPips.toFixed(1)} pips
         </text>
       </g>
 
@@ -61,14 +77,14 @@ function PositionDrawing({ points, width, height }: Pick<ChartDrawingShapeProps,
       <g transform={`translate(${stopLabelX} ${stopLabelY})`}>
         <rect className="position-label-background stop" width="260" height="19" rx="3" />
         <text className="position-label-text" x="5" y="13">
-          Stop: {risk.toFixed(5)} ({riskPercent.toFixed(3)}%) {riskPips.toFixed(1)}, Amount: 99.00
+          Stop: {risk.toFixed(precision)} ({riskPercent.toFixed(3)}%) {riskPips.toFixed(1)} pips
         </text>
       </g>
     </g>
   )
 }
 
-export function ChartDrawingShape({ drawing, points, width, height }: ChartDrawingShapeProps) {
+export function ChartDrawingShape({ drawing, points, width, height, precision = 5 }: ChartDrawingShapeProps) {
   const first = points[0]
   const last = points.at(-1) ?? first
   if (!first || !last) return null
@@ -135,12 +151,12 @@ export function ChartDrawingShape({ drawing, points, width, height }: ChartDrawi
       return (
         <g>
           <circle className="drawing-note-dot" cx={first.x} cy={first.y} r={3} />
-          <text className="drawing-note" x={first.x + 7} y={first.y + 4}>{first.price.toFixed(5)}</text>
+          <text className="drawing-note" x={first.x + 7} y={first.y + 4}>{first.price.toFixed(precision)}</text>
         </g>
       )
     case 'long-position':
     case 'short-position':
-      return <PositionDrawing points={points} width={width} height={height} />
+      return <PositionDrawing points={points} width={width} height={height} precision={precision} />
     case 'fib-retracement': {
       const ratios = [0, 0.236, 0.382, 0.5, 0.618, 1]
       return (

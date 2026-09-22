@@ -7,6 +7,7 @@ type VirtualizedCalendarRowsProps = {
   now: number
   timeDisplay: TimeDisplayPreference
   emptyLabel: string
+  highlightedEventId?: string | null
 }
 
 const rowHeight = 36
@@ -36,7 +37,13 @@ function formatValue(value: number | null, event: EconomicCalendarEvent) {
   return `${number}${multiplierSuffix[event.multiplier] ?? ''}`
 }
 
-export function VirtualizedCalendarRows({ events, now, timeDisplay, emptyLabel }: VirtualizedCalendarRowsProps) {
+export function VirtualizedCalendarRows({
+  events,
+  now,
+  timeDisplay,
+  emptyLabel,
+  highlightedEventId,
+}: VirtualizedCalendarRowsProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [viewportHeight, setViewportHeight] = useState(0)
   const [scrollTop, setScrollTop] = useState(0)
@@ -50,6 +57,14 @@ export function VirtualizedCalendarRows({ events, now, timeDisplay, emptyLabel }
     observer.observe(viewport)
     return () => observer.disconnect()
   }, [])
+
+  useEffect(() => {
+    if (!highlightedEventId || !viewportRef.current) return
+    const index = events.findIndex((e) => e.value_id === highlightedEventId)
+    if (index === -1) return
+    const targetScroll = Math.max(0, index * rowHeight - (viewportHeight || 300) / 2 + rowHeight / 2)
+    viewportRef.current.scrollTo({ top: targetScroll, behavior: 'smooth' })
+  }, [events, highlightedEventId, viewportHeight])
 
   if (events.length === 0) {
     return <div className="calendar-rows"><p className="calendar-empty">{emptyLabel}</p></div>
@@ -70,7 +85,10 @@ export function VirtualizedCalendarRows({ events, now, timeDisplay, emptyLabel }
           {events.slice(firstIndex, finalIndex).map((event) => {
             const countdown = countdownLabel(event.release_at, event.actual, now)
             return (
-              <div className="calendar-row" key={event.value_id}>
+              <div
+                className={`calendar-row${event.value_id === highlightedEventId ? ' highlighted-event' : ''}`}
+                key={event.value_id}
+              >
                 <time dateTime={event.release_at ? new Date(event.release_at).toISOString() : undefined}>
                   {event.release_at ? formatAppTimestamp(event.release_at, timeDisplay, 'date-time') : '—'}
                 </time>

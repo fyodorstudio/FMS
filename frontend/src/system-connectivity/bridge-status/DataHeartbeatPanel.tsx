@@ -30,12 +30,40 @@ function operationDetail(operation: BridgeOperation | undefined, now: number) {
   return operation.operation ?? 'Waiting'
 }
 
+const VERIFIED_CLOCK_STORAGE_KEY = 'fyodor.source-clock.verified'
+
+function readVerifiedClock(): boolean {
+  try {
+    return window.localStorage.getItem(VERIFIED_CLOCK_STORAGE_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
+function saveVerifiedClock(verified: boolean): void {
+  try {
+    window.localStorage.setItem(VERIFIED_CLOCK_STORAGE_KEY, verified ? 'true' : 'false')
+  } catch {
+    // Ignore storage quota
+  }
+}
+
 export function DataHeartbeatPanel({ health, reachable, lastContactAt, roundTripMs, probeStartedAt }: DataHeartbeatPanelProps) {
   const [now, setNow] = useState(() => Date.now())
+  const [clockVerified, setClockVerified] = useState(readVerifiedClock)
+
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 250)
     return () => window.clearInterval(timer)
   }, [])
+
+  const toggleClockVerification = () => {
+    setClockVerified((current) => {
+      const next = !current
+      saveVerifiedClock(next)
+      return next
+    })
+  }
 
   const mt5 = health?.mt5
   const calendar = health?.calendar
@@ -46,6 +74,7 @@ export function DataHeartbeatPanel({ health, reachable, lastContactAt, roundTrip
     || now - lastContactAt > 7_000
   const healthFresh = !healthOverdue
   const mt5Available = healthFresh && mt5?.connected === true
+  const terminalName = mt5?.terminal_path ? mt5.terminal_path.split(/[\\/]/).pop() : null
   const cards = [
     {
       label: 'Bridge',
@@ -58,26 +87,30 @@ export function DataHeartbeatPanel({ health, reachable, lastContactAt, roundTrip
         : lastContactAt
           ? `${elapsedLabel(roundTripMs)} round trip · ${elapsedLabel(now - lastContactAt)} ago`
           : 'No contact yet',
+      onClick: undefined,
     },
     {
       label: 'MT5 terminal',
       state: !healthFresh ? 'bad' : mt5?.connected ? 'good' : mt5?.process_running ? 'warn' : 'bad',
       value: !healthFresh ? 'Unknown' : mt5?.connected ? 'Connected' : mt5?.process_running ? 'Disconnected' : 'Not running',
       detail: !healthFresh ? 'Fresh bridge health is unavailable' : mt5?.connected
-        ? `${mt5.account_server ?? 'Broker'} · login ${mt5.account_login ?? '—'} · generation ${mt5.generation}`
+        ? `${mt5.account_server ?? 'Broker'} · login ${mt5.account_login ?? '—'} · gen ${mt5.generation} · PID ${mt5.process_id ?? '—'}${terminalName ? ` (${terminalName})` : ''}`
         : mt5?.last_error ?? 'Waiting for status',
+      onClick: undefined,
     },
     {
       label: 'Market Watch',
       state: !mt5Available ? 'bad' : !health?.operations.market_watch ? 'warn' : health.operations.market_watch.state === 'failed' ? 'bad' : health.operations.market_watch.state === 'running' ? 'busy' : 'good',
       value: !healthFresh ? 'Unknown' : !mt5Available ? 'Unavailable' : health?.operations.market_watch?.state === 'running' ? 'Fetching' : `${health?.operations.market_watch?.count ?? 0} symbols`,
       detail: !healthFresh ? 'Fresh bridge health is unavailable' : !mt5Available ? mt5?.last_error ?? 'MT5 is not connected' : operationDetail(health?.operations.market_watch, now),
+      onClick: undefined,
     },
     {
       label: 'Chart OHLC',
       state: !mt5Available ? 'bad' : !health?.operations.ohlc ? 'warn' : health.operations.ohlc.state === 'failed' ? 'bad' : health.operations.ohlc.state === 'running' ? 'busy' : 'good',
       value: !healthFresh ? 'Unknown' : !mt5Available ? 'Unavailable' : health?.operations.ohlc?.state === 'running' ? 'Fetching' : `${health?.operations.ohlc?.count ?? 0} bars`,
       detail: !healthFresh ? 'Fresh bridge health is unavailable' : !mt5Available ? mt5?.last_error ?? 'MT5 is not connected' : operationDetail(health?.operations.ohlc, now),
+      onClick: undefined,
     },
     {
       label: 'Calendar EA',
@@ -86,25 +119,36 @@ export function DataHeartbeatPanel({ health, reachable, lastContactAt, roundTrip
       detail: !healthFresh ? 'Fresh bridge health is unavailable' : calendar?.last_heartbeat_at
         ? `${calendar.event_count} events · send ${elapsedLabel(calendar.publisher_request_duration_ms)} · ${elapsedLabel(now - calendar.last_heartbeat_at)} ago`
         : 'Attach the calendar publisher EA',
+      onClick: undefined,
     },
     {
       label: 'Source clock',
-      state: healthFresh && calendar?.clock_trust === 'observed' && calendar.status === 'live' ? 'warn' : 'bad',
+      state: healthFresh && calendar?.clock_trust === 'observed' && calendar.status === 'live'
+        ? (clockVerified ? 'good' : 'warn')
+        : 'bad',
       value: healthFresh && calendar?.clock_trust === 'observed'
-        ? calendar.status === 'live' ? 'Observed' : 'Last observed'
+        ? (clockVerified ? 'Verified' : calendar.status === 'live' ? 'Observed' : 'Last observed')
         : 'Unverified',
       detail: !healthFresh
         ? 'Fresh bridge health is unavailable'
         : calendar?.server_utc_offset_seconds === null || calendar?.server_utc_offset_seconds === undefined
         ? 'Waiting for broker clock'
-        : `Broker ${formatUtcOffset(calendar.server_utc_offset_seconds / 60)} · verify once before freeze`,
+        : clockVerified
+        ? `Broker ${formatUtcOffset(calendar.server_utc_offset_seconds / 60)} · verified (click to reset)`
+        : `Broker ${formatUtcOffset(calendar.server_utc_offset_seconds / 60)} · click to verify`,
+      onClick: calendar?.clock_trust === 'observed' && calendar.status === 'live' ? toggleClockVerification : undefined,
     },
-  ] as const
-
+  ]
   return (
     <section className="data-heartbeat" aria-label="Data heartbeat">
       {cards.map((card) => (
-        <article className={`heartbeat-card ${card.state}`} key={card.label}>
+        <article
+          className={`heartbeat-card ${card.state}${card.onClick ? ' clickable' : ''}`}
+          key={card.label}
+          onClick={card.onClick}
+          role={card.onClick ? 'button' : undefined}
+          tabIndex={card.onClick ? 0 : undefined}
+        >
           <span>{card.label}</span>
           <strong><i />{card.value}</strong>
           <small title={card.detail}>{card.detail}</small>

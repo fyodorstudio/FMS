@@ -55,7 +55,10 @@ def bridge_error(error: Exception) -> HTTPException:
         return HTTPException(status_code=409, detail={"code": "superseded", "message": str(error)})
     if isinstance(error, Mt5UnavailableError):
         return HTTPException(status_code=503, detail={"code": "mt5-unavailable", "message": str(error)})
-    return HTTPException(status_code=502, detail={"code": "mt5-call-failed", "message": str(error)})
+    message = str(error)
+    if "history returned for" in message or "Unable to select" in message:
+        return HTTPException(status_code=404, detail={"code": "ohlc-history-unavailable", "message": message})
+    return HTTPException(status_code=502, detail={"code": "mt5-call-failed", "message": message})
 
 
 @app.get("/api/v1/health")

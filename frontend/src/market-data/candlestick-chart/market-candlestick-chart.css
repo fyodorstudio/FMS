@@ -3,3 +3,49 @@
   position: absolute;
   inset: 0;
 }
+
+.chart-error-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+  background: var(--surface-panel);
+  color: var(--text);
+  z-index: 20;
+}
+
+.chart-error-fallback strong {
+  color: var(--negative);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.chart-error-fallback p {
+  margin: 0;
+  max-width: 420px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.chart-error-fallback button {
+  padding: 6px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface-hover);
+  color: var(--text-strong);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.chart-error-fallback button:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}

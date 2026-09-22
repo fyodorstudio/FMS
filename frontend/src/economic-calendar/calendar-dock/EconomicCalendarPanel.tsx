@@ -20,6 +20,7 @@ type EconomicCalendarPanelProps = {
   error: string | null
   clockOffsetMs: number
   timeDisplay: TimeDisplayPreference
+  highlightedEventId?: string | null
 }
 
 function sourceLabel(source: CalendarSourceHealth | null, error: string | null) {
@@ -31,7 +32,14 @@ function sourceLabel(source: CalendarSourceHealth | null, error: string | null) 
   return 'Attach FyodorCalendarPublisher to one MT5 chart'
 }
 
-export function EconomicCalendarPanel({ events, source, error, clockOffsetMs, timeDisplay }: EconomicCalendarPanelProps) {
+export function EconomicCalendarPanel({
+  events,
+  source,
+  error,
+  clockOffsetMs,
+  timeDisplay,
+  highlightedEventId,
+}: EconomicCalendarPanelProps) {
   const [now, setNow] = useState(() => Date.now() + clockOffsetMs)
   const initialToday = displayDateKey(now, timeDisplay)
   const initialWeek = displayWeekDateKeys(initialToday)
@@ -49,12 +57,15 @@ export function EconomicCalendarPanel({ events, source, error, clockOffsetMs, ti
     () => calendarDisplayRange(rangePreset, today, customFrom, customTo, timeDisplay),
     [customFrom, customTo, rangePreset, timeDisplay, today],
   )
-  const orderedEvents = useMemo(
-    () => events
-      .filter((event) => event.release_at !== null && range !== null && event.release_at >= range.from && event.release_at < range.to)
-      .sort((left, right) => (left.release_at ?? Number.MAX_SAFE_INTEGER) - (right.release_at ?? Number.MAX_SAFE_INTEGER)),
-    [events, range],
-  )
+
+  const orderedEvents = useMemo(() => {
+    const list = events.filter((event) => {
+      if (event.release_at === null) return false
+      if (highlightedEventId && event.value_id === highlightedEventId) return true
+      return range !== null && event.release_at >= range.from && event.release_at < range.to
+    })
+    return list.sort((left, right) => (left.release_at ?? Number.MAX_SAFE_INTEGER) - (right.release_at ?? Number.MAX_SAFE_INTEGER))
+  }, [events, highlightedEventId, range])
 
   return (
     <section className="economic-calendar" aria-label="Economic Calendar">
@@ -96,6 +107,7 @@ export function EconomicCalendarPanel({ events, source, error, clockOffsetMs, ti
           now={now}
           timeDisplay={timeDisplay}
           emptyLabel={range === null ? 'Choose a valid custom date range' : sourceLabel(source, error)}
+          highlightedEventId={highlightedEventId}
         />
       </div>
     </section>

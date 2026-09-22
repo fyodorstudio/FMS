@@ -6,6 +6,7 @@ import {
   timeDisplayLabel,
   type TimeDisplayPreference,
 } from '../appearance/time-display/time-display-preference'
+import { EconomicCalendarMarkers } from '../economic-calendar/calendar-dock/EconomicCalendarMarkers'
 import { EconomicCalendarPanel } from '../economic-calendar/calendar-dock/EconomicCalendarPanel'
 import { useMt5EconomicCalendar } from '../economic-calendar/mt5-calendar/use-mt5-economic-calendar'
 import { FmsArrowControls } from '../fms/chart-arrows/FmsArrowControls'
@@ -22,6 +23,7 @@ import type {
   FmsDecision,
 } from '../fms/placeholder-feed/fms-placeholder-types'
 import { MarketCandlestickChart } from '../market-data/candlestick-chart/MarketCandlestickChart'
+import { MarketChartErrorBoundary } from '../market-data/candlestick-chart/MarketChartErrorBoundary'
 import { FloatingDrawingToolbar } from '../market-data/chart-drawings/FloatingDrawingToolbar'
 import type { ChartDrawingPoint } from '../market-data/chart-drawings/chart-drawing-record'
 import type { DrawingToolId } from '../market-data/chart-drawings/drawing-tool'
@@ -99,9 +101,19 @@ export function FyodorTerminalShell() {
     totalDrawingCount,
     addDrawing,
     updateDrawingPoint,
+    updateDrawingPoints,
     updatePositionWidth,
+    deleteDrawing,
     clearAllDrawings,
   } = useChartDrawings(activeSymbol, timeframe)
+
+  const [highlightedCalendarEventId, setHighlightedCalendarEventId] = useState<string | null>(null)
+
+  const handleDeleteDrawing = useCallback((drawingId: string) => {
+    deleteDrawing(drawingId)
+    if (selectedDrawingId === drawingId) setSelectedDrawingId(null)
+    appendActivity('Drawing', 'Drawing deleted', `${activeSymbol} ${timeframe}`)
+  }, [activeSymbol, appendActivity, deleteDrawing, selectedDrawingId, timeframe])
 
   const selectSymbol = (symbol: string) => {
     if (symbol === selectedSymbol) return
@@ -221,34 +233,55 @@ export function FyodorTerminalShell() {
         <section className="chart-workspace" aria-label={`${activeSymbol} chart workspace`}>
           <ChartWorkspaceHeader symbol={activeSymbol} quote={quote} timeframe={timeframe} onSelectTimeframe={selectTimeframe} />
           <div className="chart-frame">
-            <MarketCandlestickChart
-              bars={bars}
-              fitContentKey={`${activeSymbol}:${timeframe}`}
-              precision={quote?.precision ?? 5}
-              theme={theme}
-              appearance={chartAppearance}
-              timeDisplay={timeDisplay}
-              activeDrawingTool={activeDrawingTool}
-              drawings={drawings}
-              selectedDrawingId={selectedDrawingId}
-              onSelectDrawing={setSelectedDrawingId}
-              onCreateDrawing={createDrawing}
-              onUpdateDrawingPoint={updateDrawingPoint}
-              onUpdatePositionWidth={updatePositionWidth}
-              onExitDrawingMode={() => setActiveDrawingTool(null)}
-              onDataApplied={recordChartData}
-              hasOlderData={!marketData.chartHistoryComplete}
-              isLoadingOlderData={marketData.chartHistoryLoading}
-              onRequestOlderData={marketData.requestOlderBars}
-              renderChartOverlay={(chartApi, seriesApi) => (
-                <FmsChartMarkers
-                  chartApi={chartApi}
-                  seriesApi={seriesApi}
-                  arrows={visibleFmsArrows}
-                  onSelectArrow={openFmsResult}
-                />
-              )}
-            />
+            <MarketChartErrorBoundary
+              symbol={activeSymbol}
+              timeframe={timeframe}
+              onError={(error) => appendActivity('Chart', 'Chart error caught', error.message, { severity: 'error' })}
+            >
+              <MarketCandlestickChart
+                bars={bars}
+                fitContentKey={`${activeSymbol}:${timeframe}`}
+                precision={quote?.precision ?? 5}
+                theme={theme}
+                appearance={chartAppearance}
+                timeDisplay={timeDisplay}
+                activeDrawingTool={activeDrawingTool}
+                drawings={drawings}
+                selectedDrawingId={selectedDrawingId}
+                onSelectDrawing={setSelectedDrawingId}
+                onCreateDrawing={createDrawing}
+                onUpdateDrawingPoint={updateDrawingPoint}
+                onUpdateDrawingPoints={updateDrawingPoints}
+                onUpdatePositionWidth={updatePositionWidth}
+                onDeleteDrawing={handleDeleteDrawing}
+                onExitDrawingMode={() => setActiveDrawingTool(null)}
+                onDataApplied={recordChartData}
+                hasOlderData={!marketData.chartHistoryComplete}
+                isLoadingOlderData={marketData.chartHistoryLoading}
+                onRequestOlderData={marketData.requestOlderBars}
+                renderChartOverlay={(chartApi, seriesApi) => (
+                  <>
+                    <FmsChartMarkers
+                      chartApi={chartApi}
+                      seriesApi={seriesApi}
+                      arrows={visibleFmsArrows}
+                      onSelectArrow={openFmsResult}
+                    />
+                    <EconomicCalendarMarkers
+                      chartApi={chartApi}
+                      seriesApi={seriesApi}
+                      symbol={activeSymbol}
+                      bars={bars}
+                      events={calendar.events}
+                      onSelectEvent={(event) => {
+                        setBottomDockWindow('calendar')
+                        setHighlightedCalendarEventId(event.value_id)
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </MarketChartErrorBoundary>
             <MarketDataNotice status={marketData.chartStatus} symbol={activeSymbol} timeframe={timeframe} error={marketData.chartError} />
             <FloatingDrawingToolbar
               activeTool={activeDrawingTool}
@@ -306,6 +339,7 @@ export function FyodorTerminalShell() {
               error={calendar.error}
               clockOffsetMs={bridge.clockOffsetMs}
               timeDisplay={timeDisplay}
+              highlightedEventId={highlightedCalendarEventId}
             />
           )}
           {bottomDockWindow === 'past-result' && <FmsPastResultPanel result={selectedFmsResult} timeDisplay={timeDisplay} />}

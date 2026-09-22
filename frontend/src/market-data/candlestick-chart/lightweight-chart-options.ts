@@ -54,7 +54,18 @@ export function lightweightChartOptions(
       barSpacing: appearance.barSpacing,
       tickMarkFormatter: (time: Time, tickType: TickMarkType) => formatChartTick(time, tickType, timeDisplay),
     },
-    handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
+    handleScale: {
+      axisPressedMouseMove: {
+        time: true,
+        price: true,
+      },
+      axisDoubleClickReset: {
+        time: true,
+        price: true,
+      },
+      mouseWheel: true,
+      pinch: true,
+    },
     handleScroll: {
       mouseWheel: true,
       pressedMouseMove: true,

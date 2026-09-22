@@ -14,10 +14,14 @@ type ChartDrawingOverlayProps = {
   activeTool: DrawingToolId | null
   drawings: ChartDrawingRecord[]
   selectedDrawingId: string | null
+  precision?: number
   onSelectDrawing: (drawingId: string | null) => void
   onCreateDrawing: (tool: DrawingToolId, points: ChartDrawingPoint[]) => string
   onUpdateDrawingPoint: (drawingId: string, pointIndex: number, point: ChartDrawingPoint, persist: boolean) => void
+  onUpdateDrawingPoints?: (drawingId: string, points: ChartDrawingPoint[], persist: boolean) => void
   onUpdatePositionWidth: (drawingId: string, time: ChartDrawingPoint['time'], persist: boolean) => void
+  onDeleteSelectedDrawing?: () => void
+  onDeleteDrawing?: (drawingId: string) => void
   onExitDrawingMode: () => void
 }
 
@@ -25,6 +29,8 @@ type EditingHandle = {
   drawingId: string
   pointIndex: number
   kind: DrawingHandleKind
+  startPoint?: ChartDrawingPoint
+  initialPoints?: ChartDrawingPoint[]
 }
 
 export function ChartDrawingOverlay({
@@ -33,10 +39,14 @@ export function ChartDrawingOverlay({
   activeTool,
   drawings,
   selectedDrawingId,
+  precision = 5,
   onSelectDrawing,
   onCreateDrawing,
   onUpdateDrawingPoint,
+  onUpdateDrawingPoints,
   onUpdatePositionWidth,
+  onDeleteSelectedDrawing,
+  onDeleteDrawing,
   onExitDrawingMode,
 }: ChartDrawingOverlayProps) {
   const overlayRef = useRef<SVGSVGElement>(null)
@@ -63,6 +73,22 @@ export function ChartDrawingOverlay({
       chartApi.timeScale().unsubscribeVisibleLogicalRangeChange(refresh)
     }
   }, [chartApi])
+
+  useEffect(() => {
+    if (!selectedDrawingId || !onDeleteSelectedDrawing) return
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Delete' || event.key === 'Backspace') {
+        const target = event.target as HTMLElement | null
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+          return
+        }
+        event.preventDefault()
+        onDeleteSelectedDrawing()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onDeleteSelectedDrawing, selectedDrawingId])
 
   const eventToDataPoint = (event: ReactPointerEvent<SVGSVGElement>) => {
     const rectangle = event.currentTarget.getBoundingClientRect()
@@ -127,7 +153,17 @@ export function ChartDrawingOverlay({
 
     const editing = editingHandleRef.current
     if (editing) {
-      if (editing.kind === 'position-width') {
+      if (editing.kind === 'position-move-all') {
+        if (editing.startPoint && editing.initialPoints && onUpdateDrawingPoints) {
+          const deltaPrice = point.price - editing.startPoint.price
+          const deltaTime = point.time - editing.startPoint.time
+          const shifted = editing.initialPoints.map((p) => ({
+            time: (p.time + deltaTime) as ChartDrawingPoint['time'],
+            price: p.price + deltaPrice,
+          }))
+          onUpdateDrawingPoints(editing.drawingId, shifted, false)
+        }
+      } else if (editing.kind === 'position-width') {
         onUpdatePositionWidth(editing.drawingId, point.time, false)
       } else if (editing.kind === 'position-price') {
         const drawing = drawings.find((candidate) => candidate.id === editing.drawingId)
@@ -154,7 +190,17 @@ export function ChartDrawingOverlay({
     const editing = editingHandleRef.current
     if (editing) {
       if (point) {
-        if (editing.kind === 'position-width') {
+        if (editing.kind === 'position-move-all') {
+          if (editing.startPoint && editing.initialPoints && onUpdateDrawingPoints) {
+            const deltaPrice = point.price - editing.startPoint.price
+            const deltaTime = point.time - editing.startPoint.time
+            const shifted = editing.initialPoints.map((p) => ({
+              time: (p.time + deltaTime) as ChartDrawingPoint['time'],
+              price: p.price + deltaPrice,
+            }))
+            onUpdateDrawingPoints(editing.drawingId, shifted, true)
+          }
+        } else if (editing.kind === 'position-width') {
           onUpdatePositionWidth(editing.drawingId, point.time, true)
         } else if (editing.kind === 'position-price') {
           const drawing = drawings.find((candidate) => candidate.id === editing.drawingId)
@@ -194,7 +240,7 @@ export function ChartDrawingOverlay({
   }
 
   const startHandleEdit = (
-    event: ReactPointerEvent<SVGCircleElement>,
+    event: ReactPointerEvent<SVGCircleElement | SVGRectElement>,
     drawingId: string,
     pointIndex: number,
     kind: DrawingHandleKind = 'point',
@@ -203,7 +249,15 @@ export function ChartDrawingOverlay({
     event.preventDefault()
     event.stopPropagation()
     event.currentTarget.setPointerCapture(event.pointerId)
-    editingHandleRef.current = { drawingId, pointIndex, kind }
+    const drawing = drawings.find((candidate) => candidate.id === drawingId)
+    const point = eventToDataPoint(event as unknown as ReactPointerEvent<SVGSVGElement>)
+    editingHandleRef.current = {
+      drawingId,
+      pointIndex,
+      kind,
+      startPoint: point ?? undefined,
+      initialPoints: drawing ? [...drawing.points] : undefined,
+    }
     onSelectDrawing(drawingId)
   }
 
@@ -240,8 +294,19 @@ export function ChartDrawingOverlay({
               event.stopPropagation()
               onSelectDrawing(drawing.id)
             }}
+            onContextMenu={(event) => {
+              if (activeTool) return
+              event.preventDefault()
+              event.stopPropagation()
+              if (onDeleteDrawing) {
+                onDeleteDrawing(drawing.id)
+              } else if (onDeleteSelectedDrawing) {
+                onSelectDrawing(drawing.id)
+                onDeleteSelectedDrawing()
+              }
+            }}
           >
-            <ChartDrawingShape drawing={drawing} points={screenPoints} width={viewport.width} height={viewport.height} />
+            <ChartDrawingShape drawing={drawing} points={screenPoints} width={viewport.width} height={viewport.height} precision={precision} />
             {selected && (
               <ChartDrawingSelectionHandles
                 drawing={drawing}
@@ -255,7 +320,7 @@ export function ChartDrawingOverlay({
       })}
       {draftDrawing && (
         <g className="drawing-draft">
-          <ChartDrawingShape drawing={draftDrawing} points={toScreenPoints(draftDrawing)} width={viewport.width} height={viewport.height} />
+          <ChartDrawingShape drawing={draftDrawing} points={toScreenPoints(draftDrawing)} width={viewport.width} height={viewport.height} precision={precision} />
           {activeTool === 'path' && draft.length > 0 && (() => {
             const draftPoints = toScreenPoints(draftDrawing)
             const last = draftPoints.at(-1)
