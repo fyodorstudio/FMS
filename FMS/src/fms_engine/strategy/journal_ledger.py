@@ -107,3 +107,4 @@ class JournalLedger:
                 avg_r_per_trade=avg_r,
                 curve=curve,
             )
+

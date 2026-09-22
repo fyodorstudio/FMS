@@ -82,9 +82,9 @@ def test_zone_detector():
 
 def test_excursion_engine():
     engine = ExcursionEngine(max_bars=10)
-    # Create 30 synthetic bars
+    # Create 50 synthetic bars for robust ATR calibration
     bars = []
-    for i in range(30):
+    for i in range(50):
         bars.append({
             "time": 1700000000 + i * 14400,
             "open": 1.1000 + i * 0.0005,
@@ -95,10 +95,170 @@ def test_excursion_engine():
             "spread": 1,
         })
     df = pl.DataFrame(bars)
-    timestamps = [1700000000 + 5 * 14400, 1700000000 + 10 * 14400, 1700000000 + 15 * 14400]
+    timestamps = [1700000000 + 15 * 14400, 1700000000 + 20 * 14400, 1700000000 + 25 * 14400]
     result = engine.evaluate_setup_excursions("EURUSD", SetupDirection.BUY, timestamps, df)
     assert result is not None
     assert result.sample_count == 3
     assert result.median_mfe_pips > 0
     assert result.recommended_tp_pips > 0
     assert result.recommended_sl_pips > 0
+
+def test_macro_divergence_engine():
+    from fms_engine.analytics.macro_divergence_engine import MacroDivergenceEngine
+
+    surprise_engine = SurpriseEngine()
+    surprise_engine.std_cache["US Non-Farm Payrolls"] = 50.0
+    surprise_engine.std_cache["Eurozone Harmonised CPI YoY"] = 0.2
+
+    cal_data = [
+        # USD misses heavily
+        {
+            "event_id": "1",
+            "event_name": "US Non-Farm Payrolls",
+            "currency": "USD",
+            "family": "labor",
+            "timestamp": 1700000000,
+            "actual": 80.0,
+            "forecast": 180.0,
+            "previous": 150.0,
+            "impact": "high",
+        },
+        # EUR beats strongly
+        {
+            "event_id": "2",
+            "event_name": "Eurozone Harmonised CPI YoY",
+            "currency": "EUR",
+            "family": "inflation",
+            "timestamp": 1700000100,
+            "actual": 3.4,
+            "forecast": 3.0,
+            "previous": 3.0,
+            "impact": "high",
+        },
+    ]
+    cal_df = pl.DataFrame(cal_data)
+    engine = MacroDivergenceEngine(lookback_days=14, min_divergence_z=1.50)
+
+    events_scored = engine.compute_currency_scores(cal_df, surprise_engine)
+    assert len(events_scored) == 2
+
+    triggers = engine.find_divergence_triggers("EURUSD", events_scored)
+    assert len(triggers) >= 1
+    # EUR beat (+2.0 std) and USD miss (-2.0 std) -> EUR - USD = +4.0 std -> BUY trigger
+    assert triggers[0].direction == SetupDirection.BUY
+    assert triggers[0].spread_z >= 1.50
+
+def test_policy_spread_engine():
+    from fms_engine.analytics.policy_spread_engine import PolicySpreadEngine
+    from fms_engine.contracts.setup_models import SetupDirection
+
+    cal_data = [
+        # USD Fed rate at 5.0%
+        {
+            "event_id": "1",
+            "event_name": "Federal Reserve Interest Rate Decision",
+            "currency": "USD",
+            "family": "monetary_policy",
+            "timestamp": 1700000000,
+            "actual": 5.0,
+            "forecast": 5.0,
+            "previous": 4.75,
+            "impact": "high",
+        },
+        # US CPI at 3.0%
+        {
+            "event_id": "2",
+            "event_name": "US Consumer Price Index (CPI) YoY",
+            "currency": "USD",
+            "family": "inflation",
+            "timestamp": 1700000100,
+            "actual": 3.0,
+            "forecast": 3.0,
+            "previous": 3.2,
+            "impact": "high",
+        },
+        # JPY BoJ rate at -0.10%
+        {
+            "event_id": "3",
+            "event_name": "Bank of Japan Interest Rate Decision",
+            "currency": "JPY",
+            "family": "monetary_policy",
+            "timestamp": 1700000200,
+            "actual": -0.10,
+            "forecast": -0.10,
+            "previous": -0.10,
+            "impact": "high",
+        },
+        # Japan CPI at 2.0%
+        {
+            "event_id": "4",
+            "event_name": "Japan National Core CPI YoY",
+            "currency": "JPY",
+            "family": "inflation",
+            "timestamp": 1700000300,
+            "actual": 2.0,
+            "forecast": 2.0,
+            "previous": 2.2,
+            "impact": "high",
+        },
+    ]
+    cal_df = pl.DataFrame(cal_data)
+    engine = PolicySpreadEngine(min_real_spread_bps=100.0, refractory_bars=1)
+
+    # Synthetic candles for USDJPY
+    candles_data = [
+        {"time": 1700000000 + i * 14400, "open": 140.0, "high": 140.5, "low": 139.8, "close": 140.2, "tick_volume": 100, "spread": 2}
+        for i in range(10)
+    ]
+    candles_df = pl.DataFrame(candles_data)
+
+    triggers = engine.find_policy_triggers("USDJPY", cal_df, candles_df)
+    assert len(triggers) >= 1
+    # USD real yield: 5.0 - 3.0 = +2.0%, JPY real yield: -0.10 - 2.0 = -2.10%
+    # Real spread = +2.0 - (-2.10) = +4.10% -> USDJPY BUY
+    assert triggers[0].direction == SetupDirection.BUY
+    assert triggers[0].real_spread > 1.0
+
+def test_library_models_contract():
+    from fms_engine.contracts.library_models import MethodSectionContract, LibrarySummaryContract, AccordionState
+    from fms_engine.contracts.setup_models import QuantMethod
+
+    section = MethodSectionContract(
+        method_id=QuantMethod.PYS,
+        name="Policy & Real Yield Spread Momentum",
+        code="M-PYS",
+        description="Captures sovereign interest rate differentials and real yield momentum.",
+        hypothesis="Capital flows gravitate to currencies with positive real purchasing power expansion.",
+        research_chapter_file="10-policy-and-real-yield-spread-momentum.md",
+        setup_count=8,
+        aggregate_net_r=137.10,
+        average_expectancy_r=0.233,
+        average_win_rate=0.565,
+        ui_accordion_state=AccordionState.EXPANDED,
+    )
+    assert section.setup_count == 8
+    assert section.aggregate_net_r > 100.0
+
+    summary = LibrarySummaryContract(
+        methods=[section],
+        total_setups=8,
+        total_net_r=137.10,
+        average_portfolio_expectancy=0.233,
+        last_audit_timestamp=1700000000,
+    )
+    assert summary.total_setups == 8
+
+def test_portal_endpoint():
+    from fms_engine.api.app import app
+    from fastapi.testclient import TestClient
+
+    client = TestClient(app)
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers.get("content-type", "")
+    assert "FMS Library" in response.text
+    assert "Codified Setups" in response.text
+
+
+
+

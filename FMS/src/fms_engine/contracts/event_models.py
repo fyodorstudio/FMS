@@ -29,3 +29,4 @@ class MacroReleaseDTO(BaseModel):
     z_score: Optional[float] = None
     state: MacroState = MacroState.IN_LINE
     impact: str = "high"
+

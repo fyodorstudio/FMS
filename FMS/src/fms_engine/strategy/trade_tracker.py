@@ -79,3 +79,4 @@ class TradeTracker:
                 )
                 for row in rows
             ]
+

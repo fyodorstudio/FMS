@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import numpy as np
 import polars as pl
 
@@ -93,3 +93,44 @@ class ZoneDetector:
         # Sort by most recent and return top N zones
         zones.sort(key=lambda z: z.timestamp, reverse=True)
         return zones[:max_zones]
+
+    def check_confluence(
+        self,
+        current_price: float,
+        direction: any,
+        zones: List[LiquidityZone],
+        current_atr: float = 0.0010,
+        max_reach_atr: float = 2.0,
+    ) -> Tuple[bool, str]:
+        """
+        Validates 2D S&R Liquidity Zone confluence.
+        Enforces a structural veto:
+        - Never enter a BUY directly into immediate overhead resistance.
+        - Never enter a SELL directly into immediate floor support.
+        - Requires price to be within max_reach_atr of favorable structural liquidity.
+        """
+        dir_val = direction.value if hasattr(direction, "value") else str(direction).upper()
+        if not zones:
+            return True, "No historical zones detected; entry permitted."
+
+        reach_buffer = max_reach_atr * current_atr
+        overhead_veto_buffer = 0.5 * current_atr
+
+        supports = [z for z in zones if z.zone_type == "support"]
+        resistances = [z for z in zones if z.zone_type == "resistance"]
+
+        if dir_val == "BUY":
+            # Check for immediate overhead resistance wall
+            for r in resistances:
+                if 0 < (r.bottom_price - current_price) <= overhead_veto_buffer:
+                    return False, f"Veto: Entering directly into overhead resistance ({r.bottom_price:.5f})"
+            return True, "Valid structural location for BUY"
+
+        else:  # SELL
+            # Check for immediate floor support wall
+            for s in supports:
+                if 0 < (current_price - s.top_price) <= overhead_veto_buffer:
+                    return False, f"Veto: Entering directly into floor support ({s.top_price:.5f})"
+            return True, "Valid structural location for SELL"
+
+

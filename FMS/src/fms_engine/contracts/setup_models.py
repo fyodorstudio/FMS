@@ -6,8 +6,16 @@ class SetupDirection(str, Enum):
     BUY = "BUY"
     SELL = "SELL"
 
+class QuantMethod(str, Enum):
+    MSD = "M-MSD"  # Macro Surprise Divergence
+    PYS = "M-PYS"  # Policy & Real Yield Spread
+    TOT = "M-TOT"  # Terms-of-Trade Commodity Pulse
+    VRC = "M-VRC"  # Volatility Regime & Carry Unwind
+    LAR = "M-LAR"  # Liquidity Absorption Rejection
+
 class RegisteredSetupDTO(BaseModel):
     id: str
+    quant_method: QuantMethod = QuantMethod.MSD
     event_name: str
     currency: str
     symbol: str
@@ -46,3 +54,4 @@ class ActiveTradeDTO(BaseModel):
     max_adverse_pips: float = 0.0
     bars_elapsed: int = 0
     state: TradeState = TradeState.ACTIVE
+

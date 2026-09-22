@@ -45,3 +45,4 @@ class BridgeClient:
             res = await client.get(f"{self.base_url}/api/v1/calendar")
             res.raise_for_status()
             return res.json()
+

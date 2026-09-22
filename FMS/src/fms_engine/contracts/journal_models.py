@@ -30,3 +30,4 @@ class JournalSummaryDTO(BaseModel):
     profit_factor: float
     avg_r_per_trade: float
     curve: List[JournalCurvePoint] = []
+

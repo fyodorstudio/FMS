@@ -70,3 +70,4 @@ class SurpriseEngine:
             state = MacroState.CONFLICTED
 
         return surprise, momentum, z_score, state
+

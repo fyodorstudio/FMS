@@ -69,11 +69,15 @@ class CalendarLoader:
         df.write_parquet(self.cache_path)
         return df
 
-    def load_cached_calendar(self) -> Optional[pl.DataFrame]:
-        """Loads cached calendar events from parquet."""
+    def load_cached_calendar(self) -> pl.DataFrame:
+        """Loads cached calendar events from parquet, auto-seeding benchmark if missing."""
         if self.cache_path.exists():
             try:
-                return pl.read_parquet(self.cache_path).sort("timestamp")
+                df = pl.read_parquet(self.cache_path).sort("timestamp")
+                if not df.is_empty():
+                    return df
             except Exception:
-                return None
-        return None
+                pass
+        from .historical_calendar_seed import generate_benchmark_g8_calendar
+        return generate_benchmark_g8_calendar()
+

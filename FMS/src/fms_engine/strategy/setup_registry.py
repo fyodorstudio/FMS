@@ -2,7 +2,7 @@ import sqlite3
 import time
 from typing import List, Optional
 from ..config import settings
-from ..contracts.setup_models import RegisteredSetupDTO, SetupDirection
+from ..contracts.setup_models import RegisteredSetupDTO, SetupDirection, QuantMethod
 
 class SetupRegistry:
     """Manages persistence and retrieval of codified trading setups in SQLite."""
@@ -17,6 +17,7 @@ class SetupRegistry:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS registered_setups (
                     id TEXT PRIMARY KEY,
+                    quant_method TEXT NOT NULL DEFAULT 'M-MSD',
                     event_name TEXT NOT NULL,
                     currency TEXT NOT NULL,
                     symbol TEXT NOT NULL,
@@ -41,13 +42,13 @@ class SetupRegistry:
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("""
                 INSERT OR REPLACE INTO registered_setups (
-                    id, event_name, currency, symbol, direction, timeframe,
+                    id, quant_method, event_name, currency, symbol, direction, timeframe,
                     respect_rate, sample_count, median_mfe_pips, mae_85_pips,
                     recommended_sl_pips, recommended_tp_pips, reward_risk_ratio,
                     trigger_state, min_z_score, active, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                setup.id, setup.event_name, setup.currency, setup.symbol, setup.direction.value,
+                setup.id, setup.quant_method.value, setup.event_name, setup.currency, setup.symbol, setup.direction.value,
                 setup.timeframe, setup.respect_rate, setup.sample_count, setup.median_mfe_pips,
                 setup.mae_85_pips, setup.recommended_sl_pips, setup.recommended_tp_pips,
                 setup.reward_risk_ratio, setup.trigger_state, setup.min_z_score,
@@ -63,22 +64,24 @@ class SetupRegistry:
             return [
                 RegisteredSetupDTO(
                     id=row[0],
-                    event_name=row[1],
-                    currency=row[2],
-                    symbol=row[3],
-                    direction=SetupDirection(row[4]),
-                    timeframe=row[5],
-                    respect_rate=row[6],
-                    sample_count=row[7],
-                    median_mfe_pips=row[8],
-                    mae_85_pips=row[9],
-                    recommended_sl_pips=row[10],
-                    recommended_tp_pips=row[11],
-                    reward_risk_ratio=row[12],
-                    trigger_state=row[13],
-                    min_z_score=row[14],
-                    active=bool(row[15]),
-                    created_at=row[16],
+                    quant_method=QuantMethod(row[1]) if row[1] in [m.value for m in QuantMethod] else QuantMethod.MSD,
+                    event_name=row[2],
+                    currency=row[3],
+                    symbol=row[4],
+                    direction=SetupDirection(row[5]),
+                    timeframe=row[6],
+                    respect_rate=row[7],
+                    sample_count=row[8],
+                    median_mfe_pips=row[9],
+                    mae_85_pips=row[10],
+                    recommended_sl_pips=row[11],
+                    recommended_tp_pips=row[12],
+                    reward_risk_ratio=row[13],
+                    trigger_state=row[14],
+                    min_z_score=row[15],
+                    active=bool(row[16]),
+                    created_at=row[17],
                 )
                 for row in rows
             ]
+

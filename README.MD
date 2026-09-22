@@ -1,24 +1,42 @@
 # NO-AI 
 A fresh new start. The messy terminal is no longer trusted because how differing AI models and versions across 8+ Months has been tangling and further causing the repo to be this unnecessarry complex blob of a mess.
 
-┌────────────────────────────────────────────────────────────────────────┐
-│                         FYODOR TERMINAL (FRONTEND)                     │
-│   • Renders 60 FPS charts, Setups, Trade, and Journal Docks            │
-│   • Receives pre-computed, lightweight JSON payloads only              │
-└───────────────────────▲────────────────────────▲───────────────────────┘
-                        │                        │
-       Raw Market Data  │                        │ Clean FMS Payloads
-       (Quotes/Candles) │                        │ (Setups/Trades/Arrows)
-                        │                        │
-┌───────────────────────┴──────────────┐ ┌───────┴───────────────────────┐
-│              MT5 BRIDGE              │ │          FMS ENGINE           │
-│         (port 8000 / FastAPI)        │ │         (Isolated App)        │
-│   • Native MetaTrader5 IPC adapter   │ │   • Vectorized Polars/NumPy   │
-│   • Pure read-only candle/calendar   │ │   • MAE / MFE Distributions   │
-│   • Zero strategy logic              │ │   • S&R Liquidity Zones       │
-└───────────────────────┬──────────────┘ │   • SQLite Setup Registry     │
-                        │                │   • Research CLI Workbench    │
-                        └─ Ingestion ───►└───────────────────────────────┘
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Repository Documentation Directory (Frozen Index)
+
+All repository documentation is consolidated and strictly mapped as follows:
+
+| Document | Location | Purpose & Audience |
+| :--- | :--- | :--- |
+| **Root Overview** | [`README.MD`](file:///c:/dev/NO-AI/README.MD) | System overview, topology, and quickstart commands. |
+| **User & Operator Guide** | [`docs/user-guide.md`](file:///c:/dev/NO-AI/docs/user-guide.md) | Terminal operator manual (chart controls, drawing tools, docks, launch). |
+| **Engineering Rules** | [`docs/AGENTS/AGENTS.md`](file:///c:/dev/NO-AI/docs/AGENTS/AGENTS.md) | Strict coding rules, domain boundaries, no barrel files, zero generic folders. |
+| **Research Paper** | [`docs/RESEARCH PAPER/README.md`](file:///c:/dev/NO-AI/docs/RESEARCH%20PAPER/README.md) | Modular quantitative research paper (Foundations, Excursions, Physics, Depth, Synthesis). |
+| **Terminal Changelog** | [`docs/DEVELOPMENT LOGS/gemini-changes.md`](file:///c:/dev/NO-AI/docs/DEVELOPMENT%20LOGS/gemini-changes.md) | Architectural fixes, reliability hardening, chart & drawing ergonomics. |
+| **Audit Checklist** | [`docs/DEVELOPMENT LOGS/checklists.md`](file:///c:/dev/NO-AI/docs/DEVELOPMENT%20LOGS/checklists.md) | Feature audit and manual verification checklist. |
+| **FMS Engine Master Guide**| [`fms/README.MD`](file:///c:/dev/NO-AI/fms/README.MD) | Single-source master documentation for FMS (5-Factor Framework, API, CLI, Tests). |
+| **FMS Library (Web UI)**   | [`http://127.0.0.1:8002/`](http://127.0.0.1:8002/) | Interactive Uxcel-style catalog, Monolith quant gauges, and setups portal. |
+| **MT5 Bridge Guide** | [`bridge/README.md`](file:///c:/dev/NO-AI/bridge/README.md) | MT5 read-only bridge adapter setup, MQL5 publisher, and IPC architecture. |
+
+---
 
 ## Explicit rules
 - No AI code write
@@ -42,13 +60,15 @@ A fresh new start. The messy terminal is no longer trusted because how differing
   - economic calendar table 
   - lightweight charts to show OHLC
 
-- build the python bridge and clear logging to ensure data arrived correctly, will explicitly reuse the mql5 script already compiled and attached in mt5
+- build the python bridge and clear logging to ensure data arrived correctly, will explicitly use the mql5 script 
+ compiled and attached in mt5
 
 2. Data Calculation
 
 - build fms panel which consists of
-  - Trade dock to see upcoming, current, recent registered setup
-  - fms workbench to craft the registered setup
+  - Trade dock to see upcoming, current, recent registered setup (lives in /frontend)
+  - fms workbench to craft the registered setup (lives in /FMS)
+
 ## Development startup
 First-time bridge setup:
 
@@ -71,3 +91,36 @@ chart's available OHLC history, and accepts economic-calendar data from the
 read-only MQL5 publisher. It has no order endpoint and no persistent market data
 cache. See `bridge/README.md` for the one-time calendar publisher setup and the
 acceptance checklist.
+
+### FMS Library (Web UI & Strategy Portal) Launch
+The **FMS Library** is served independently by the isolated FMS engine:
+
+```powershell
+.\fms\.venv\Scripts\python.exe fms/run_dev.py
+```
+Then navigate in your web browser:
+- **FMS Library Web UI**: [http://127.0.0.1:8002/](http://127.0.0.1:8002/) (or `/portal`)
+- **Interactive API Swagger**: [http://127.0.0.1:8002/docs](http://127.0.0.1:8002/docs)
+
+
+
+
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                         FYODOR TERMINAL (FRONTEND)                     │
+│   • Renders 60 FPS charts, Setups, Trade, and Journal Docks            │
+│   • Receives pre-computed, lightweight JSON payloads only              │
+└───────────────────────▲────────────────────────▲───────────────────────┘
+                        │                        │
+       Raw Market Data  │                        │ Clean FMS Payloads
+       (Quotes/Candles) │                        │ (Setups/Trades/Arrows)
+                        │                        │
+┌───────────────────────┴──────────────┐ ┌───────┴───────────────────────┐
+│              MT5 BRIDGE              │ │          FMS ENGINE           │
+│         (port 8000 / FastAPI)        │ │         (Isolated App)        │
+│   • Native MetaTrader5 IPC adapter   │ │   • Vectorized Polars/NumPy   │
+│   • Pure read-only candle/calendar   │ │   • MAE / MFE Distributions   │
+│   • Zero strategy logic              │ │   • S&R Liquidity Zones       │
+└───────────────────────┬──────────────┘ │   • SQLite Setup Registry     │
+                        │                │   • Research CLI Workbench    │
+                        └─ Ingestion ───►└───────────────────────────────┘
