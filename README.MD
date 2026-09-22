@@ -1,6 +1,25 @@
 # NO-AI 
 A fresh new start. The messy terminal is no longer trusted because how differing AI models and versions across 8+ Months has been tangling and further causing the repo to be this unnecessarry complex blob of a mess.
 
+┌────────────────────────────────────────────────────────────────────────┐
+│                         FYODOR TERMINAL (FRONTEND)                     │
+│   • Renders 60 FPS charts, Setups, Trade, and Journal Docks            │
+│   • Receives pre-computed, lightweight JSON payloads only              │
+└───────────────────────▲────────────────────────▲───────────────────────┘
+                        │                        │
+       Raw Market Data  │                        │ Clean FMS Payloads
+       (Quotes/Candles) │                        │ (Setups/Trades/Arrows)
+                        │                        │
+┌───────────────────────┴──────────────┐ ┌───────┴───────────────────────┐
+│              MT5 BRIDGE              │ │          FMS ENGINE           │
+│         (port 8000 / FastAPI)        │ │         (Isolated App)        │
+│   • Native MetaTrader5 IPC adapter   │ │   • Vectorized Polars/NumPy   │
+│   • Pure read-only candle/calendar   │ │   • MAE / MFE Distributions   │
+│   • Zero strategy logic              │ │   • S&R Liquidity Zones       │
+└───────────────────────┬──────────────┘ │   • SQLite Setup Registry     │
+                        │                │   • Research CLI Workbench    │
+                        └─ Ingestion ───►└───────────────────────────────┘
+
 ## Explicit rules
 - No AI code write
 - Trusted Data still comes from user-logged in broker > MT5 > this app, strictly :
@@ -14,31 +33,6 @@ A fresh new start. The messy terminal is no longer trusted because how differing
 ## Stack
 - Python for bridge and MT5 integration
 - Typescript for UI
-
-## Development startup
-
-First-time bridge setup:
-
-```powershell
-python -m venv bridge/.venv
-bridge/.venv/Scripts/python.exe -m pip install -e ./bridge
-pnpm install
-```
-
-Normal startup:
-
-```powershell
-pnpm run dev:all
-```
-
-The bridge stays alive when MT5 is closed and reports that state to the in-app
-Activity heartbeat. Native MetaTrader5 calls are isolated in a supervised child
-process so failed broker IPC cannot block bridge health. It binds only to
-`127.0.0.1:8001`, reads visible Market Watch symbols, demand-pages the selected
-chart's available OHLC history, and accepts economic-calendar data from the
-read-only MQL5 publisher. It has no order endpoint and no persistent market data
-cache. See `bridge/README.md` for the one-time calendar publisher setup and the
-acceptance checklist.
 
 ## Rebuilding plan
 
@@ -55,3 +49,25 @@ acceptance checklist.
 - build fms panel which consists of
   - Trade dock to see upcoming, current, recent registered setup
   - fms workbench to craft the registered setup
+## Development startup
+First-time bridge setup:
+
+```powershell
+python -m venv bridge/.venv
+bridge/.venv/Scripts/python.exe -m pip install -e ./bridge
+pnpm install
+```
+
+Normal startup:
+
+```powershell
+pnpm run dev:all
+```
+The bridge stays alive when MT5 is closed and reports that state to the in-app
+Activity heartbeat. Native MetaTrader5 calls are isolated in a supervised child
+process so failed broker IPC cannot block bridge health. It binds only to
+`127.0.0.1:8001`, reads visible Market Watch symbols, demand-pages the selected
+chart's available OHLC history, and accepts economic-calendar data from the
+read-only MQL5 publisher. It has no order endpoint and no persistent market data
+cache. See `bridge/README.md` for the one-time calendar publisher setup and the
+acceptance checklist.

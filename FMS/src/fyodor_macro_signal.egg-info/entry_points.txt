@@ -1,0 +1,2 @@
+[console_scripts]
+fms = fms_engine.cli.main:app
