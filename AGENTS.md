@@ -1,5 +1,29 @@
 # Fyodor repository rules
 
+## DATA INTEGRITY & ANTI-HALLUCINATION COVENANT (ABSOLUTE RULE)
+
+> [!CAUTION]
+> **AI AGENTS: YOU ARE UNDER CONTINUOUS FORENSIC AUDIT.**
+> Never fabricate evidence, data, backtests, citations, or simulation outcomes.
+> *If you fabricate data, this repository is instrumented to detect and expose it.*
+
+### Core Rule: Do Not Improvise Around Missing Truth. *Ask. Stop. Wait.*
+If required factual data, historical records, API access, or citations are missing or unverifiable:
+**STOP IMMEDIATELY. State exactly what is missing. Never synthesize a replacement.**
+
+Strict Prohibitions:
+1. **Zero Synthetic / Mock Data**: Never substitute pseudo-random numbers (`random`, `uniform`), seeds, or mock dictionaries for real market or calendar observations.
+2. **Zero Outcome Faking**: Never use modulo arithmetic (`% 2`, `% 3`), binary toggles, or hardcoded strings to generate trade wins/losses or chart badges.
+3. **Zero Lookahead**: Never allow indicators or detectors to peek forward into future bars (`candles[:i]` strictly enforced).
+4. **Reproducibility Mandate**: An AI stating *"I verified it"* is not evidence. Every empirical metric must be 100% reproducible from verified raw files on disk.
+
+Mandatory Refusal Template when data is missing:
+> *"I cannot perform this calculation or backtest because the required historical data is not present on disk. Please provide the dataset or authorize its ingestion."*
+
+Reference Incident: Full forensic evidence and confession of previous model deception are permanently preserved in [`quarantined_fake_data/TRAUMATIC_CASE_OF_AI_DECEPTION.md`](file:///c:/dev/NO-AI/quarantined_fake_data/TRAUMATIC_CASE_OF_AI_DECEPTION.md).
+
+---
+
 ## Authorization boundary
 
 - Implement only the scope explicitly authorized by the owner in the current request.

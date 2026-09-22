@@ -97,9 +97,10 @@ class PolicySpreadEngine:
             curr: [] for curr in BASELINE_CPI.keys()
         }
 
-        # Filter calendar to policy and inflation events
+        # Filter calendar to policy and inflation events with valid actual values
         relevant_df = calendar_df.filter(
-            pl.col("family").is_in(["monetary_policy", "inflation"])
+            pl.col("family").is_in(["monetary_policy", "inflation"]) &
+            pl.col("actual").is_not_null()
         ).sort("timestamp")
 
         current_rates: Dict[str, float] = {curr: 1.0 for curr in BASELINE_CPI.keys()}
@@ -111,11 +112,18 @@ class PolicySpreadEngine:
             actual = row["actual"]
             family = row["family"]
 
+            if actual is None:
+                continue
+            try:
+                val = float(actual)
+            except (ValueError, TypeError):
+                continue
+
             if curr in current_rates:
                 if family == "monetary_policy":
-                    current_rates[curr] = actual
+                    current_rates[curr] = val
                 elif family == "inflation":
-                    current_cpis[curr] = actual
+                    current_cpis[curr] = val
 
                 timeline[curr].append((ts, current_rates[curr], current_cpis[curr]))
 
@@ -199,8 +207,11 @@ class PolicySpreadEngine:
             i_quote_past, _ = self.get_state_at(quote_timeline, past_ts, quote_curr)
 
             # Real yields: r = i - cpi
-            r_base = i_base - cpi_base
-            r_quote = i_quote - cpi_quote
+            if any(v is None for v in (i_base, cpi_base, i_quote, cpi_quote, i_base_past, i_quote_past)):
+                continue
+
+            r_base = float(i_base) - float(cpi_base)
+            r_quote = float(i_quote) - float(cpi_quote)
             real_spread = r_base - r_quote
 
             # Nominal spread & momentum

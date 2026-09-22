@@ -49,9 +49,9 @@ $$\mathbf{Trigger}_{\text{LAR}}(t) =
 
 ---
 
-## 4. Decadal Audit & Sovereign Defense Case Studies
+## 4. Empirical Sovereign Defense Case Studies
 
-Across our 10-year decadal audit (166,283 H4 candles):
+Across historical high-volatility broker market periods:
 1. **Bank of Japan September 22, 2022**: USD/JPY rejected $145.90$ with a $520\text{ pip}$ upper wick. $\text{TR}_t / \text{ATR}_{14} = 3.6\times$. Method 5 triggered a SELL entry that delivered $+1.25\text{R}$ profit within 6 H4 bars.
 2. **Bank of Japan October 21, 2022**: USD/JPY printed an extreme rejection off $151.94$. $\text{TR}_t / \text{ATR}_{14} = 3.9\times$. Method 5 triggered a SELL entry that rode the subsequent $1,000\text{ pip}$ decline.
 3. **Swiss National Bank Liquidity Defense**: Similar structural absorption wicks triggered on USD/CHF at daily liquidity resistance, confirming cross-pair robustness.

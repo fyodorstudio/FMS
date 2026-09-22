@@ -13,14 +13,12 @@ import { useMt5EconomicCalendar } from '../economic-calendar/mt5-calendar/use-mt
 import { FmsArrowControls } from '../fms/chart-arrows/FmsArrowControls'
 import { FmsChartMarkers } from '../fms/chart-arrows/FmsChartMarkers'
 import { FmsPastResultPanel } from '../fms/past-result-dock/FmsPastResultPanel'
-import {
-  createFmsPlaceholderArrows,
-  fmsPlaceholderDecisions,
-} from '../fms/placeholder-feed/fms-placeholder-data'
 import type {
   FmsArrowFilter,
   FmsChartArrow,
   FmsDecision,
+  FmsDecisionResult,
+  FmsDecisionState,
 } from '../fms/placeholder-feed/fms-placeholder-types'
 import type { UTCTimestamp } from 'lightweight-charts'
 import { useFmsData } from '../fms/use-fms-data'
@@ -103,8 +101,8 @@ export function FyodorTerminalShell() {
         releaseTime: sig.releaseTime,
       }))
     }
-    return createFmsPlaceholderArrows(activeSymbol, timeframe, bars)
-  }, [activeSymbol, bars, fmsData.isOnline, fmsData.signals, timeframe])
+    return []
+  }, [activeSymbol, fmsData.isOnline, fmsData.signals, timeframe])
   const visibleFmsArrows = useMemo(() => {
     if (!pastArrowsVisible) return []
     return fmsArrows.filter((arrow) => {
@@ -114,6 +112,30 @@ export function FyodorTerminalShell() {
       return true
     })
   }, [arrowFilter, fmsArrows, pastArrowsVisible])
+
+  const decisions = useMemo<FmsDecision[]>(() => {
+    if (fmsData.isOnline && fmsData.signals.length > 0) {
+      const referenceTimeMs = bars.length > 0 ? Number(bars[bars.length - 1].time) * 1000 : 0
+      return fmsData.signals.map((sig) => {
+        const isUpcoming = sig.releaseTime > referenceTimeMs
+        const isCurrent = !isUpcoming && (referenceTimeMs - sig.releaseTime) < 86_400_000
+        const state: FmsDecisionState = isUpcoming ? 'upcoming' : isCurrent ? 'current' : 'recent'
+        return {
+          id: sig.id,
+          symbol: activeSymbol,
+          setupName: sig.setup_name,
+          eventName: sig.event_name,
+          releaseTime: sig.releaseTime,
+          state,
+          direction: sig.direction,
+          result: sig.result as FmsDecisionResult,
+          resultR: sig.result_r,
+          version: sig.version,
+        }
+      })
+    }
+    return []
+  }, [activeSymbol, bars, fmsData.isOnline, fmsData.signals])
 
   const {
     drawings,
@@ -242,7 +264,7 @@ export function FyodorTerminalShell() {
           selectedSymbol={activeSymbol}
           marketWatchStatus={marketData.marketWatchStatus}
           marketWatchError={marketData.marketWatchError}
-          decisions={fmsPlaceholderDecisions}
+          decisions={decisions}
           setups={fmsData.setups}
           summary={fmsData.summary}
           isFmsOnline={fmsData.isOnline}

@@ -358,6 +358,51 @@ def test_liquidity_absorption_engine():
     assert triggers[0].expansion_ratio >= 1.50
     assert triggers[0].wick_ratio >= 0.40
 
+def test_signal_evaluator():
+    from fms_engine.analytics.signal_evaluator import SignalEvaluator
+    evaluator = SignalEvaluator(horizon_bars=10, k_sl=2.0, rr_target=1.25)
+
+    times = np.array([1700000000 + i * 3600 for i in range(20)])
+    opens = np.array([1.1000 + i * 0.0010 for i in range(20)])
+    highs = np.array([1.1000 + i * 0.0010 + 0.0020 for i in range(20)])
+    lows = np.array([1.1000 + i * 0.0010 - 0.0005 for i in range(20)])
+    closes = np.array([1.1000 + i * 0.0010 + 0.0010 for i in range(20)])
+    atrs = np.full(20, 0.0010)
+
+    outcome = evaluator.evaluate_path(
+        entry_idx=2,
+        direction=SetupDirection.BUY,
+        times=times,
+        opens=opens,
+        highs=highs,
+        lows=lows,
+        closes=closes,
+        atrs=atrs,
+        pip_scale=0.0001,
+    )
+    assert outcome["result"] == "tp-reached"
+    assert outcome["result_r"] == 1.25
+    assert outcome["mfe_pips"] > 0
+    assert outcome["mae_pips"] >= 0
+
+def test_signals_endpoint():
+    from fastapi.testclient import TestClient
+    from fms_engine.api.app import app
+    client = TestClient(app)
+    response = client.get("/api/fms/signals?symbol=EURUSD&limit=10")
+    assert response.status_code == 200
+    data = response.json()
+    assert "signals" in data
+    assert "symbol" in data
+    assert data["symbol"] == "EURUSD"
+    for s in data["signals"]:
+        assert s["result"] in ["tp-reached", "sl-reached", "open"]
+        if s["result"] == "tp-reached":
+            assert s["result_r"] is not None and s["result_r"] > 0
+        elif s["result"] == "sl-reached":
+            assert s["result_r"] is not None and s["result_r"] <= 0
+
+
 
 
 

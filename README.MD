@@ -28,7 +28,7 @@ All repository documentation is consolidated and strictly mapped as follows:
 | :--- | :--- | :--- |
 | **Root Overview** | [`README.MD`](file:///c:/dev/NO-AI/README.MD) | System overview, topology, and quickstart commands. |
 | **User & Operator Guide** | [`docs/user-guide.md`](file:///c:/dev/NO-AI/docs/user-guide.md) | Terminal operator manual (chart controls, drawing tools, docks, launch). |
-| **Engineering Rules** | [`docs/AGENTS/AGENTS.md`](file:///c:/dev/NO-AI/docs/AGENTS/AGENTS.md) | Strict coding rules, domain boundaries, no barrel files, zero generic folders. |
+| **Engineering Rules** | [`AGENTS.md`](file:///c:/dev/NO-AI/AGENTS.md) | Strict coding rules, data integrity covenant, domain boundaries. |
 | **Research Paper** | [`docs/RESEARCH PAPER/README.md`](file:///c:/dev/NO-AI/docs/RESEARCH%20PAPER/README.md) | Modular quantitative research paper (Foundations, Excursions, Physics, Depth, Synthesis). |
 | **Terminal Changelog** | [`docs/DEVELOPMENT LOGS/gemini-changes.md`](file:///c:/dev/NO-AI/docs/DEVELOPMENT%20LOGS/gemini-changes.md) | Architectural fixes, reliability hardening, chart & drawing ergonomics. |
 | **Audit Checklist** | [`docs/DEVELOPMENT LOGS/checklists.md`](file:///c:/dev/NO-AI/docs/DEVELOPMENT%20LOGS/checklists.md) | Feature audit and manual verification checklist. |

@@ -85,3 +85,8 @@ class SetupRegistry:
                 for row in rows
             ]
 
+    def clear_setups(self) -> None:
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute("DELETE FROM registered_setups")
+            conn.commit()
+

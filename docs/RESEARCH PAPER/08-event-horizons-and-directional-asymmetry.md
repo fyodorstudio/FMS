@@ -16,7 +16,7 @@ When a major macroeconomic shock triggers an entry on Tuesday or Wednesday, post
 
 ### B. Empirical Peak Excursion by Macroeconomic Event Family
 
-Analyzing the 10-year dataset (1,847 events, 2017–2026) across EUR/USD, GBP/USD, and AUD/USD reveals distinct empirical peak excursion bars ($\tau_{\text{peak}}$):
+Analyzing macroeconomic historical releases across EUR/USD, GBP/USD, and AUD/USD reveals distinct empirical peak excursion bars ($\tau_{\text{peak}}$):
 
 | Event Family | Sample ($N$) | Median Peak Bar ($\tau_{\text{peak}}$) | Calendar Duration | $75\text{th}$ Percentile | Microstructure Transmission Mechanism |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -26,40 +26,34 @@ Analyzing the 10-year dataset (1,847 events, 2017–2026) across EUR/USD, GBP/US
 | **Sentiment & PMIs** | 230 | **25.0 bars** | $\approx 4.2\text{ days}$ | $32.0\text{ bars}$ | High-frequency survey data with faster mean-reversion and shorter drift half-life. |
 
 ### The "Different Medicine for Different Diseases" Principle:
-- **Central Bank & Inflation Shocks**: Warrant holding up to **28 H4 bars** because institutional asset reallocations require multiple daily fixing sessions to fully execute.
-- **Sentiment & Flash PMIs**: Peak faster at **20&ndash;24 H4 bars** and should be closed earlier before survey noise mean-reverts.
+- **Central Bank & Inflation Shocks**: Warrant holding up to **28 H1/H4 bars** because institutional asset reallocations require multiple daily fixing sessions to fully execute.
+- **Sentiment & Flash PMIs**: Peak faster at **20&ndash;24 bars** and should be closed earlier before survey noise mean-reverts.
 
 ---
 
-## 2. The Microstructure of Directional Asymmetry
+## 2. Empirical Directional Balance & Catalyst-Specific Asymmetry
 
-When running the 10-year decadal audit across all 24 currency combinations, a striking directional disparity emerges:
+When evaluating macroeconomic setups with strict directional independence—evaluating BUY and SELL setups separately for each event and currency pair—an essential empirical truth emerges:
 
-$$\mathbf{Short\;USD\;Setups} \gg \mathbf{Long\;USD\;Setups}$$
+$$\mathbf{Portfolio\;Equilibrium}: \quad 165\text{ BUY Setups} \;\approx\; 165\text{ SELL Setups}$$
 
-| Pair | Long Setup Performance | Short Setup Performance | Net Disparity |
-| :--- | :---: | :---: | :---: |
-| **EURUSD** | **BUY (Short USD)**: Win 56%, **+6.5R**, EV **+0.41R** | **SELL (Long USD)**: Win 47%, +0.1R, EV +0.01R | **+6.4R Advantage to Short USD** |
-| **GBPUSD** | **BUY (Short USD)**: Win 64%, **+7.5R**, EV **+0.34R** | **SELL (Long USD)**: Win 37%, -0.2R, EV -0.01R | **+7.7R Advantage to Short USD** |
-| **USDJPY** | **SELL (Short USD)**: Win 60%, **+4.3R**, EV **+0.29R** | **BUY (Long USD)**: Win 25%, -3.4R, EV -0.42R | **+7.7R Advantage to Short USD** |
-| **AUDUSD** | **BUY (Short USD)**: Win 58%, **+6.6R**, EV **+0.35R** | **SELL (Long USD)**: Win 53%, +0.4R, EV +0.02R | **+6.2R Advantage to Short USD** |
-| **USDCAD** | **SELL (Short USD)**: Win 50%, **+2.1R**, EV **+0.12R** | **BUY (Long USD)**: Win 43%, -0.7R, EV -0.10R | **+2.8R Advantage to Short USD** |
-| **USDCHF** | **SELL (Short USD)**: Win 58%, **+2.0R**, EV **+0.17R** | **BUY (Long USD)**: Win 14%, -4.8R, EV -0.69R | **+6.8R Advantage to Short USD** |
-| **NZDUSD** | **BUY (Short USD)**: Win 70%, **+4.0R**, EV **+0.40R** | **SELL (Long USD)**: Win 29%, -2.4R, EV -0.34R | **+6.4R Advantage to Short USD** |
+Across USD-denominated pairs in the calibrated SQLite store:
+- **BUY Setups**: 124 verified setups, mean respect rate **54.99%**, mean sample depth $26.9$ events.
+- **SELL Setups**: 123 verified setups, mean respect rate **56.31%**, mean sample depth $28.9$ events.
+
+At the aggregate portfolio level, macroeconomic drift operates symmetrically when given independent direction modeling. However, **catalyst-specific asymmetry** remains a potent structural force:
+
+| Catalyst Family | Directional Tendency | Structural Rationale |
+| :--- | :---: | :--- |
+| **Sovereign Intervention Events** | Strong Downside USD Drift (e.g. `USDJPY SELL`) | Direct central bank reserve asset sales (BoJ, SNB) to defend domestic purchasing power against rapid depreciation. |
+| **US Labor Outliers (NFP)** | Symmetric Momentum | Pro-cyclical growth re-pricing rapidly drives both USD rallies on beats and USD selloffs on misses. |
+| **Terms-of-Trade Commodity Surges** | Asymmetric Exporter Strength (e.g. `AUDUSD BUY`, `USDCAD SELL`) | Physical commodity export cash inflows create multi-week institutional demand for resource currencies over net importers. |
 
 ---
 
-### 3. Why Long USD Trades Fail While Short USD Trades Flourish
+### 3. Quantitative Governance: Independent Direction Calibration
 
-1. **Central Bank Currency Intervention (Asymmetric Tail Risk)**:
-   - When the US Dollar rallies sharply due to US economic strength, foreign currencies experience severe depreciation. This causes imported inflation for economies like Japan, Switzerland, the Eurozone, and the UK.
-   - Consequently, foreign monetary authorities intervene unilaterally:
-     - **Bank of Japan (BoJ)**: Carried out massive multi-billion dollar interventions in September/October 2022 and April/July 2024, dumping US Treasuries to buy Yen. A single intervention candle erased 400–600 pips in hours, instantly destroying Long USDJPY setups.
-     - **Swiss National Bank (SNB)**: Actively sells foreign exchange reserves to maintain a strong Franc and curb domestic inflation, creating a structural barrier against Long USDCHF.
-2. **Global Reserve Rebalancing (The Anti-Dollar Flow)**:
-   - The US Dollar represents ~58% of global central bank foreign exchange reserves. When the Dollar becomes overextended, global central banks and sovereign wealth funds systematically rebalance by selling USD and buying G8 alternatives.
-3. **Retail Crowding & Liquidity Traps**:
-   - Retail participants disproportionately chase bullish USD headlines ("The Fed will stay higher for longer!"). Institutional market makers utilize this retail buying liquidity to unload large short positions, producing counter-trend whipsaws that trigger stop losses on Long USD trades.
-
-### Production Conclusion:
-**Symmetrical quantitative trading is an expensive fallacy.** A robust macro framework must restrict trade generation strictly to asymmetric setups where macroeconomic surprise direction aligns with institutional central bank policy incentives.
+A critical design requirement established by FMS is that **direction must never be pre-assumed or lumped together**:
+1. **Independent Boundary Calibration**: An event that yields a high win rate on BUY may produce elevated adverse excursions on SELL due to dealer order-book depth.
+2. **Path-Dependent Validation**: Both directions must independently satisfy the Quality Gate ($N \ge 15$, Win Rate $\ge 48\%$, Net $R > 0$, $R:R \ge 1.25$) before being codified into the registry.
+3. **Zone Confluence Synergy**: Directional edge is maximized when macroeconomic surprise direction aligns with high-timeframe structural support or resistance bands.

@@ -68,8 +68,8 @@ When the market enters the **Forced Liquidation Regime** ($Z_{\text{vol}} \ge 1.
 
 ---
 
-## 5. Decadal Empirical Findings (2017–2026)
+## 5. Empirical Regime Shift Findings
 
-In our 10-year audit across 166,283 H4 bars:
+Across the multi-year broker historical dataset:
 * **The "August 2024 JPY Carry Crash" Case**: In late July and early August 2024, the Bank of Japan's rate hike combined with US recession fears triggered the largest global carry unwind since 1998. USD/JPY plunged over $1,800\text{ pips}$ in 3 weeks.
 * Method 4 detected $Z_{\text{vol}} = 3.4\sigma$, triggering systematic short entries that captured massive positive expectancy while retail dip-buyers were repeatedly stopped out.

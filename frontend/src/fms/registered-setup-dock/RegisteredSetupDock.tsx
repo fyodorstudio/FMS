@@ -71,11 +71,11 @@ export function RegisteredSetupDock({
             <>
               <div className="stat-pill">
                 <span className="stat-label">Total Setups</span>
-                <strong className="stat-val">{setups.length || 34}</strong>
+                <strong className="stat-val">{setups.length}</strong>
               </div>
               <div className="stat-pill">
                 <span className="stat-label">Decadal Net R</span>
-                <strong className="stat-val text-green">+{summary?.total_net_r ?? 365.6}R</strong>
+                <strong className="stat-val text-green">+{summary?.total_net_r != null ? summary.total_net_r.toFixed(1) : '0.0'}R</strong>
               </div>
               <div className="stat-pill">
                 <span className="stat-label">Quality Gate</span>
@@ -91,13 +91,13 @@ export function RegisteredSetupDock({
               <div className="stat-pill">
                 <span className="stat-label">Avg Win Rate</span>
                 <strong className="stat-val text-green">
-                  {activeMethodInfo ? `${(activeMethodInfo.average_win_rate * 100).toFixed(0)}%` : '55%'}
+                  {activeMethodInfo ? `${(activeMethodInfo.average_win_rate * 100).toFixed(0)}%` : '—'}
                 </strong>
               </div>
               <div className="stat-pill">
                 <span className="stat-label">Net Return</span>
                 <strong className="stat-val text-green">
-                  +{activeMethodInfo?.aggregate_net_r.toFixed(1) ?? '0.0'}R
+                  +{activeMethodInfo?.aggregate_net_r != null ? activeMethodInfo.aggregate_net_r.toFixed(1) : '0.0'}R
                 </strong>
               </div>
             </>

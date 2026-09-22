@@ -13,7 +13,7 @@ function resultLabel(result: SelectedFmsResult) {
 
 export function FmsPastResultPanel({ result, timeDisplay }: FmsPastResultPanelProps) {
   if (!result) {
-    return <div className="fms-past-result-empty">Select an FMS arrow or result to inspect its placeholder record.</div>
+    return <div className="fms-past-result-empty">Select an FMS arrow or result to inspect its verified audit record.</div>
   }
 
   return (

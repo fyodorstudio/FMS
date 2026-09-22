@@ -28,8 +28,8 @@ Pure macroeconomic divergence answers **Direction** (BUY vs. SELL) and **Shock M
 2. **Support & Resistance Zone Confluence Filter**:
    - Integrate [`zone_detector.py`](file:///c:/dev/NO-AI/fms/src/fms_engine/analytics/zone_detector.py) directly into the setup trigger pipeline.
    - Filter triggers: only register BUY setups at or bouncing from Support zones; only register SELL setups at or rejecting Resistance zones.
-3. **10-Year Confluence Sweep**:
-   - Re-run the research cruncher on the 166,283 H4 bars with ATR normalization and Zone Confluence.
-   - Codify the passing pairs into the SQLite setup registry with verified positive mathematical expectancy ($\mathbb{E}[R] \ge +0.25R$).
+3. **Multi-Year Confluence Sweep**:
+   - Re-run the calibration cruncher on the complete broker H1 candle dataset (50,000 bars per pair across 127 pairs, >6,000,000 bars) with ATR normalization and Zone Confluence.
+   - Codify passing setups into the SQLite setup registry (`fms_store.db`) with verified positive mathematical expectancy.
 4. **Live Catalyst Pairing for Upcoming Releases**:
    - Cross-reference live incoming MT5 economic calendar alerts against codified registered setups, generating actionable orders (Entry Trigger, SL pips, TP pips, Expected Duration) before execution.

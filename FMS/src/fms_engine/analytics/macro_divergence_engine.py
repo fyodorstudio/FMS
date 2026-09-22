@@ -4,12 +4,11 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import polars as pl
 
-from ..contracts.event_models import EventFamily
+from ..contracts.event_models import EventFamily, is_inverted_indicator
 from ..contracts.setup_models import SetupDirection, QuantMethod
 from .surprise_engine import SurpriseEngine
 from .zone_detector import ZoneDetector
 from .excursion_engine import ExcursionEngine, ExcursionResult, get_pip_scale
-from ..ingestion.historical_calendar_seed import is_inverted_indicator
 
 PAIR_MAPPINGS: Dict[str, Tuple[str, str]] = {
     "EURUSD": ("EUR", "USD"),

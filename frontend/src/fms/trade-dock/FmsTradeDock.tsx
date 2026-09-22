@@ -5,6 +5,7 @@ import './fms-trade-dock.css'
 
 type FmsTradeDockProps = {
   decisions: FmsDecision[]
+  setupCount?: number
   timeDisplay: TimeDisplayPreference
   onOpenResult: (decision: FmsDecision) => void
   onGoToArrow: (decision: FmsDecision) => void
@@ -16,7 +17,7 @@ const tabs: { id: FmsDecisionState; label: string }[] = [
   { id: 'recent', label: 'Recent' },
 ]
 
-export function FmsTradeDock({ decisions, timeDisplay, onOpenResult, onGoToArrow }: FmsTradeDockProps) {
+export function FmsTradeDock({ decisions, setupCount, timeDisplay, onOpenResult, onGoToArrow }: FmsTradeDockProps) {
   const [activeState, setActiveState] = useState<FmsDecisionState>('upcoming')
   const visibleDecisions = useMemo(
     () => decisions.filter((decision) => decision.state === activeState),
@@ -26,8 +27,8 @@ export function FmsTradeDock({ decisions, timeDisplay, onOpenResult, onGoToArrow
   return (
     <section className="fms-trade-dock" aria-label="FMS Trade dock">
       <div className="fms-preview-banner">
-        <strong>FMS Decadal Execution</strong>
-        <span>34 Registered Setups · Quality Gate Verified</span>
+        <strong>FMS Empirical Execution</strong>
+        <span>{setupCount != null ? `${setupCount} Registered Setups · Quality Gate Verified` : 'Empirical Macro Execution'}</span>
       </div>
       <div className="fms-trade-tabs" role="tablist" aria-label="Trade state">
         {tabs.map((tab) => (
@@ -42,7 +43,12 @@ export function FmsTradeDock({ decisions, timeDisplay, onOpenResult, onGoToArrow
         ))}
       </div>
       <div className="fms-decision-list">
-        {visibleDecisions.map((decision) => (
+        {visibleDecisions.length === 0 ? (
+          <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--text-faint)', fontSize: '0.8rem' }}>
+            No {activeState} trade executions detected.
+          </div>
+        ) : (
+          visibleDecisions.map((decision) => (
           <article className="fms-decision-card" key={decision.id}>
             <header>
               <strong>{decision.symbol}</strong>
@@ -58,7 +64,7 @@ export function FmsTradeDock({ decisions, timeDisplay, onOpenResult, onGoToArrow
               )}
             </div>
           </article>
-        ))}
+        )))}
       </div>
     </section>
   )

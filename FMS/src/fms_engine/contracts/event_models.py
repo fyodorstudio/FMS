@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Set
 from pydantic import BaseModel, Field
 
 class MacroState(str, Enum):
@@ -15,6 +15,19 @@ class EventFamily(str, Enum):
     GROWTH = "growth"                    # GDP, Retail Sales, Industrial Production
     SENTIMENT = "sentiment"              # PMI, Consumer Confidence
 
+INVERTED_EVENTS: Set[str] = {
+    "unemployment rate",
+    "jobless claims",
+    "initial claims",
+    "continuing claims",
+    "claimant count",
+}
+
+def is_inverted_indicator(event_name: str) -> bool:
+    """Returns True if higher numbers indicate economic deterioration (e.g. unemployment)."""
+    lower = event_name.lower()
+    return any(inv in lower for inv in INVERTED_EVENTS)
+
 class MacroReleaseDTO(BaseModel):
     event_id: str
     event_name: str
@@ -29,4 +42,3 @@ class MacroReleaseDTO(BaseModel):
     z_score: Optional[float] = None
     state: MacroState = MacroState.IN_LINE
     impact: str = "high"
-

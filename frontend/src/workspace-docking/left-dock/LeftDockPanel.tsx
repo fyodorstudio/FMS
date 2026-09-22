@@ -75,7 +75,13 @@ export function LeftDockPanel({
           />
         )}
         {activeWindow === 'trade' && (
-          <FmsTradeDock decisions={decisions} timeDisplay={timeDisplay} onOpenResult={onOpenResult} onGoToArrow={onGoToArrow} />
+          <FmsTradeDock
+            decisions={decisions}
+            setupCount={setups.length}
+            timeDisplay={timeDisplay}
+            onOpenResult={onOpenResult}
+            onGoToArrow={onGoToArrow}
+          />
         )}
         {activeWindow === 'journal' && <FmsJournalDock decisions={decisions} onOpenResult={onOpenResult} />}
         {activeWindow === 'setups' && (

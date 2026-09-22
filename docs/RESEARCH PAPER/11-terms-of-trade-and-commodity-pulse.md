@@ -73,8 +73,8 @@ $$\mathbf{Setup}_{\text{TOT}} = \left( \text{Pulse}_{\text{ToT}}(t) \ge \theta_{
 
 ---
 
-## 5. Decadal Findings & Empirical Edge
+## 5. Empirical Calibration & Method 3 Edge
 
-In our 10-year decadal audit across 166,283 H4 candles (2017–2026), Method 3 setups exhibit unique characteristics:
+In our empirical calibration across the broker dataset (126,469 events, 50,000 H1 candles per pair across 127 symbols), Method 3 (`[M-TOT]`) yields **38 verified registered setups** (26 BUY, 12 SELL) with an average respect rate of **56.3%** and unique structural characteristics:
 1. **Exceptional Asymmetry on JPY Crosses**: Buying commodity currencies against JPY during commodity expansion cycles produced $>60\%$ win rates due to Japan's extreme structural energy import dependence.
 2. **Smooth Equity Growth**: Because terms-of-trade shocks represent physical trade flows rather than speculative sentiment, trend drift is exceptionally persistent, allowing targets of $1.25\text{R}$ to $1.50\text{R}$ with low stop-out rates.

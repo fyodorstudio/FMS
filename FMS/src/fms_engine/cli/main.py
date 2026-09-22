@@ -36,7 +36,9 @@ app = typer.Typer(
 console = Console()
 
 @app.command()
-def status():
+def status(
+    timeframe: str = typer.Option("H1", "--timeframe", "-t", help="Timeframe to inspect (H1 or H4)"),
+):
     """Inspect FMS local data caches, database records, and engine health."""
     settings.ensure_directories()
     candle_loader = CandleLoader()
@@ -52,7 +54,8 @@ def status():
     ))
 
     # Data Cache Table
-    cache_table = Table(title="Local Parquet Caches (fms/data/cache)")
+    tf = timeframe.upper()
+    cache_table = Table(title=f"Local Parquet Caches (fms/data/cache - {tf})")
     cache_table.add_column("Symbol", style="cyan")
     cache_table.add_column("Timeframe", style="magenta")
     cache_table.add_column("Cached Bars", justify="right", style="green")
@@ -60,16 +63,16 @@ def status():
 
     total_bars = 0
     for sym in settings.major_forex_extended:
-        df = candle_loader.load_cached_candles(sym, "H4")
+        df = candle_loader.load_cached_candles(sym, tf)
         if df is not None and not df.is_empty():
             count = len(df)
             total_bars += count
-            cache_table.add_row(sym, "H4", str(count), "[green]Ready[/green]")
+            cache_table.add_row(sym, tf, str(count), "[green]Ready[/green]")
         else:
-            cache_table.add_row(sym, "H4", "0", "[red]Missing (run fms sync)[/red]")
+            cache_table.add_row(sym, tf, "0", f"[red]Missing (run fms sync)[/red]")
 
     console.print(cache_table)
-    console.print(f"Total Cached H4 Bars: [bold green]{total_bars:,}[/bold green]")
+    console.print(f"Total Cached {tf} Bars: [bold green]{total_bars:,}[/bold green]")
     console.print(f"Cached Calendar Releases: [bold green]{cal_count:,}[/bold green]")
 
     # SQLite Store Table

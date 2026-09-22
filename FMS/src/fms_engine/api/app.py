@@ -19,6 +19,7 @@ from ..analytics.policy_spread_engine import PolicySpreadEngine
 from ..analytics.terms_of_trade_engine import TermsOfTradeEngine
 from ..analytics.carry_unwind_engine import CarryUnwindEngine
 from ..analytics.liquidity_absorption_engine import LiquidityAbsorptionEngine
+from ..analytics.signal_evaluator import SignalEvaluator
 from .portal_html import generate_portal_html
 
 app = FastAPI(
@@ -40,6 +41,7 @@ tracker = TradeTracker()
 journal = JournalLedger()
 candle_loader = CandleLoader()
 calendar_loader = CalendarLoader()
+signal_evaluator = SignalEvaluator(horizon_bars=24)
 
 tot_engine = TermsOfTradeEngine(min_pulse_threshold=1.00)
 carry_engine = CarryUnwindEngine(min_vol_z=1.50)
@@ -86,31 +88,26 @@ def get_summary() -> Dict[str, Any]:
             "name": "Macro Surprise Divergence",
             "code": "M-MSD",
             "desc": "Standardized release surprise vector divergence with 2D S&R zones.",
-            "net_r": 33.4,
         },
         QuantMethod.PYS: {
             "name": "Policy & Real Yield Spread Momentum",
             "code": "M-PYS",
             "desc": "Irving Fisher real rate differentials and sovereign capital gravity.",
-            "net_r": 137.1,
         },
         QuantMethod.TOT: {
             "name": "Terms-of-Trade Commodity Pulse",
             "code": "M-TOT",
             "desc": "Commodity export shocks vs. structural resource net importers.",
-            "net_r": 71.1,
         },
         QuantMethod.VRC: {
             "name": "Volatility Regime & Carry Unwind",
             "code": "M-VRC",
             "desc": "Systemic liquidation cascades and mandatory institutional VaR de-grossing.",
-            "net_r": 73.2,
         },
         QuantMethod.LAR: {
             "name": "Liquidity Absorption Rejection",
             "code": "M-LAR",
             "desc": "Sovereign defense footprints: 1.5x+ ATR expansion with 40%+ rejection wicks.",
-            "net_r": 50.8,
         },
     }
 
@@ -122,7 +119,12 @@ def get_summary() -> Dict[str, Any]:
         count = len(setups_m)
         avg_win_rate = (sum(s.respect_rate for s in setups_m) / count) if count > 0 else 0.0
         avg_rr = (sum(s.reward_risk_ratio for s in setups_m) / count) if count > 0 else 1.0
-        net_r = meta["net_r"] if count > 0 else 0.0
+        # Calculate real aggregate Net R from empirical setup observations:
+        net_r = sum(
+            (s.sample_count * s.respect_rate * s.reward_risk_ratio - s.sample_count * (1.0 - s.respect_rate))
+            for s in setups_m
+        ) if count > 0 else 0.0
+        net_r = round(net_r, 1)
         total_net_r += net_r
 
         methods_out.append({
@@ -166,97 +168,25 @@ def get_journal() -> Dict[str, Any]:
 
 @app.get("/api/fms/signals")
 def get_signals(symbol: str = Query(default="EURUSD"), limit: int = Query(default=35)) -> Dict[str, Any]:
-    """Returns empirical and recent signals/outcome markers for the chart overlay."""
-    candles_df = candle_loader.load_cached_candles(symbol.upper(), "H4")
+    """Returns verified empirical signals and path-evaluated outcome markers for the chart overlay."""
+    candles_df = candle_loader.load_cached_candles(symbol.upper(), "H1")
     if candles_df is None or len(candles_df) < 50:
         return {"symbol": symbol.upper(), "signals": []}
 
-    times = candles_df["time"].to_numpy()
-    closes = candles_df["close"].to_numpy()
-    time_to_close = {int(times[i]): float(closes[i]) for i in range(len(times))}
+    try:
+        cal_df = calendar_loader.load_cached_calendar()
+    except Exception:
+        cal_df = None
 
-    signals = []
-    active_setups = [s for s in registry.get_active_setups() if s.symbol == symbol.upper()]
+    signals = signal_evaluator.generate_all_signals(
+        symbol=symbol.upper(),
+        calendar_df=cal_df,
+        candles_df=candles_df,
+        limit=limit,
+    )
 
-    # Collect Method 5 (LAR) triggers
-    lar_setups = [s for s in active_setups if s.quant_method == QuantMethod.LAR]
-    if lar_setups:
-        lar_trigs = lar_engine.find_absorption_triggers(symbol.upper(), candles_df)
-        for t in lar_trigs[-15:]:
-            matching = [s for s in lar_setups if s.direction == t.direction]
-            if matching:
-                s = matching[0]
-                signals.append({
-                    "id": f"LAR_{symbol}_{t.timestamp}",
-                    "time": t.timestamp,
-                    "releaseTime": t.timestamp * 1000,
-                    "price": time_to_close.get(t.timestamp, 0.0),
-                    "direction": "long" if t.direction == SetupDirection.BUY else "short",
-                    "method": "M-LAR",
-                    "setup_name": "Liquidity Absorption Rejection",
-                    "event_name": t.catalyst_event,
-                    "version": "v2",
-                    "state": "recent",
-                    "result": "tp-reached" if (t.timestamp % 2 == 0) else "sl-reached",
-                    "result_r": 1.0 if (t.timestamp % 2 == 0) else -1.0,
-                    "recommended_tp_pips": s.recommended_tp_pips,
-                    "recommended_sl_pips": s.recommended_sl_pips,
-                })
-
-    # Collect Method 4 (VRC) triggers
-    vrc_setups = [s for s in active_setups if s.quant_method == QuantMethod.VRC]
-    if vrc_setups:
-        vrc_trigs = carry_engine.find_unwind_triggers(symbol.upper(), candles_df)
-        for t in vrc_trigs[-15:]:
-            matching = [s for s in vrc_setups if s.direction == t.direction]
-            if matching:
-                s = matching[0]
-                signals.append({
-                    "id": f"VRC_{symbol}_{t.timestamp}",
-                    "time": t.timestamp,
-                    "releaseTime": t.timestamp * 1000,
-                    "price": time_to_close.get(t.timestamp, 0.0),
-                    "direction": "long" if t.direction == SetupDirection.BUY else "short",
-                    "method": "M-VRC",
-                    "setup_name": "Carry Liquidation Cascade",
-                    "event_name": t.catalyst_event,
-                    "version": "v2",
-                    "state": "recent",
-                    "result": "tp-reached" if (t.timestamp % 3 != 0) else "sl-reached",
-                    "result_r": 1.0 if (t.timestamp % 3 != 0) else -1.0,
-                    "recommended_tp_pips": s.recommended_tp_pips,
-                    "recommended_sl_pips": s.recommended_sl_pips,
-                })
-
-    # Collect Method 3 (TOT) triggers
-    tot_setups = [s for s in active_setups if s.quant_method == QuantMethod.TOT]
-    if tot_setups:
-        tot_trigs = tot_engine.find_tot_triggers(symbol.upper(), candles_df)
-        for t in tot_trigs[-15:]:
-            matching = [s for s in tot_setups if s.direction == t.direction]
-            if matching:
-                s = matching[0]
-                signals.append({
-                    "id": f"TOT_{symbol}_{t.timestamp}",
-                    "time": t.timestamp,
-                    "releaseTime": t.timestamp * 1000,
-                    "price": time_to_close.get(t.timestamp, 0.0),
-                    "direction": "long" if t.direction == SetupDirection.BUY else "short",
-                    "method": "M-TOT",
-                    "setup_name": "Terms-of-Trade Commodity Pulse",
-                    "event_name": t.catalyst_event,
-                    "version": "v2",
-                    "state": "recent",
-                    "result": "tp-reached" if (t.timestamp % 2 == 1) else "sl-reached",
-                    "result_r": 1.0 if (t.timestamp % 2 == 1) else -1.0,
-                    "recommended_tp_pips": s.recommended_tp_pips,
-                    "recommended_sl_pips": s.recommended_sl_pips,
-                })
-
-    # Sort descending and limit
-    signals.sort(key=lambda s: s["time"], reverse=True)
     return {
         "symbol": symbol.upper(),
-        "signals": signals[:limit],
+        "signals": signals,
     }
 

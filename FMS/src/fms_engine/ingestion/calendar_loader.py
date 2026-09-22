@@ -1,17 +1,18 @@
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import polars as pl
-from .bridge_client import BridgeClient
 from ..config import settings
 from ..contracts.event_models import EventFamily
 
 FAMILY_KEYWORDS = {
-    EventFamily.INFLATION: ["cpi", "ppi", "pce", "inflation", "price index"],
-    EventFamily.LABOR: ["nfp", "payrolls", "unemployment", "jobless", "employment", "claims", "wages", "labor"],
-    EventFamily.MONETARY_POLICY: ["rate decision", "interest rate", "fomc", "ecb", "boe", "rba", "boj", "policy", "statement", "minutes"],
-    EventFamily.GROWTH: ["gdp", "retail sales", "industrial production", "trade balance", "orders", "factory"],
-    EventFamily.SENTIMENT: ["pmi", "sentiment", "confidence", "zew", "ifo", "ism", "surveys"],
+    EventFamily.INFLATION: ["cpi", "ppi", "pce", "inflation", "price index", "deflator"],
+    EventFamily.LABOR: ["nfp", "payrolls", "unemployment", "jobless", "employment", "claims", "wages", "labor", "earnings", "claimant"],
+    EventFamily.MONETARY_POLICY: ["rate decision", "interest rate", "fomc", "ecb", "boe", "rba", "boj", "policy", "statement", "minutes", "cash rate", "refinancing rate", "bank rate"],
+    EventFamily.GROWTH: ["gdp", "retail sales", "industrial production", "trade balance", "orders", "factory", "current account"],
+    EventFamily.SENTIMENT: ["pmi", "sentiment", "confidence", "zew", "ifo", "ism", "surveys", "michigan"],
 }
+
+COMMON_CALENDAR_CSV = Path(r"C:\Users\Administrator\AppData\Roaming\MetaQuotes\Terminal\Common\Files\fyodor_calendar_master_history.csv")
 
 def classify_event_family(event_name: str) -> EventFamily:
     lower = event_name.lower()
@@ -23,54 +24,93 @@ def classify_event_family(event_name: str) -> EventFamily:
 class CalendarLoader:
     """Manages ingestion, family categorization, and caching of MT5 economic calendar."""
 
-    def __init__(self, bridge: Optional[BridgeClient] = None):
-        self.bridge = bridge or BridgeClient()
+    def __init__(self):
         settings.ensure_directories()
 
     @property
     def cache_path(self) -> Path:
         return settings.cache_dir / "calendar_events.parquet"
 
-    async def sync_calendar(self) -> pl.DataFrame:
-        """Fetches calendar from bridge and caches to parquet."""
-        data = await self.bridge.get_calendar()
-        raw_events = data.get("events", [])
-        if not raw_events:
-            return self.load_cached_calendar() or pl.DataFrame()
+    def ingest_from_master_csv(self, csv_path: Optional[Path] = None) -> pl.DataFrame:
+        """
+        Parses genuine broker MT5 calendar history CSV (Terminal/Common/Files)
+        and converts it to compressed Parquet storage.
+        """
+        source_path = csv_path or COMMON_CALENDAR_CSV
+        if not source_path.exists():
+            raise FileNotFoundError(
+                f"Historical MT5 calendar master CSV not found at: {source_path}. "
+                "Please run FyodorMasterExport script in MT5 to generate it."
+            )
 
-        normalized: List[Dict[str, Any]] = []
-        for ev in raw_events:
-            name = ev.get("event_name") or ev.get("name") or "Unknown Event"
-            family = classify_event_family(name)
-            time_val = ev.get("time") or ev.get("timestamp") or 0
-            if isinstance(time_val, str):
+        rows: List[Dict[str, Any]] = []
+        with open(source_path, "r", encoding="latin-1") as f:
+            header_line = f.readline()
+            for line in f:
+                parts = line.strip().split(",")
+                if len(parts) < 11:
+                    continue
+
+                event_id = str(parts[0])
+                value_id = str(parts[1])
                 try:
-                    time_val = int(time_val)
+                    ts = int(parts[2])
                 except ValueError:
-                    time_val = 0
+                    continue
 
-            # Convert millisecond timestamps to seconds if necessary
-            if time_val > 10_000_000_000:
-                time_val //= 1000
+                cur = str(parts[3]).upper()
+                country = str(parts[4]).upper()
+                event_name = ",".join(parts[5:-5]).strip()
+                imp = str(parts[-5]).lower()
 
-            normalized.append({
-                "event_id": str(ev.get("event_id") or ev.get("value_id") or ev.get("id") or ""),
-                "event_name": name,
-                "currency": str(ev.get("currency") or ev.get("country") or "USD"),
-                "family": family.value,
-                "timestamp": int(time_val),
-                "actual": float(ev.get("actual_value") or ev.get("actual") or 0.0),
-                "forecast": float(ev.get("forecast_value") or ev.get("forecast") or 0.0),
-                "previous": float(ev.get("prev_value") or ev.get("previous") or 0.0),
-                "impact": str(ev.get("importance") or ev.get("impact") or "high"),
-            })
+                # Robust float conversion handling blanks and nulls
+                raw_act = parts[-4].strip()
+                raw_fct = parts[-3].strip()
+                raw_prv = parts[-2].strip()
 
-        df = pl.DataFrame(normalized).sort("timestamp")
+                try:
+                    act = float(raw_act) if raw_act else None
+                except ValueError:
+                    act = None
+
+                try:
+                    fct = float(raw_fct) if raw_fct else None
+                except ValueError:
+                    fct = None
+
+                try:
+                    prv = float(raw_prv) if raw_prv else None
+                except ValueError:
+                    prv = None
+
+                family = classify_event_family(event_name)
+
+                rows.append({
+                    "event_id": event_id,
+                    "value_id": value_id,
+                    "timestamp": ts,
+                    "currency": cur,
+                    "country_code": country,
+                    "event_name": event_name,
+                    "family": family.value,
+                    "importance": imp,
+                    "actual": act,
+                    "forecast": fct,
+                    "previous": prv,
+                })
+
+        if not rows:
+            raise ValueError(f"No valid calendar records could be parsed from {source_path}")
+
+        df = pl.DataFrame(rows).sort("timestamp")
         df.write_parquet(self.cache_path)
         return df
 
     def load_cached_calendar(self) -> pl.DataFrame:
-        """Loads cached calendar events from parquet, auto-seeding benchmark if missing."""
+        """
+        Loads cached calendar events from parquet.
+        If parquet cache is missing, auto-ingests from verified MT5 common files CSV.
+        """
         if self.cache_path.exists():
             try:
                 df = pl.read_parquet(self.cache_path).sort("timestamp")
@@ -78,6 +118,12 @@ class CalendarLoader:
                     return df
             except Exception:
                 pass
-        from .historical_calendar_seed import generate_benchmark_g8_calendar
-        return generate_benchmark_g8_calendar()
 
+        if COMMON_CALENDAR_CSV.exists():
+            return self.ingest_from_master_csv(COMMON_CALENDAR_CSV)
+
+        raise FileNotFoundError(
+            "Calendar data is missing on disk. Neither parquet cache nor "
+            f"master CSV ({COMMON_CALENDAR_CSV}) was found. "
+            "Under the Data Integrity Covenant, synthetic fallback is forbidden."
+        )
