@@ -43,55 +43,91 @@ FMS includes a dedicated, self-contained interactive web library served directly
 FMS provides a fast command-line interface for research, calibration, and setup inspection:
 
 ```powershell
-# 1. View all active codified setups saved in SQLite
+# 1. View all active codified setups saved in SQLite (34 setups across 5 methods)
 .\fms\.venv\Scripts\python.exe -m fms_engine.cli.main setups
 
-# 2. Run full 10-year decadal research cruncher for Method 1 ([M-MSD])
-.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method msd --min-spread 1.75 --horizon 24 --zones
+# 2. Run decadal research cruncher for any quantitative method
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method msd --min-spread 1.75 --zones
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method pys --zones
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method tot --zones
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method vrc --zones
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method lar --zones
 
-# 3. Run full 10-year decadal research cruncher for Method 2 ([M-PYS])
-.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method pys --horizon 24 --zones
-
-# 4. Auto-register passing setups into SQLite store
+# 3. Auto-register passing setups into SQLite store
 .\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method msd --register
 .\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method pys --register
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method tot --register
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method vrc --register
+.\fms\.venv\Scripts\python.exe -m fms_engine.cli.main research --method lar --register
 ```
 
 ---
 
 ## 4. Empirical 10-Year Decadal Audit Results (2017–2026)
 
-Tested across 166,283 H4 bars and 1,847 macroeconomic events under the Quality Gate ($\text{Win Rate} \ge 50\%$, $\text{Net } R > 0.0R$, $R:R \ge 1.00$, $N \ge 8$):
+Tested across 166,283 H4 bars and 1,847 macroeconomic events under the FMS Quality Gate ($\text{Win Rate} \ge 50\%$, $\text{Net } R > 0.0R$, $R:R \ge 1.00$, $N \ge 8$):
 
-### Method 1: [M-MSD] Macro Surprise Divergence (Tactical Shocks)
-| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Avg Duration | Edge Status |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **EURUSD** | **BUY** | 16 | 9 / 7 | **56%** | $63\text{p} / 42\text{p}$ | $1.5\times$ | **1.50** | **+6.5R** | **+0.41R** | $7.8\text{ bars}$ | **PASS** |
-| **GBPUSD** | **BUY** | 22 | 14 / 8 | **64%** | $88\text{p} / 70\text{p}$ | $2.0\times$ | **1.25** | **+7.5R** | **+0.34R** | $11.5\text{ bars}$ | **PASS** |
-| **USDJPY** | **SELL** | 15 | 9 / 6 | **60%** | $41\text{p} / 41\text{p}$ | $1.5\times$ | **1.00** | **+4.3R** | **+0.29R** | $8.3\text{ bars}$ | **PASS** |
-| **AUDUSD** | **BUY** | 19 | 11 / 8 | **58%** | $86\text{p} / 57\text{p}$ | $2.5\times$ | **1.50** | **+6.6R** | **+0.35R** | $16.8\text{ bars}$ | **PASS** |
-| **AUDUSD** | **SELL** | 19 | 10 / 9 | **53%** | $55\text{p} / 55\text{p}$ | $2.5\times$ | **1.00** | **+0.4R** | **+0.02R** | $14.4\text{ bars}$ | **PASS** |
-| **USDCAD** | **SELL** | 18 | 9 / 9 | **50%** | $99\text{p} / 66\text{p}$ | $2.5\times$ | **1.50** | **+2.1R** | **+0.12R** | $14.9\text{ bars}$ | **PASS** |
-| **USDCHF** | **SELL** | 12 | 7 / 5 | **58%** | $43\text{p} / 43\text{p}$ | $2.0\times$ | **1.00** | **+2.0R** | **+0.17R** | $10.8\text{ bars}$ | **PASS** |
-| **NZDUSD** | **BUY** | 10 | 7 / 3 | **70%** | $31\text{p} / 31\text{p}$ | $1.5\times$ | **1.00** | **+4.0R** | **+0.40R** | $7.4\text{ bars}$ | **PASS** |
+### Method 1: [M-MSD] Macro Surprise Divergence (Tactical Shocks) — 8 Setups (+33.4R)
+| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Edge Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **EURUSD** | **BUY** | 16 | 9 / 7 | **56%** | $63\text{p} / 42\text{p}$ | $1.5\times$ | **1.50** | **+6.5R** | **+0.41R** | **PASS** |
+| **GBPUSD** | **BUY** | 22 | 14 / 8 | **64%** | $88\text{p} / 70\text{p}$ | $2.0\times$ | **1.25** | **+7.5R** | **+0.34R** | **PASS** |
+| **USDJPY** | **SELL** | 15 | 9 / 6 | **60%** | $41\text{p} / 41\text{p}$ | $1.5\times$ | **1.00** | **+4.3R** | **+0.29R** | **PASS** |
+| **AUDUSD** | **BUY** | 19 | 11 / 8 | **58%** | $86\text{p} / 57\text{p}$ | $2.5\times$ | **1.50** | **+6.6R** | **+0.35R** | **PASS** |
+| **AUDUSD** | **SELL** | 19 | 10 / 9 | **53%** | $55\text{p} / 55\text{p}$ | $2.5\times$ | **1.00** | **+0.4R** | **+0.02R** | **PASS** |
+| **USDCAD** | **SELL** | 18 | 9 / 9 | **50%** | $99\text{p} / 66\text{p}$ | $2.5\times$ | **1.50** | **+2.1R** | **+0.12R** | **PASS** |
+| **USDCHF** | **SELL** | 12 | 7 / 5 | **58%** | $43\text{p} / 43\text{p}$ | $2.0\times$ | **1.00** | **+2.0R** | **+0.17R** | **PASS** |
+| **NZDUSD** | **BUY** | 10 | 7 / 3 | **70%** | $31\text{p} / 31\text{p}$ | $1.5\times$ | **1.00** | **+4.0R** | **+0.40R** | **PASS** |
 
-### Method 2: [M-PYS] Policy & Real Yield Spread Momentum (Sovereign Gravity)
-| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Avg Duration | Edge Status |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **AUDJPY** | **BUY** | 130 | 76 / 54 | **58%** | $96\text{p} / 77\text{p}$ | $2.0\times$ | **1.25** | **+29.7R** | **+0.23R** | $12.0\text{ bars}$ | **PASS** |
-| **AUDUSD** | **SELL** | 70 | 35 / 35 | **50%** | $60\text{p} / 48\text{p}$ | $2.0\times$ | **1.25** | **+2.8R** | **+0.04R** | $10.9\text{ bars}$ | **PASS** |
-| **EURGBP** | **BUY** | 28 | 15 / 13 | **54%** | $65\text{p} / 52\text{p}$ | $2.0\times$ | **1.25** | **+6.2R** | **+0.22R** | $12.3\text{ bars}$ | **PASS** |
-| **EURJPY** | **BUY** | 120 | 72 / 48 | **60%** | $110\text{p} / 88\text{p}$ | $2.0\times$ | **1.25** | **+43.3R** | **+0.36R** | $12.2\text{ bars}$ | **PASS** |
-| **GBPJPY** | **BUY** | 34 | 22 / 12 | **65%** | $125\text{p} / 100\text{p}$ | $2.0\times$ | **1.25** | **+14.1R** | **+0.41R** | $11.9\text{ bars}$ | **PASS** |
-| **GBPUSD** | **BUY** | 37 | 19 / 18 | **51%** | $86\text{p} / 69\text{p}$ | $2.0\times$ | **1.25** | **+5.9R** | **+0.16R** | $10.7\text{ bars}$ | **PASS** |
-| **USDCHF** | **SELL** | 40 | 24 / 16 | **60%** | $62\text{p} / 49\text{p}$ | $2.0\times$ | **1.25** | **+10.9R** | **+0.27R** | $12.4\text{ bars}$ | **PASS** |
-| **USDJPY** | **BUY** | 140 | 78 / 62 | **56%** | $109\text{p} / 87\text{p}$ | $2.0\times$ | **1.25** | **+24.2R** | **+0.17R** | $12.2\text{ bars}$ | **PASS** |
+### Method 2: [M-PYS] Policy & Real Yield Spread Momentum (Sovereign Gravity) — 8 Setups (+137.1R)
+| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Edge Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **AUDJPY** | **BUY** | 130 | 76 / 54 | **58%** | $96\text{p} / 77\text{p}$ | $2.0\times$ | **1.25** | **+29.7R** | **+0.23R** | **PASS** |
+| **AUDUSD** | **SELL** | 70 | 35 / 35 | **50%** | $60\text{p} / 48\text{p}$ | $2.0\times$ | **1.25** | **+2.8R** | **+0.04R** | **PASS** |
+| **EURGBP** | **BUY** | 28 | 15 / 13 | **54%** | $65\text{p} / 52\text{p}$ | $2.0\times$ | **1.25** | **+6.2R** | **+0.22R** | **PASS** |
+| **EURJPY** | **BUY** | 120 | 72 / 48 | **60%** | $110\text{p} / 88\text{p}$ | $2.0\times$ | **1.25** | **+43.3R** | **+0.36R** | **PASS** |
+| **GBPJPY** | **BUY** | 34 | 22 / 12 | **65%** | $125\text{p} / 100\text{p}$ | $2.0\times$ | **1.25** | **+14.1R** | **+0.41R** | **PASS** |
+| **GBPUSD** | **BUY** | 37 | 19 / 18 | **51%** | $86\text{p} / 69\text{p}$ | $2.0\times$ | **1.25** | **+5.9R** | **+0.16R** | **PASS** |
+| **USDCHF** | **SELL** | 40 | 24 / 16 | **60%** | $62\text{p} / 49\text{p}$ | $2.0\times$ | **1.25** | **+10.9R** | **+0.27R** | **PASS** |
+| **USDJPY** | **BUY** | 140 | 78 / 62 | **56%** | $109\text{p} / 87\text{p}$ | $2.0\times$ | **1.25** | **+24.2R** | **+0.17R** | **PASS** |
 
-### Combined Portfolio Synthesis:
-- **Total Codified Setups**: **16 active setups** (8 MSD + 8 PYS)
-- **Cumulative Net Profit**: **$+170.5R$** ($+33.4R$ MSD + $+137.1R$ PYS)
-- **Average Mathematical Expectancy**: **$+0.231R\text{ per trade}$** across 738 verified decadal occurrences
-- **Portfolio Win Rate**: **$57.2\%$**
+### Method 3: [M-TOT] Terms-of-Trade & Commodity Pulse — 5 Setups (+71.1R)
+| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Edge Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **AUDJPY** | **BUY** | 430 | 241 / 189 | **56%** | $61\text{p} / 61\text{p}$ | $2.0\times$ | **1.00** | **+45.7R** | **+0.11R** | **PASS** |
+| **EURJPY** | **BUY** | 445 | 231 / 214 | **52%** | $77\text{p} / 77\text{p}$ | $2.0\times$ | **1.00** | **+16.8R** | **+0.04R** | **PASS** |
+| **NZDUSD** | **BUY** | 384 | 201 / 183 | **52%** | $45\text{p} / 45\text{p}$ | $2.0\times$ | **1.00** | **+13.1R** | **+0.03R** | **PASS** |
+| **AUDUSD** | **BUY** | 382 | 199 / 183 | **52%** | $47\text{p} / 47\text{p}$ | $2.0\times$ | **1.00** | **+14.7R** | **+0.04R** | **PASS** |
+| **USDJPY** | **BUY** | 454 | 232 / 222 | **51%** | $63\text{p} / 63\text{p}$ | $2.0\times$ | **1.00** | **+9.8R** | **+0.02R** | **PASS** |
+
+### Method 4: [M-VRC] Volatility Regime & Carry Unwind — 8 Setups (+73.2R)
+| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Edge Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **AUDJPY** | **SELL** | 260 | 137 / 123 | **53%** | $71\text{p} / 71\text{p}$ | $2.0\times$ | **1.00** | **+24.8R** | **+0.10R** | **PASS** |
+| **EURJPY** | **SELL** | 272 | 141 / 131 | **52%** | $90\text{p} / 90\text{p}$ | $2.0\times$ | **1.00** | **+15.5R** | **+0.06R** | **PASS** |
+| **USDJPY** | **SELL** | 272 | 142 / 130 | **52%** | $76\text{p} / 76\text{p}$ | $2.0\times$ | **1.00** | **+13.6R** | **+0.05R** | **PASS** |
+| **AUDUSD** | **SELL** | 272 | 141 / 131 | **52%** | $53\text{p} / 53\text{p}$ | $2.0\times$ | **1.00** | **+12.3R** | **+0.05R** | **PASS** |
+| **GBPJPY** | **SELL** | 20 | 12 / 8 | **60%** | $107\text{p} / 107\text{p}$ | $2.0\times$ | **1.00** | **+5.2R** | **+0.26R** | **PASS** |
+| **USDCAD** | **SELL** | 283 | 144 / 139 | **51%** | $67\text{p} / 67\text{p}$ | $2.0\times$ | **1.00** | **+1.5R** | **+0.01R** | **PASS** |
+| **EURGBP** | **SELL** | 283 | 143 / 140 | **51%** | $42\text{p} / 42\text{p}$ | $2.0\times$ | **1.00** | **+0.1R** | **+0.00R** | **PASS** |
+| **EURUSD** | **SELL** | 289 | 144 / 145 | **50%** | $62\text{p} / 62\text{p}$ | $2.0\times$ | **1.00** | **+0.2R** | **+0.00R** | **PASS** |
+
+### Method 5: [M-LAR] Liquidity Absorption & Sovereign Intervention — 5 Setups (+50.8R)
+| Symbol | Direction | Sample ($N$) | W / L | Win Rate | Median TP / SL | SL ATR | $R:R$ | Net Realized $R$ | EV / Trade | Edge Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **AUDJPY** | **SELL** | 126 | 78 / 48 | **62%** | $63\text{p} / 63\text{p}$ | $2.0\times$ | **1.00** | **+28.6R** | **+0.23R** | **PASS** |
+| **AUDUSD** | **SELL** | 146 | 78 / 68 | **53%** | $48\text{p} / 48\text{p}$ | $2.0\times$ | **1.00** | **+8.3R** | **+0.06R** | **PASS** |
+| **GBPUSD** | **SELL** | 180 | 93 / 87 | **52%** | $72\text{p} / 72\text{p}$ | $2.0\times$ | **1.00** | **+6.6R** | **+0.04R** | **PASS** |
+| **USDCHF** | **SELL** | 176 | 90 / 86 | **51%** | $47\text{p} / 47\text{p}$ | $2.0\times$ | **1.00** | **+6.3R** | **+0.04R** | **PASS** |
+| **USDCAD** | **BUY** | 158 | 82 / 76 | **52%** | $60\text{p} / 60\text{p}$ | $2.0\times$ | **1.00** | **+1.0R** | **+0.01R** | **PASS** |
+
+---
+
+### Combined Decadal Portfolio Synthesis:
+- **Total Codified Setups**: **34 active setups** across all 5 quantitative methods
+- **Cumulative Net Profit**: **$+365.6R$** ($+33.4R$ MSD + $+137.1R$ PYS + $+71.1R$ TOT + $+73.2R$ VRC + $+50.8R$ LAR)
+- **Portfolio Win Rate Range**: **$50.0\%\text{ to }70.0\%$**
+- **Data Source Independence**: Requires **zero external paid APIs** (strictly MT5 OHLC candles + economic calendar data).
 
 ---
 
@@ -103,26 +139,25 @@ FMS models macro trading across **Major Forex Extended** through 5 distinct quan
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        FMS MULTI-METHOD TAXONOMY                       │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Method 1: [M-MSD] Macro Surprise Divergence (PACD) [ACTIVE - 8 SETUPS] │
+│ Method 1: [M-MSD] Macro Surprise Divergence (PACD) [8 SETUPS, +33.4R]  │
 │ • Rolling standardized surprise vector spread between two G8 currencies│
-│ • S&R Zone Confluence + ATR Dynamic Volatility Scaling (+33.4R).       │
+│ • S&R Zone Confluence + ATR Dynamic Volatility Scaling.                │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Method 2: [M-PYS] Policy & Real Yield Spread Momentum [ACTIVE - 8 SETUPS]│
+│ Method 2: [M-PYS] Policy & Real Yield Spread Momentum [8 SETUPS, +137.1R│
 │ • Central bank rate divergence & Irving Fisher Real Yield Spreads.     │
-│ • S&R Zone Confluence + Multi-Week Drift Acceleration (+137.1R).       │
+│ • S&R Zone Confluence + Multi-Week Drift Acceleration.                 │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Method 3: [M-TOT] Terms-of-Trade Commodity Pulse                       │
+│ Method 3: [M-TOT] Terms-of-Trade Commodity Pulse [5 SETUPS, +71.1R]    │
 │ • Commodity export shocks on commodity currencies (AUD, CAD, NZD).     │
 │ • Relative divergence against net energy/metal importers (JPY, EUR).   │
-
 ├────────────────────────────────────────────────────────────────────────┤
-│ Method 4: [M-VRC] Volatility Regime & Carry Unwind                     │
+│ Method 4: [M-VRC] Volatility Regime & Carry Unwind [8 SETUPS, +73.2R]  │
 │ • Regime-switching model tracking FX volatility spikes vs. carry yield.│
 │ • Exploits quiet carry drift vs. violent safe-haven rushes (JPY, CHF). │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Method 5: [M-LAR] Liquidity Absorption Rejection                       │
-│ • Microstructure order-flow model for news fakeouts at H4/D1 zones.   │
-│ • Exploits institutional absorption of late retail breakout buyers.    │
+│ Method 5: [M-LAR] Liquidity Absorption Rejection [5 SETUPS, +50.8R]    │
+│ • The Mirror Principle: 1.5x+ ATR expansion and 40%+ rejection wicks.  │
+│ • Sovereign defense absorption footprint off structural S&R zones.     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -137,32 +172,29 @@ fms/
 ├── README.MD                   # Master FMS documentation (this file)
 ├── data/                       # Local compressed caches & SQLite store (gitignored)
 │   ├── cache/                  # Parquet candle & calendar historical caches (166k bars)
-│   └── fms_store.db            # SQLite: Registered setups, active trades, journal ledger
+│   └── fms_store.db            # SQLite: 34 registered setups, active trades, journal ledger
 ├── tests/                      # Unit test suite (pytest)
-│   └── test_fms_analytics.py   # 5 automated tests
+│   └── test_fms_analytics.py   # 10 automated unit tests (100% passing)
 └── src/
     └── fms_engine/
         ├── config.py           # Paths, ports, ATR/MAE/MFE parameters
-        ├── contracts/          # Shared Pydantic models (events, setups, trades, journal)
+        ├── contracts/          # Shared Pydantic models (events, setups, library, journal)
         │   ├── event_models.py
         │   ├── setup_models.py
+        │   ├── library_models.py
         │   └── journal_models.py
         ├── ingestion/          # Bridge client, candle loader, calendar loader (Parquet caching)
-        │   ├── bridge_client.py
-        │   ├── candle_loader.py
-        │   └── calendar_loader.py
-        ├── analytics/          # Pure quantitative calculations
-        │   ├── surprise_engine.py         # Z-score standardization & 4 Macro Reaction States
-        │   ├── zone_detector.py           # 2D S&R liquidity box generator (swing pivots + ATR buffer)
-        │   ├── excursion_engine.py        # ATR-normalized MAE/MFE survival simulation
-        │   └── macro_divergence_engine.py # [M-MSD] 10-year multi-pair divergence cruncher
+        ├── analytics/          # Pure quantitative factor calculation engines
+        │   ├── surprise_engine.py             # Z-score standardization & 4 Macro Reaction States
+        │   ├── zone_detector.py               # 2D S&R liquidity box generator
+        │   ├── excursion_engine.py            # ATR-normalized MAE/MFE survival simulation
+        │   ├── macro_divergence_engine.py     # [M-MSD] Method 1 engine
+        │   ├── policy_spread_engine.py        # [M-PYS] Method 2 engine
+        │   ├── terms_of_trade_engine.py       # [M-TOT] Method 3 engine
+        │   ├── carry_unwind_engine.py         # [M-VRC] Method 4 engine
+        │   └── liquidity_absorption_engine.py # [M-LAR] Method 5 engine
         ├── strategy/           # Setup registry, trade tracker, journal ledger
-        │   ├── setup_registry.py
-        │   ├── trade_tracker.py
-        │   └── journal_ledger.py
         ├── api/                # FastAPI service & Web Portal
-        │   ├── app.py          # Routes for setups, trades, signals, journal, and portal
-        │   └── portal_html.py  # Self-contained dark-themed Knowledge & Strategy Portal
         └── cli/                # Standalone CLI research workbench
             └── main.py
 ```
@@ -173,7 +205,7 @@ fms/
 
 Always run these commands before submitting changes:
 ```powershell
-# Run FMS test suite (5 passed)
+# Run FMS test suite (10 passed)
 .\fms\.venv\Scripts\pytest.exe fms\tests
 
 # Verify Python syntax and imports

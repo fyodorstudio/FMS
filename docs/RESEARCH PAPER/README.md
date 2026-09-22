@@ -18,6 +18,9 @@ This folder contains the modular chapters of the **Fyodor Macro Signal (FMS)** a
 | **[08](08-event-horizons-and-directional-asymmetry.md)** | [Event Family Horizons & Directional Asymmetry](08-event-horizons-and-directional-asymmetry.md) | The 24-bar anchor vs. family adaptability & why Short USD beats Long USD |
 | **[09](09-geopolitical-absorption-and-intervention-shocks.md)** | [Geopolitical Absorption & Intervention Shocks](09-geopolitical-absorption-and-intervention-shocks.md) | The Mirror Principle, BoJ intervention case study, and the 3x ATR shock candidate |
 | **[10](10-policy-and-real-yield-spread-momentum.md)** | [Policy & Real Yield Spread Momentum](10-policy-and-real-yield-spread-momentum.md) | Irving Fisher relation ($r \approx i - \pi$), Real Yield differentials, and sovereign capital gravity |
+| **[11](11-terms-of-trade-and-commodity-pulse.md)** | [Terms-of-Trade & Commodity Pulse](11-terms-of-trade-and-commodity-pulse.md) | Resource exporter vs net importer asymmetry, Balance of Payments, 5 passing setups (+71.1R) |
+| **[12](12-volatility-regimes-and-carry-unwind.md)** | [Volatility Regimes & Carry Unwind](12-volatility-regimes-and-carry-unwind.md) | Mandatory institutional VaR de-grossing, volatility expansion shock, 8 passing setups (+73.2R) |
+| **[13](13-liquidity-absorption-and-intervention-rejection.md)** | [Liquidity Absorption & Sovereign Intervention](13-liquidity-absorption-and-intervention-rejection.md) | The Mirror Principle footprint: 1.5x+ ATR expansion and 40%+ rejection wicks, 5 passing setups (+50.8R) |
 
 ---
 

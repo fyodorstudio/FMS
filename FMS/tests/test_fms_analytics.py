@@ -259,6 +259,105 @@ def test_portal_endpoint():
     assert "FMS Library" in response.text
     assert "Codified Setups" in response.text
 
+def test_terms_of_trade_engine():
+    from fms_engine.analytics.terms_of_trade_engine import TermsOfTradeEngine
+
+    engine = TermsOfTradeEngine(min_pulse_threshold=1.00, refractory_bars=2)
+    # Synthetic candles for AUDJPY with an upward pulse in AUD vs JPY (100 bars)
+    candles_data = []
+    base_price = 80.0
+    for i in range(100):
+        # Push strong upward momentum in AUDJPY
+        inc = 0.10 * i if 30 <= i <= 50 else 0.01 * i
+        candles_data.append({
+            "time": 1700000000 + i * 14400,
+            "open": base_price + inc,
+            "high": base_price + inc + 0.30,
+            "low": base_price + inc - 0.10,
+            "close": base_price + inc + 0.25,
+            "tick_volume": 100,
+            "spread": 2,
+        })
+    candles_df = pl.DataFrame(candles_data)
+    triggers = engine.find_tot_triggers("AUDJPY", candles_df)
+    assert len(triggers) >= 1
+    assert any(t.direction == SetupDirection.BUY for t in triggers)
+    assert any(t.tot_pulse >= 1.0 for t in triggers)
+
+def test_carry_unwind_engine():
+    from fms_engine.analytics.carry_unwind_engine import CarryUnwindEngine
+
+    engine = CarryUnwindEngine(lookback_baseline=20, min_vol_z=1.50, refractory_bars=2)
+    # Synthetic candles (100 bars) with normal variance then a volatility shock
+    candles_data = []
+    base_price = 140.0
+    for i in range(100):
+        if i == 35:
+            # Massive volatility expansion shock (Carry Unwind)
+            candles_data.append({
+                "time": 1700000000 + i * 14400,
+                "open": base_price,
+                "high": base_price + 4.00,
+                "low": base_price - 4.00,
+                "close": base_price - 2.00,
+                "tick_volume": 500,
+                "spread": 5,
+            })
+        else:
+            var = (i % 5) * 0.05
+            candles_data.append({
+                "time": 1700000000 + i * 14400,
+                "open": base_price,
+                "high": base_price + 0.10 + var,
+                "low": base_price - 0.10 - var,
+                "close": base_price,
+                "tick_volume": 100,
+                "spread": 2,
+            })
+    candles_df = pl.DataFrame(candles_data)
+    triggers = engine.find_unwind_triggers("USDJPY", candles_df)
+    assert len(triggers) >= 1
+    assert triggers[0].direction == SetupDirection.SELL
+    assert triggers[0].volatility_z >= 1.50
+
+def test_liquidity_absorption_engine():
+    from fms_engine.analytics.liquidity_absorption_engine import LiquidityAbsorptionEngine
+
+    engine = LiquidityAbsorptionEngine(min_expansion_ratio=1.50, min_wick_ratio=0.40, refractory_bars=2)
+    # Synthetic candles (100 bars): normal baseline, explosive pin bar rejection at index 35
+    candles_data = []
+    base_price = 150.0
+    for i in range(100):
+        if i == 35:
+            # The BoJ Shock candle: Open=151.0, High=155.0, Low=150.5, Close=151.2
+            # Range = 4.5, Upper wick = 155.0 - 151.2 = 3.8 (84% wick)
+            candles_data.append({
+                "time": 1700000000 + i * 14400,
+                "open": 151.0,
+                "high": 155.0,
+                "low": 150.5,
+                "close": 151.2,
+                "tick_volume": 1000,
+                "spread": 5,
+            })
+        else:
+            var = (i % 5) * 0.02
+            candles_data.append({
+                "time": 1700000000 + i * 14400,
+                "open": base_price,
+                "high": base_price + 0.15 + var,
+                "low": base_price - 0.15 - var,
+                "close": base_price,
+                "tick_volume": 100,
+                "spread": 2,
+            })
+    candles_df = pl.DataFrame(candles_data)
+    triggers = engine.find_absorption_triggers("USDJPY", candles_df)
+    assert len(triggers) >= 1
+    assert triggers[0].direction == SetupDirection.SELL
+    assert triggers[0].expansion_ratio >= 1.50
+    assert triggers[0].wick_ratio >= 0.40
+
 
 
 

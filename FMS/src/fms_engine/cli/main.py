@@ -22,6 +22,9 @@ from ..analytics.excursion_engine import ExcursionEngine
 from ..analytics.zone_detector import ZoneDetector
 from ..analytics.macro_divergence_engine import MacroDivergenceEngine, PAIR_MAPPINGS
 from ..analytics.policy_spread_engine import PolicySpreadEngine
+from ..analytics.terms_of_trade_engine import TermsOfTradeEngine
+from ..analytics.carry_unwind_engine import CarryUnwindEngine
+from ..analytics.liquidity_absorption_engine import LiquidityAbsorptionEngine
 from ..strategy.setup_registry import SetupRegistry
 
 
@@ -99,7 +102,7 @@ def sync(
 
 @app.command()
 def research(
-    method: str = typer.Option("msd", "--method", "-m", help="Quant method: msd (Macro Surprise Divergence), pys (Policy & Real Yield Spread Momentum)"),
+    method: str = typer.Option("msd", "--method", "-m", help="Quant method: msd, pys, tot, vrc, lar"),
     min_spread: float = typer.Option(1.75, "--min-spread", "-s", help="Minimum divergence spread Z-score"),
     lookback: int = typer.Option(14, "--lookback", "-l", help="Rolling sentiment lookback window in days"),
     half_life: float = typer.Option(5.0, "--half-life", "-h", help="Exponential decay half-life in days"),
@@ -110,10 +113,16 @@ def research(
 ):
     """
     Run empirical research cruncher on Major Forex Extended across historical market data.
-    Computes rolling G8 surprise vectors or policy/real yield momentum, identifies divergence triggers, and calculates path-dependent ECDF distributions.
+    Supports:
+      - msd: Method 1 [M-MSD] Macro Surprise Divergence
+      - pys: Method 2 [M-PYS] Policy & Real Yield Spread Momentum
+      - tot: Method 3 [M-TOT] Terms-of-Trade & Commodity Pulse
+      - vrc: Method 4 [M-VRC] Volatility Regime & Carry Unwind
+      - lar: Method 5 [M-LAR] Liquidity Absorption & Sovereign Intervention Rejection
     """
-    if method.lower() not in ["msd", "pys"]:
-        console.print(f"[bold red]Error:[/bold red] Quant method '{method}' not implemented yet. Currently supported: 'msd', 'pys'.")
+    valid_methods = ["msd", "pys", "tot", "vrc", "lar"]
+    if method.lower() not in valid_methods:
+        console.print(f"[bold red]Error:[/bold red] Quant method '{method}' not recognized. Supported: {', '.join(valid_methods)}.")
         raise typer.Exit(1)
 
     candle_loader = CandleLoader()
@@ -226,6 +235,336 @@ def research(
                             reward_risk_ratio=res.reward_risk_ratio,
                             trigger_state=f"real_yield_spread (SL={res.k_sl:.1f}xATR)",
                             min_z_score=1.00,
+                            active=True,
+                            created_at=int(time.time()),
+                        )
+                        registry.save_setup(setup_dto)
+                        registered_count += 1
+
+        console.print(results_table)
+        console.print(f"\n[bold]Total Combinations Analyzed:[/bold] {len(target_symbols) * 2} | [bold green]Passing Statistical Edge:[/bold green] {passing_count}")
+        if register:
+            console.print(f"[bold green]Successfully saved {registered_count} passing setups to SQLite registry![/bold green]")
+        return
+
+    if method.lower() == "tot":
+        console.print(Panel.fit(
+            f"[bold cyan]Method 3: [M-TOT] Terms-of-Trade & Commodity Pulse Research Cruncher[/bold cyan]\n"
+            f"  * Commodity Pulse Advantage: [yellow]|Delta S_tot| >= 1.00 sigma[/yellow]\n"
+            f"  * Excursion Horizon: [blue]{horizon} H4 bars (~{horizon*4/24:.1f} trading days)[/blue]\n"
+            f"  * S&R Zone Confluence: {zone_status}\n"
+            f"  * Quality Gate: Respect Rate >= [green]50%[/green] | Net R > [green]0.0R[/green] | R:R >= [green]1.00[/green]",
+            border_style="cyan",
+        ))
+
+        tot_engine = TermsOfTradeEngine(min_pulse_threshold=1.00)
+        excursion_engine = ExcursionEngine(max_bars=horizon)
+        zone_detector = ZoneDetector(k_window=5, atr_period=14) if zones else None
+        registry = SetupRegistry()
+
+        target_symbols = [symbol.upper()] if symbol else settings.major_forex_extended
+        results_table = Table(title="[M-TOT] Terms-of-Trade Commodity Pulse — Decadal Audit")
+        results_table.add_column("Symbol", style="bold cyan")
+        results_table.add_column("Dir", style="white")
+        results_table.add_column("Trig (N)", justify="right")
+        results_table.add_column("W/L", justify="center")
+        results_table.add_column("Respect %", justify="right")
+        results_table.add_column("TP / SL (pips)", justify="center")
+        results_table.add_column("SL ATR", justify="right")
+        results_table.add_column("R:R", justify="right")
+        results_table.add_column("Net R", justify="right")
+        results_table.add_column("EV / trade", justify="right")
+        results_table.add_column("Avg Hold", justify="right")
+        results_table.add_column("Edge Status", justify="center")
+
+        passing_count = 0
+        registered_count = 0
+
+        with console.status("[bold green]Calculating Terms-of-Trade divergence and forward paths...[/bold green]"):
+            for sym in target_symbols:
+                candles = candle_loader.load_cached_candles(sym, "H4")
+                if candles is None or candles.is_empty():
+                    continue
+
+                for dir_enum in [SetupDirection.BUY, SetupDirection.SELL]:
+                    res = tot_engine.backtest_pair_direction(
+                        symbol=sym,
+                        direction=dir_enum,
+                        candles_df=candles,
+                        excursion_engine=excursion_engine,
+                        zone_detector=zone_detector,
+                        k_sl=2.0,
+                        reward_risk_ratio=1.00,
+                    )
+                    if res is None:
+                        continue
+
+                    is_pass = res.valid_edge
+                    if is_pass:
+                        passing_count += 1
+                        status_str = "[bold green]PASS[/bold green]"
+                    else:
+                        status_str = "[dim red]FAIL[/dim red]"
+
+                    dir_color = "green" if dir_enum == SetupDirection.BUY else "red"
+                    wl_str = f"[green]{res.win_count}[/green]/[red]{res.loss_count}[/red]"
+                    tp_sl_str = f"{res.recommended_tp_pips:.0f} / {res.recommended_sl_pips:.0f}"
+                    net_r_color = "green" if res.net_realized_r > 0 else "red"
+
+                    results_table.add_row(
+                        sym,
+                        f"[{dir_color}]{dir_enum.value}[/{dir_color}]",
+                        str(res.trigger_count),
+                        wl_str,
+                        f"{res.respect_rate*100:.0f}%",
+                        tp_sl_str,
+                        f"{res.k_sl:.1f}x",
+                        f"{res.reward_risk_ratio:.2f}",
+                        f"[{net_r_color}]{res.net_realized_r:+.1f}R[/{net_r_color}]",
+                        f"[{net_r_color}]{res.expected_r_per_trade:+.2f}R[/{net_r_color}]",
+                        f"{res.avg_holding_bars:.1f} b",
+                        status_str,
+                    )
+
+                    if register and is_pass:
+                        setup_dto = RegisteredSetupDTO(
+                            id=f"TOT_{sym}_{dir_enum.value}",
+                            quant_method=QuantMethod.TOT,
+                            event_name="Terms of Trade Commodity Pulse",
+                            currency=res.base_currency,
+                            symbol=sym,
+                            direction=dir_enum,
+                            timeframe="H4",
+                            respect_rate=res.respect_rate,
+                            sample_count=res.trigger_count,
+                            median_mfe_pips=res.median_mfe_pips,
+                            mae_85_pips=res.mae_85_pips,
+                            recommended_sl_pips=res.recommended_sl_pips,
+                            recommended_tp_pips=res.recommended_tp_pips,
+                            reward_risk_ratio=res.reward_risk_ratio,
+                            trigger_state=f"tot_pulse (SL={res.k_sl:.1f}xATR)",
+                            min_z_score=1.00,
+                            active=True,
+                            created_at=int(time.time()),
+                        )
+                        registry.save_setup(setup_dto)
+                        registered_count += 1
+
+        console.print(results_table)
+        console.print(f"\n[bold]Total Combinations Analyzed:[/bold] {len(target_symbols) * 2} | [bold green]Passing Statistical Edge:[/bold green] {passing_count}")
+        if register:
+            console.print(f"[bold green]Successfully saved {registered_count} passing setups to SQLite registry![/bold green]")
+        return
+
+    if method.lower() == "vrc":
+        console.print(Panel.fit(
+            f"[bold cyan]Method 4: [M-VRC] Volatility Regime & Carry Unwind Research Cruncher[/bold cyan]\n"
+            f"  * Volatility Expansion Shock: [yellow]Z_vol >= 1.50 sigma[/yellow]\n"
+            f"  * Excursion Horizon: [blue]{horizon} H4 bars (~{horizon*4/24:.1f} trading days)[/blue]\n"
+            f"  * S&R Zone Confluence: {zone_status}\n"
+            f"  * Quality Gate: Respect Rate >= [green]50%[/green] | Net R > [green]0.0R[/green] | R:R >= [green]1.00[/green]",
+            border_style="cyan",
+        ))
+
+        carry_engine = CarryUnwindEngine(min_vol_z=1.50)
+        excursion_engine = ExcursionEngine(max_bars=horizon)
+        zone_detector = ZoneDetector(k_window=5, atr_period=14) if zones else None
+        registry = SetupRegistry()
+
+        target_symbols = [symbol.upper()] if symbol else settings.major_forex_extended
+        results_table = Table(title="[M-VRC] Volatility Regime & Carry Unwind — Decadal Audit")
+        results_table.add_column("Symbol", style="bold cyan")
+        results_table.add_column("Dir", style="white")
+        results_table.add_column("Trig (N)", justify="right")
+        results_table.add_column("W/L", justify="center")
+        results_table.add_column("Respect %", justify="right")
+        results_table.add_column("TP / SL (pips)", justify="center")
+        results_table.add_column("SL ATR", justify="right")
+        results_table.add_column("R:R", justify="right")
+        results_table.add_column("Net R", justify="right")
+        results_table.add_column("EV / trade", justify="right")
+        results_table.add_column("Avg Hold", justify="right")
+        results_table.add_column("Edge Status", justify="center")
+
+        passing_count = 0
+        registered_count = 0
+
+        with console.status("[bold green]Detecting volatility regime expansions and carry cascades...[/bold green]"):
+            for sym in target_symbols:
+                candles = candle_loader.load_cached_candles(sym, "H4")
+                if candles is None or candles.is_empty():
+                    continue
+
+                for dir_enum in [SetupDirection.BUY, SetupDirection.SELL]:
+                    res = carry_engine.backtest_pair_direction(
+                        symbol=sym,
+                        direction=dir_enum,
+                        candles_df=candles,
+                        excursion_engine=excursion_engine,
+                        zone_detector=zone_detector,
+                        k_sl=2.0,
+                        reward_risk_ratio=1.00,
+                    )
+                    if res is None:
+                        continue
+
+                    is_pass = res.valid_edge
+                    if is_pass:
+                        passing_count += 1
+                        status_str = "[bold green]PASS[/bold green]"
+                    else:
+                        status_str = "[dim red]FAIL[/dim red]"
+
+                    dir_color = "green" if dir_enum == SetupDirection.BUY else "red"
+                    wl_str = f"[green]{res.win_count}[/green]/[red]{res.loss_count}[/red]"
+                    tp_sl_str = f"{res.recommended_tp_pips:.0f} / {res.recommended_sl_pips:.0f}"
+                    net_r_color = "green" if res.net_realized_r > 0 else "red"
+
+                    results_table.add_row(
+                        sym,
+                        f"[{dir_color}]{dir_enum.value}[/{dir_color}]",
+                        str(res.trigger_count),
+                        wl_str,
+                        f"{res.respect_rate*100:.0f}%",
+                        tp_sl_str,
+                        f"{res.k_sl:.1f}x",
+                        f"{res.reward_risk_ratio:.2f}",
+                        f"[{net_r_color}]{res.net_realized_r:+.1f}R[/{net_r_color}]",
+                        f"[{net_r_color}]{res.expected_r_per_trade:+.2f}R[/{net_r_color}]",
+                        f"{res.avg_holding_bars:.1f} b",
+                        status_str,
+                    )
+
+                    if register and is_pass:
+                        base_c = sym[:3]
+                        setup_dto = RegisteredSetupDTO(
+                            id=f"VRC_{sym}_{dir_enum.value}",
+                            quant_method=QuantMethod.VRC,
+                            event_name="Carry Liquidation Cascade",
+                            currency=base_c,
+                            symbol=sym,
+                            direction=dir_enum,
+                            timeframe="H4",
+                            respect_rate=res.respect_rate,
+                            sample_count=res.trigger_count,
+                            median_mfe_pips=res.median_mfe_pips,
+                            mae_85_pips=res.mae_85_pips,
+                            recommended_sl_pips=res.recommended_sl_pips,
+                            recommended_tp_pips=res.recommended_tp_pips,
+                            reward_risk_ratio=res.reward_risk_ratio,
+                            trigger_state=f"volatility_unwind (SL={res.k_sl:.1f}xATR)",
+                            min_z_score=1.50,
+                            active=True,
+                            created_at=int(time.time()),
+                        )
+                        registry.save_setup(setup_dto)
+                        registered_count += 1
+
+        console.print(results_table)
+        console.print(f"\n[bold]Total Combinations Analyzed:[/bold] {len(target_symbols) * 2} | [bold green]Passing Statistical Edge:[/bold green] {passing_count}")
+        if register:
+            console.print(f"[bold green]Successfully saved {registered_count} passing setups to SQLite registry![/bold green]")
+        return
+
+    if method.lower() == "lar":
+        console.print(Panel.fit(
+            f"[bold cyan]Method 5: [M-LAR] Liquidity Absorption & Sovereign Intervention Rejection[/bold cyan]\n"
+            f"  * Volatility Expansion Ratio: [yellow]TR >= 1.50x baseline ATR[/yellow]\n"
+            f"  * Rejection Wick Proportion: [yellow]Wick >= 40% total candle range[/yellow]\n"
+            f"  * Excursion Horizon: [blue]{horizon} H4 bars (~{horizon*4/24:.1f} trading days)[/blue]\n"
+            f"  * S&R Zone Confluence: {zone_status}\n"
+            f"  * Quality Gate: Respect Rate >= [green]50%[/green] | Net R > [green]0.0R[/green] | R:R >= [green]1.00[/green]",
+            border_style="cyan",
+        ))
+
+        lar_engine = LiquidityAbsorptionEngine(min_expansion_ratio=1.50, min_wick_ratio=0.40)
+        excursion_engine = ExcursionEngine(max_bars=horizon)
+        zone_detector = ZoneDetector(k_window=5, atr_period=14) if zones else None
+        registry = SetupRegistry()
+
+        target_symbols = [symbol.upper()] if symbol else settings.major_forex_extended
+        results_table = Table(title="[M-LAR] Liquidity Absorption Rejection — Decadal Audit")
+        results_table.add_column("Symbol", style="bold cyan")
+        results_table.add_column("Dir", style="white")
+        results_table.add_column("Trig (N)", justify="right")
+        results_table.add_column("W/L", justify="center")
+        results_table.add_column("Respect %", justify="right")
+        results_table.add_column("TP / SL (pips)", justify="center")
+        results_table.add_column("SL ATR", justify="right")
+        results_table.add_column("R:R", justify="right")
+        results_table.add_column("Net R", justify="right")
+        results_table.add_column("EV / trade", justify="right")
+        results_table.add_column("Avg Hold", justify="right")
+        results_table.add_column("Edge Status", justify="center")
+
+        passing_count = 0
+        registered_count = 0
+
+        with console.status("[bold green]Scanning for liquidity absorption footprints and zone rejections...[/bold green]"):
+            for sym in target_symbols:
+                candles = candle_loader.load_cached_candles(sym, "H4")
+                if candles is None or candles.is_empty():
+                    continue
+
+                for dir_enum in [SetupDirection.BUY, SetupDirection.SELL]:
+                    res = lar_engine.backtest_pair_direction(
+                        symbol=sym,
+                        direction=dir_enum,
+                        candles_df=candles,
+                        excursion_engine=excursion_engine,
+                        zone_detector=zone_detector,
+                        k_sl=2.0,
+                        reward_risk_ratio=1.00,
+                    )
+                    if res is None:
+                        continue
+
+                    is_pass = res.valid_edge
+                    if is_pass:
+                        passing_count += 1
+                        status_str = "[bold green]PASS[/bold green]"
+                    else:
+                        status_str = "[dim red]FAIL[/dim red]"
+
+                    dir_color = "green" if dir_enum == SetupDirection.BUY else "red"
+                    wl_str = f"[green]{res.win_count}[/green]/[red]{res.loss_count}[/red]"
+                    tp_sl_str = f"{res.recommended_tp_pips:.0f} / {res.recommended_sl_pips:.0f}"
+                    net_r_color = "green" if res.net_realized_r > 0 else "red"
+
+                    results_table.add_row(
+                        sym,
+                        f"[{dir_color}]{dir_enum.value}[/{dir_color}]",
+                        str(res.trigger_count),
+                        wl_str,
+                        f"{res.respect_rate*100:.0f}%",
+                        tp_sl_str,
+                        f"{res.k_sl:.1f}x",
+                        f"{res.reward_risk_ratio:.2f}",
+                        f"[{net_r_color}]{res.net_realized_r:+.1f}R[/{net_r_color}]",
+                        f"[{net_r_color}]{res.expected_r_per_trade:+.2f}R[/{net_r_color}]",
+                        f"{res.avg_holding_bars:.1f} b",
+                        status_str,
+                    )
+
+                    if register and is_pass:
+                        base_c = sym[:3]
+                        setup_dto = RegisteredSetupDTO(
+                            id=f"LAR_{sym}_{dir_enum.value}",
+                            quant_method=QuantMethod.LAR,
+                            event_name="Liquidity Absorption Rejection",
+                            currency=base_c,
+                            symbol=sym,
+                            direction=dir_enum,
+                            timeframe="H4",
+                            respect_rate=res.respect_rate,
+                            sample_count=res.trigger_count,
+                            median_mfe_pips=res.median_mfe_pips,
+                            mae_85_pips=res.mae_85_pips,
+                            recommended_sl_pips=res.recommended_sl_pips,
+                            recommended_tp_pips=res.recommended_tp_pips,
+                            reward_risk_ratio=res.reward_risk_ratio,
+                            trigger_state=f"absorption_wick (SL={res.k_sl:.1f}xATR)",
+                            min_z_score=1.50,
                             active=True,
                             created_at=int(time.time()),
                         )
