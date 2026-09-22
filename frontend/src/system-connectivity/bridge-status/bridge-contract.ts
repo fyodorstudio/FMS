@@ -43,6 +43,8 @@ export type CalendarSourceHealth = {
   last_update_at: number | null
   server_time_seconds: number | null
   server_utc_offset_seconds: number | null
+  window_from_server_seconds: number | null
+  window_to_server_seconds: number | null
   change_id: string | null
   publisher_request_duration_ms: number | null
   clock_trust: 'unavailable' | 'observed'

@@ -26,6 +26,13 @@ Compile and attach `mql5/FyodorCalendarPublisher.mq5` to one chart. Add
 WebRequest for listed URL**. The EA only reads the MT5 calendar and posts it to
 the local bridge; it cannot place orders.
 
+`FyodorCalendarPublisher` is the only EA this bridge needs. Detach the older
+`FyodorQuoteBridge` and `FyodorCalendarBridge` EAs from every chart so they do
+not create duplicate or competing feeds. The Python bridge reads Market Watch
+and OHLC directly; the publisher owns only the calendar. Its default source
+window is 14 days back through 60 days ahead, while the app initially displays
+the current week and offers previous-week, next-week, and custom views.
+
 ## Bridge v1 acceptance checklist
 
 Bridge v1 is not frozen until the owner manually confirms all of these:

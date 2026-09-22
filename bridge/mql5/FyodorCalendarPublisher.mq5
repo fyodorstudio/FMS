@@ -70,16 +70,20 @@ long ServerUtcOffsetSeconds()
    return (long)TimeTradeServer()-(long)TimeGMT();
   }
 
-string EnvelopePrefix(const string kind,const string change_id)
+string EnvelopePrefix(const string kind,const string change_id,const datetime server_now)
   {
+   datetime window_from=server_now-(datetime)(SnapshotDaysBack*86400);
+   datetime window_to=server_now+(datetime)(SnapshotDaysAhead*86400);
    return "{"
           "\"protocol_version\":1,"
           "\"kind\":"+JsonString(kind)+","
           "\"instance_id\":"+JsonString(g_instance_id)+","
           "\"sent_at_local_seconds\":"+IntegerToString((long)TimeLocal())+","
-          "\"server_time_seconds\":"+IntegerToString((long)TimeTradeServer())+","
+          "\"server_time_seconds\":"+IntegerToString((long)server_now)+","
           "\"gmt_time_seconds\":"+IntegerToString((long)TimeGMT())+","
           "\"server_utc_offset_seconds\":"+IntegerToString(ServerUtcOffsetSeconds())+","
+          "\"window_from_server_seconds\":"+IntegerToString((long)window_from)+","
+          "\"window_to_server_seconds\":"+IntegerToString((long)window_to)+","
           "\"previous_request_duration_ms\":"+IntegerToString((long)g_last_request_duration_ms)+","
           "\"change_id\":"+JsonString(change_id)+",";
   }
@@ -139,21 +143,28 @@ bool PostJson(const string json)
    uint request_started=GetTickCount();
    int status=WebRequest("POST",BridgeUrl,headers,RequestTimeoutMilliseconds,request,response,response_headers);
    g_last_request_duration_ms=GetTickCount()-request_started;
-   if(status==200) return true;
+   string response_body=CharArrayToString(response,0,-1,CP_UTF8);
+   if(status==200)
+     {
+      if(StringFind(response_body,"\"snapshot_required\":true")>=0)
+         g_snapshot_ready=false;
+      return true;
+     }
    if(status==-1)
      {
       PrintFormat("Fyodor calendar: bridge request failed: %d. Confirm WebRequest URL permission for http://127.0.0.1:8001",GetLastError());
      }
    else
      {
-      PrintFormat("Fyodor calendar: bridge returned HTTP %d: %s",status,CharArrayToString(response,0,-1,CP_UTF8));
+      PrintFormat("Fyodor calendar: bridge returned HTTP %d: %s",status,response_body);
      }
    return false;
   }
 
 bool PostHeartbeat()
   {
-   string json=EnvelopePrefix("heartbeat",ULongString(g_change_id))+
+   datetime server_now=TimeTradeServer();
+   string json=EnvelopePrefix("heartbeat",ULongString(g_change_id),server_now)+
                "\"snapshot_id\":null,\"chunk_index\":0,\"chunk_count\":1,\"events\":[]}";
    return PostJson(json);
   }
@@ -165,9 +176,10 @@ bool PostValuesChunk(const string kind,
                      const int end_index,
                      const int chunk_index,
                      const int chunk_count,
-                     const ulong change_id)
+                     const ulong change_id,
+                     const datetime server_now)
   {
-   string json=EnvelopePrefix(kind,ULongString(change_id));
+   string json=EnvelopePrefix(kind,ULongString(change_id),server_now);
    if(kind=="snapshot") json+="\"snapshot_id\":"+JsonString(snapshot_id)+",";
    else json+="\"snapshot_id\":null,";
    json+="\"chunk_index\":"+IntegerToString(chunk_index)+",";
@@ -225,7 +237,7 @@ bool PublishSnapshot()
      {
       int start=chunk*chunk_size;
       int end=(int)MathMin(received,start+chunk_size);
-      if(!PostValuesChunk("snapshot",snapshot_id,values,start,end,chunk,chunk_count,g_change_id))
+      if(!PostValuesChunk("snapshot",snapshot_id,values,start,end,chunk,chunk_count,g_change_id,now))
          return false;
      }
    PrintFormat("Fyodor calendar: published atomic snapshot with %d values in %d chunks",received,chunk_count);
@@ -251,13 +263,14 @@ bool PublishChanges()
       return true;
      }
 
+   datetime now=TimeTradeServer();
    int chunk_size=(int)MathMax(1,EventsPerChunk);
    int chunk_count=(int)MathMax(1,(received+chunk_size-1)/chunk_size);
    for(int chunk=0; chunk<chunk_count; chunk++)
      {
       int start=chunk*chunk_size;
       int end=(int)MathMin(received,start+chunk_size);
-      if(!PostValuesChunk("delta","",values,start,end,chunk,chunk_count,candidate))
+      if(!PostValuesChunk("delta","",values,start,end,chunk,chunk_count,candidate,now))
         {
          g_change_id=previous_change_id;
          return false;
@@ -270,7 +283,8 @@ bool PublishChanges()
 
 int OnInit()
   {
-   if(PollSeconds<1 || HeartbeatSeconds<1 || RetrySeconds<1 || EventsPerChunk<1 || EventsPerChunk>250)
+   if(SnapshotDaysBack<0 || SnapshotDaysAhead<0 || SnapshotDaysBack+SnapshotDaysAhead<1 ||
+      PollSeconds<1 || HeartbeatSeconds<1 || RetrySeconds<1 || EventsPerChunk<1 || EventsPerChunk>250)
      {
       Print("Fyodor calendar: invalid timer or chunk input");
       return INIT_PARAMETERS_INCORRECT;

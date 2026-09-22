@@ -10,51 +10,61 @@ export type Mt5EconomicCalendar = {
   error: string | null
 }
 
-export function useMt5EconomicCalendar(reachable: boolean): Mt5EconomicCalendar {
+export function useMt5EconomicCalendar(
+  reachable: boolean,
+  healthSource: CalendarSourceHealth | null,
+  enabled: boolean,
+): Mt5EconomicCalendar {
   const { appendActivity } = useActivityLog()
   const [events, setEvents] = useState<EconomicCalendarEvent[]>([])
   const [source, setSource] = useState<CalendarSourceHealth | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const wasLive = useRef(false)
+  const previousStatus = useRef<CalendarSourceHealth['status'] | null>(null)
+  const calendarRevision = healthSource?.last_update_at === null || healthSource?.last_update_at === undefined
+    ? null
+    : `${healthSource.instance_id}:${healthSource.last_update_at}:${healthSource.event_count}`
 
   useEffect(() => {
-    if (!reachable) return
-    wasLive.current = false
-    let disposed = false
-    let timer: number | undefined
-    let controller: AbortController | null = null
+    const status = healthSource?.status ?? null
+    if (status === previousStatus.current) return
+    if (status === 'live') {
+      appendActivity('Calendar', 'Calendar feed live', `${healthSource?.event_count ?? 0} MT5 events`, { severity: 'success' })
+    } else if (status === 'stale' && previousStatus.current === 'live') {
+      appendActivity('Calendar', 'Calendar publisher stale', 'No publisher heartbeat for more than 30 seconds', { severity: 'warning' })
+    }
+    previousStatus.current = status
+  }, [appendActivity, healthSource?.event_count, healthSource?.status])
 
-    const poll = async () => {
-      controller = new AbortController()
+  useEffect(() => {
+    if (!reachable || !enabled || calendarRevision === null) return
+    let disposed = false
+    const controller = new AbortController()
+
+    const loadRevision = async () => {
       try {
         const response = await bridgeRequest<EconomicCalendarResponse>('/calendar', controller.signal)
         if (disposed) return
         setEvents(response.events)
         setSource(response.source)
         setError(null)
-        if (response.source.status === 'live' && !wasLive.current) {
-          appendActivity('Calendar', 'Calendar feed live', `${response.events.length} MT5 events`, { severity: 'success' })
-        }
-        if (response.source.status === 'stale' && wasLive.current) {
-          appendActivity('Calendar', 'Calendar publisher stale', 'No publisher heartbeat for more than 30 seconds', { severity: 'warning' })
-        }
-        wasLive.current = response.source.status === 'live'
       } catch (requestError) {
         if (disposed || (requestError instanceof DOMException && requestError.name === 'AbortError')) return
         setError(requestError instanceof Error ? requestError.message : 'Calendar request failed')
-        wasLive.current = false
-      } finally {
-        if (!disposed) timer = window.setTimeout(poll, 2_000)
       }
     }
 
-    void poll()
+    void loadRevision()
     return () => {
       disposed = true
-      controller?.abort()
-      if (timer) window.clearTimeout(timer)
+      controller.abort()
     }
-  }, [appendActivity, reachable])
+  }, [calendarRevision, enabled, reachable])
 
-  return reachable ? { events, source, error } : { events: [], source: null, error: null }
+  return reachable
+    ? {
+        events: enabled && calendarRevision !== null ? events : [],
+        source: healthSource ?? source,
+        error: calendarRevision === null ? null : error,
+      }
+    : { events: [], source: null, error: null }
 }

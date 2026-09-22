@@ -71,7 +71,11 @@ export function FyodorTerminalShell() {
   const bridge = useBridgeStatus()
   const mt5Connected = bridge.health?.mt5.connected === true
   const marketData = useMt5MarketData(mt5Connected, bridge.health?.mt5.generation ?? 0, selectedSymbol, timeframe)
-  const calendar = useMt5EconomicCalendar(bridge.reachable)
+  const calendar = useMt5EconomicCalendar(
+    bridge.reachable,
+    bridge.health?.calendar ?? null,
+    bottomDockWindow === 'calendar',
+  )
   const activeSymbol = marketData.activeSymbol
   const quote = marketData.symbols.find((item) => item.symbol === activeSymbol) ?? null
   const bars = marketData.bars
@@ -313,7 +317,7 @@ export function FyodorTerminalShell() {
         bottomDockWindow={bottomDockWindow}
         settingsOpen={settingsOpen}
         calendarStatus={calendarStatus}
-        calendarEventCount={calendar.events.length}
+        calendarEventCount={bridge.health?.calendar.event_count ?? 0}
         onToggleBottomDock={toggleBottomDock}
         onThemeChanged={changeTheme}
         onToggleSettings={() => setSettingsOpen((open) => !open)}

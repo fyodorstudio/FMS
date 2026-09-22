@@ -153,8 +153,9 @@ export function useMt5MarketData(
     const poll = async () => {
       controller = new AbortController()
       setChartAttemptKey(requestedChartKey)
-      const fullRefresh = chartDataKeyRef.current !== requestedChartKey || Date.now() - lastFullFetchAtRef.current >= 60_000
-      const requestedBarCount = fullRefresh ? 800 : 3
+      const firstLoad = chartDataKeyRef.current !== requestedChartKey
+      const reconciliation = !firstLoad && Date.now() - lastFullFetchAtRef.current >= 60_000
+      const requestedBarCount = firstLoad ? 5_000 : reconciliation ? 800 : 3
       try {
         const response = await bridgeRequest<OhlcResponse>(
           `/ohlc?symbol=${encodeURIComponent(activeSymbol)}&timeframe=${timeframe}&count=${requestedBarCount}`,
@@ -169,7 +170,7 @@ export function useMt5MarketData(
           close: bar.close,
         }))
         const firstReceivedTime = receivedBars[0]?.time
-        const nextBars = fullRefresh || firstReceivedTime === undefined
+        const nextBars = firstLoad || firstReceivedTime === undefined
           ? receivedBars
           : [...barsRef.current.filter((bar) => bar.time < firstReceivedTime), ...receivedBars]
         const fingerprint = barFingerprint(nextBars)
@@ -178,7 +179,7 @@ export function useMt5MarketData(
           barsRef.current = nextBars
           setBars(nextBars)
         }
-        if (fullRefresh) lastFullFetchAtRef.current = Date.now()
+        if (firstLoad || reconciliation) lastFullFetchAtRef.current = Date.now()
         setChartDataKey(requestedChartKey)
         chartDataKeyRef.current = requestedChartKey
         setBarsObservedAt(response.observed_at)

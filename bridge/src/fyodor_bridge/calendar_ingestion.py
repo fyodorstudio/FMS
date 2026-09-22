@@ -7,12 +7,18 @@ from typing import Any, Literal
 from .runtime_activity import ActivityLedger, utc_milliseconds
 
 
+DEFAULT_DAYS_BACK = 14
+DEFAULT_DAYS_AHEAD = 60
+
+
 @dataclass
 class SnapshotStage:
     chunk_count: int
     chunks: dict[int, list[dict[str, Any]]]
     instance_id: str
     server_utc_offset_seconds: int
+    window_from_server_seconds: int
+    window_to_server_seconds: int
 
 
 class CalendarStore:
@@ -27,6 +33,8 @@ class CalendarStore:
         self._last_update_at: int | None = None
         self._server_time_seconds: int | None = None
         self._server_utc_offset_seconds: int | None = None
+        self._window_from_server_seconds: int | None = None
+        self._window_to_server_seconds: int | None = None
         self._change_id: str | None = None
         self._publisher_request_duration_ms: int | None = None
         self._clock_trust: Literal["unavailable", "observed"] = "unavailable"
@@ -50,6 +58,9 @@ class CalendarStore:
             self._last_heartbeat_at = now
             self._server_time_seconds = int(payload["server_time_seconds"])
             self._server_utc_offset_seconds = int(payload["server_utc_offset_seconds"])
+            window_from, window_to = self._payload_window(payload)
+            self._window_from_server_seconds = window_from
+            self._window_to_server_seconds = window_to
             self._change_id = payload.get("change_id")
             self._publisher_request_duration_ms = int(payload.get("previous_request_duration_ms", 0))
             self._clock_trust = "observed"
@@ -58,16 +69,22 @@ class CalendarStore:
                 committed = self._ingest_snapshot_chunk(payload, now)
             elif kind == "delta":
                 for event in payload.get("events", []):
-                    self._events[event["value_id"]] = event
+                    if self._inside_window(event, window_from, window_to):
+                        self._events[event["value_id"]] = event
+                    else:
+                        self._events.pop(event["value_id"], None)
+                self._prune_outside_window(window_from, window_to)
                 self._last_update_at = now
                 committed = True
             else:
+                self._prune_outside_window(window_from, window_to)
                 committed = True
 
             return {
                 "accepted": True,
                 "committed": committed,
                 "event_count": len(self._events),
+                "snapshot_required": self._last_snapshot_at is None,
                 "received_at": now,
             }
 
@@ -82,6 +99,8 @@ class CalendarStore:
                 chunks={},
                 instance_id=payload["instance_id"],
                 server_utc_offset_seconds=int(payload["server_utc_offset_seconds"]),
+                window_from_server_seconds=self._window_from_server_seconds or 0,
+                window_to_server_seconds=self._window_to_server_seconds or 0,
             )
             self._stages = {snapshot_id: stage}
         if stage.chunk_count != chunk_count:
@@ -95,7 +114,12 @@ class CalendarStore:
             if index not in stage.chunks:
                 return False
             for event in stage.chunks[index]:
-                next_events[event["value_id"]] = event
+                if self._inside_window(
+                    event,
+                    stage.window_from_server_seconds,
+                    stage.window_to_server_seconds,
+                ):
+                    next_events[event["value_id"]] = event
         self._events = next_events
         self._last_snapshot_at = now
         self._last_update_at = now
@@ -107,6 +131,29 @@ class CalendarStore:
             "success",
         )
         return True
+
+    @staticmethod
+    def _payload_window(payload: dict[str, Any]) -> tuple[int, int]:
+        server_time = int(payload["server_time_seconds"])
+        window_from = payload.get("window_from_server_seconds")
+        window_to = payload.get("window_to_server_seconds")
+        start = int(window_from) if window_from is not None else server_time - DEFAULT_DAYS_BACK * 86_400
+        end = int(window_to) if window_to is not None else server_time + DEFAULT_DAYS_AHEAD * 86_400
+        if start >= end:
+            raise ValueError("Calendar window start must be earlier than its end")
+        return start, end
+
+    @staticmethod
+    def _inside_window(event: dict[str, Any], window_from: int, window_to: int) -> bool:
+        server_time = int(event["server_time_seconds"])
+        return window_from <= server_time <= window_to
+
+    def _prune_outside_window(self, window_from: int, window_to: int) -> None:
+        self._events = {
+            value_id: event
+            for value_id, event in self._events.items()
+            if self._inside_window(event, window_from, window_to)
+        }
 
     def health(self) -> dict[str, object]:
         with self._lock:
@@ -127,6 +174,8 @@ class CalendarStore:
                 "last_update_at": self._last_update_at,
                 "server_time_seconds": self._server_time_seconds,
                 "server_utc_offset_seconds": self._server_utc_offset_seconds,
+                "window_from_server_seconds": self._window_from_server_seconds,
+                "window_to_server_seconds": self._window_to_server_seconds,
                 "change_id": self._change_id,
                 "publisher_request_duration_ms": self._publisher_request_duration_ms,
                 "clock_trust": self._clock_trust,
@@ -138,6 +187,16 @@ class CalendarStore:
             offset = self._server_utc_offset_seconds
             events: list[dict[str, Any]] = []
             for stored in self._events.values():
+                if (
+                    self._window_from_server_seconds is not None
+                    and self._window_to_server_seconds is not None
+                    and not self._inside_window(
+                        stored,
+                        self._window_from_server_seconds,
+                        self._window_to_server_seconds,
+                    )
+                ):
+                    continue
                 event = dict(stored)
                 server_seconds = int(event["server_time_seconds"])
                 event["release_at"] = (server_seconds - offset) * 1000 if offset is not None else None

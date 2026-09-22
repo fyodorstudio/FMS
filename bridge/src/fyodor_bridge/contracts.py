@@ -40,6 +40,8 @@ class CalendarIngestPayload(BaseModel):
     server_time_seconds: int = Field(ge=0)
     gmt_time_seconds: int = Field(ge=0)
     server_utc_offset_seconds: int = Field(ge=-50_400, le=50_400)
+    window_from_server_seconds: int | None = Field(default=None, ge=0)
+    window_to_server_seconds: int | None = Field(default=None, ge=0)
     previous_request_duration_ms: int = Field(default=0, ge=0, le=120_000)
     change_id: str | None = Field(default=None, max_length=32)
     snapshot_id: str | None = Field(default=None, max_length=120)

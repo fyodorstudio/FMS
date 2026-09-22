@@ -169,15 +169,10 @@ class Mt5Worker:
 
         if previous_pid and previous_pid != process.pid:
             self._shutdown_mt5()
+            was_connected = False
 
-        if self._mt5 is None:
-            try:
-                self._mt5 = importlib.import_module("MetaTrader5")
-            except ModuleNotFoundError:
-                self._set_error("Python package MetaTrader5 is not installed", "package-missing")
-                return
-            with self._status_lock:
-                self._status.package_version = getattr(self._mt5, "__version__", None)
+        if not self._load_mt5_module():
+            return
 
         if was_connected and previous_pid == process.pid:
             try:
@@ -190,8 +185,12 @@ class Mt5Worker:
             except Exception:
                 pass
             self._shutdown_mt5()
+            was_connected = False
             with self._status_lock:
                 self._status.connected = False
+
+        if not self._load_mt5_module():
+            return
 
         with self._status_lock:
             self._status.last_attempt_at = utc_milliseconds()
@@ -233,6 +232,18 @@ class Mt5Worker:
                 f"PID {process.pid} · generation {generation}",
                 "success",
             )
+
+    def _load_mt5_module(self) -> bool:
+        if self._mt5 is not None:
+            return True
+        try:
+            self._mt5 = importlib.import_module("MetaTrader5")
+        except ModuleNotFoundError:
+            self._set_error("Python package MetaTrader5 is not installed", "package-missing")
+            return False
+        with self._status_lock:
+            self._status.package_version = getattr(self._mt5, "__version__", None)
+        return True
 
     def _set_terminal_absent(self) -> None:
         with self._status_lock:
