@@ -243,7 +243,7 @@ export function useMt5MarketData(
       setChartAttemptKey(requestedChartKey)
       const firstLoad = chartDataKeyRef.current !== requestedChartKey
       const reconciliation = !firstLoad && Date.now() - lastFullFetchAtRef.current >= 60_000
-      const requestedBarCount = firstLoad ? 5_000 : reconciliation ? 800 : 3
+      const requestedBarCount = firstLoad ? 800 : reconciliation ? 800 : 3
       try {
         const response = await bridgeRequest<OhlcResponse>(
           `/ohlc?symbol=${encodeURIComponent(activeSymbol)}&timeframe=${timeframe}&start_pos=0&count=${requestedBarCount}`,

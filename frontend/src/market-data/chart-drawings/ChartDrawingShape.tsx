@@ -146,7 +146,21 @@ export function ChartDrawingShape({ drawing, points, width, height, precision = 
         </g>
       )
     case 'text':
-      return <text className="drawing-text" x={first.x + 5} y={first.y - 6}>Text</text>
+      return (
+        <g>
+          <rect
+            x={first.x}
+            y={first.y - 20}
+            width={Math.max(50, ((drawing.text?.length ?? 4) + 1) * 9)}
+            height={24}
+            fill="transparent"
+            className="drawing-hit-area"
+          />
+          <text className="drawing-text" x={first.x + 5} y={first.y - 6}>
+            {drawing.text && drawing.text.trim() !== '' ? drawing.text : 'Text'}
+          </text>
+        </g>
+      )
     case 'price-note':
       return (
         <g>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
-import type { IChartApi, ISeriesApi, Time } from 'lightweight-charts'
+import type { IChartApi, ISeriesApi, Logical, Time } from 'lightweight-charts'
 import { ChartDrawingShape } from './ChartDrawingShape'
 import { ChartDrawingSelectionHandles, type DrawingHandleKind } from './ChartDrawingSelectionHandles'
 import type { ChartDrawingPoint, ChartDrawingRecord } from './chart-drawing-record'
@@ -20,6 +20,7 @@ type ChartDrawingOverlayProps = {
   onUpdateDrawingPoint: (drawingId: string, pointIndex: number, point: ChartDrawingPoint, persist: boolean) => void
   onUpdateDrawingPoints?: (drawingId: string, points: ChartDrawingPoint[], persist: boolean) => void
   onUpdatePositionWidth: (drawingId: string, time: ChartDrawingPoint['time'], persist: boolean) => void
+  onUpdateDrawingText?: (drawingId: string, text: string) => void
   onDeleteSelectedDrawing?: () => void
   onDeleteDrawing?: (drawingId: string) => void
   onExitDrawingMode: () => void
@@ -45,6 +46,7 @@ export function ChartDrawingOverlay({
   onUpdateDrawingPoint,
   onUpdateDrawingPoints,
   onUpdatePositionWidth,
+  onUpdateDrawingText,
   onDeleteSelectedDrawing,
   onDeleteDrawing,
   onExitDrawingMode,
@@ -55,6 +57,7 @@ export function ChartDrawingOverlay({
   const editingHandleRef = useRef<EditingHandle | null>(null)
   const [draft, setDraft] = useState<ChartDrawingPoint[]>([])
   const [viewport, setViewport] = useState({ width: 0, height: 0, revision: 0 })
+  const [editingTextId, setEditingTextId] = useState<string | null>(null)
 
   useEffect(() => {
     const overlay = overlayRef.current
@@ -90,8 +93,9 @@ export function ChartDrawingOverlay({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onDeleteSelectedDrawing, selectedDrawingId])
 
-  const eventToDataPoint = (event: ReactPointerEvent<SVGSVGElement>) => {
-    const rectangle = event.currentTarget.getBoundingClientRect()
+  const eventToDataPoint = (event: ReactPointerEvent<Element>) => {
+    const overlay = overlayRef.current
+    const rectangle = overlay ? overlay.getBoundingClientRect() : event.currentTarget.getBoundingClientRect()
     const x = event.clientX - rectangle.left
     const y = event.clientY - rectangle.top
     const time = chartApi.timeScale().coordinateToTime(x)
@@ -101,8 +105,15 @@ export function ChartDrawingOverlay({
   }
 
   const toScreenPoints = (drawing: ChartDrawingRecord) => {
+    const timeScale = chartApi.timeScale()
     const points = drawing.points.map((point) => {
-      const x = chartApi.timeScale().timeToCoordinate(point.time)
+      let x = timeScale.timeToCoordinate(point.time as unknown as Time)
+      if (x === null) {
+        const index = timeScale.timeToIndex(point.time as unknown as Time, true)
+        if (index !== null) {
+          x = timeScale.logicalToCoordinate(index as unknown as Logical)
+        }
+      }
       const y = seriesApi.priceToCoordinate(point.price)
       return x === null || y === null ? null : { x, y, price: point.price }
     })
@@ -119,6 +130,10 @@ export function ChartDrawingOverlay({
     const drawingId = onCreateDrawing(tool, normalizeDrawingPoints(tool, points))
     onSelectDrawing(drawingId)
     resetDraft()
+    if (tool === 'text') {
+      setEditingTextId(drawingId)
+    }
+    onExitDrawingMode()
   }
 
   const startInteraction = (event: ReactPointerEvent<SVGSVGElement>) => {
@@ -250,7 +265,7 @@ export function ChartDrawingOverlay({
     event.stopPropagation()
     event.currentTarget.setPointerCapture(event.pointerId)
     const drawing = drawings.find((candidate) => candidate.id === drawingId)
-    const point = eventToDataPoint(event as unknown as ReactPointerEvent<SVGSVGElement>)
+    const point = eventToDataPoint(event)
     editingHandleRef.current = {
       drawingId,
       pointIndex,
@@ -294,6 +309,12 @@ export function ChartDrawingOverlay({
               event.stopPropagation()
               onSelectDrawing(drawing.id)
             }}
+            onDoubleClick={(event) => {
+              if (drawing.tool === 'text') {
+                event.stopPropagation()
+                setEditingTextId(drawing.id)
+              }
+            }}
             onContextMenu={(event) => {
               if (activeTool) return
               event.preventDefault()
@@ -318,6 +339,52 @@ export function ChartDrawingOverlay({
           </g>
         )
       })}
+      {(() => {
+        if (!editingTextId) return null
+        const drawing = drawings.find((d) => d.id === editingTextId)
+        if (!drawing || drawing.tool !== 'text') return null
+        const screenPoints = toScreenPoints(drawing)
+        const point = screenPoints[0]
+        if (!point) return null
+        return (
+          <foreignObject
+            x={Math.max(4, point.x + 2)}
+            y={Math.max(4, point.y - 18)}
+            width={220}
+            height={32}
+            className="drawing-text-foreign-object"
+          >
+            <input
+              ref={(el) => {
+                if (el) {
+                  el.focus()
+                  el.select()
+                }
+              }}
+              className="drawing-text-input"
+              type="text"
+              defaultValue={drawing.text ?? ''}
+              placeholder="Type text..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.currentTarget.blur()
+                } else if (e.key === 'Escape') {
+                  setEditingTextId(null)
+                }
+                e.stopPropagation()
+              }}
+              onBlur={(e) => {
+                const text = e.currentTarget.value.trim()
+                if (onUpdateDrawingText) {
+                  onUpdateDrawingText(drawing.id, text)
+                }
+                setEditingTextId(null)
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+            />
+          </foreignObject>
+        )
+      })()}
       {draftDrawing && (
         <g className="drawing-draft">
           <ChartDrawingShape drawing={draftDrawing} points={toScreenPoints(draftDrawing)} width={viewport.width} height={viewport.height} precision={precision} />

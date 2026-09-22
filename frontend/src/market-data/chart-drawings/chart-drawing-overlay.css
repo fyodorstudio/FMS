@@ -16,7 +16,22 @@
 .drawing-stroke { fill: none; stroke: var(--accent); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .drawing-fill { fill: color-mix(in srgb, var(--accent) 9%, transparent); }
 .drawing-arrow-head { fill: var(--accent); }
-.drawing-text { fill: var(--text-strong); font-size: 12px; font-weight: 650; paint-order: stroke; stroke: var(--chart-background); stroke-width: 3px; }
+.drawing-text { fill: var(--text-strong); font-size: 12px; font-weight: 650; paint-order: stroke; stroke: var(--chart-background); stroke-width: 3px; cursor: pointer; user-select: none; }
+.drawing-text-foreign-object { overflow: visible; pointer-events: auto; }
+.drawing-text-input {
+  background: var(--surface-panel);
+  color: var(--text-strong);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  padding: 3px 7px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
 .drawing-note-dot { fill: var(--accent); }
 .drawing-note { fill: var(--text-strong); font-size: 10px; paint-order: stroke; stroke: var(--chart-background); stroke-width: 3px; }
 .position-target-area { fill: color-mix(in srgb, var(--positive) 21%, transparent); }

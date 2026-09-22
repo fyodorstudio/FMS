@@ -8,6 +8,7 @@ import {
 } from '../appearance/time-display/time-display-preference'
 import { EconomicCalendarMarkers } from '../economic-calendar/calendar-dock/EconomicCalendarMarkers'
 import { EconomicCalendarPanel } from '../economic-calendar/calendar-dock/EconomicCalendarPanel'
+import type { CalendarRangePreset } from '../economic-calendar/calendar-dock/calendar-display-range'
 import { useMt5EconomicCalendar } from '../economic-calendar/mt5-calendar/use-mt5-economic-calendar'
 import { FmsArrowControls } from '../fms/chart-arrows/FmsArrowControls'
 import { FmsChartMarkers } from '../fms/chart-arrows/FmsChartMarkers'
@@ -102,12 +103,14 @@ export function FyodorTerminalShell() {
     addDrawing,
     updateDrawingPoint,
     updateDrawingPoints,
+    updateDrawingText,
     updatePositionWidth,
     deleteDrawing,
     clearAllDrawings,
   } = useChartDrawings(activeSymbol, timeframe)
 
   const [highlightedCalendarEventId, setHighlightedCalendarEventId] = useState<string | null>(null)
+  const [calendarRangePreset, setCalendarRangePreset] = useState<CalendarRangePreset>('this-week')
 
   const handleDeleteDrawing = useCallback((drawingId: string) => {
     deleteDrawing(drawingId)
@@ -253,6 +256,7 @@ export function FyodorTerminalShell() {
                 onUpdateDrawingPoint={updateDrawingPoint}
                 onUpdateDrawingPoints={updateDrawingPoints}
                 onUpdatePositionWidth={updatePositionWidth}
+                onUpdateDrawingText={updateDrawingText}
                 onDeleteDrawing={handleDeleteDrawing}
                 onExitDrawingMode={() => setActiveDrawingTool(null)}
                 onDataApplied={recordChartData}
@@ -273,6 +277,9 @@ export function FyodorTerminalShell() {
                       symbol={activeSymbol}
                       bars={bars}
                       events={calendar.events}
+                      rangePreset={calendarRangePreset}
+                      timeDisplay={timeDisplay}
+                      clockOffsetMs={bridge.clockOffsetMs}
                       onSelectEvent={(event) => {
                         setBottomDockWindow('calendar')
                         setHighlightedCalendarEventId(event.value_id)
@@ -340,6 +347,8 @@ export function FyodorTerminalShell() {
               clockOffsetMs={bridge.clockOffsetMs}
               timeDisplay={timeDisplay}
               highlightedEventId={highlightedCalendarEventId}
+              rangePreset={calendarRangePreset}
+              onRangePresetChange={setCalendarRangePreset}
             />
           )}
           {bottomDockWindow === 'past-result' && <FmsPastResultPanel result={selectedFmsResult} timeDisplay={timeDisplay} />}

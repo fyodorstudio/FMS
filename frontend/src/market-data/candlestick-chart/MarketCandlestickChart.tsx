@@ -31,6 +31,7 @@ type MarketCandlestickChartProps = {
   onUpdateDrawingPoint: (drawingId: string, pointIndex: number, point: ChartDrawingPoint, persist: boolean) => void
   onUpdateDrawingPoints?: (drawingId: string, points: ChartDrawingPoint[], persist: boolean) => void
   onUpdatePositionWidth: (drawingId: string, time: ChartDrawingPoint['time'], persist: boolean) => void
+  onUpdateDrawingText?: (drawingId: string, text: string) => void
   onDeleteSelectedDrawing?: () => void
   onDeleteDrawing?: (drawingId: string) => void
   onExitDrawingMode: () => void
@@ -59,6 +60,7 @@ export function MarketCandlestickChart({
   onUpdateDrawingPoint,
   onUpdateDrawingPoints,
   onUpdatePositionWidth,
+  onUpdateDrawingText,
   onDeleteSelectedDrawing,
   onDeleteDrawing,
   onExitDrawingMode,
@@ -311,6 +313,7 @@ export function MarketCandlestickChart({
           onUpdateDrawingPoint={onUpdateDrawingPoint}
           onUpdateDrawingPoints={onUpdateDrawingPoints}
           onUpdatePositionWidth={onUpdatePositionWidth}
+          onUpdateDrawingText={onUpdateDrawingText}
           onDeleteSelectedDrawing={onDeleteSelectedDrawing}
           onDeleteDrawing={onDeleteDrawing}
           onExitDrawingMode={onExitDrawingMode}

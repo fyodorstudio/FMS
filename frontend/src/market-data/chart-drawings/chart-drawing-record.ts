@@ -14,4 +14,5 @@ export type ChartDrawingRecord = {
   tool: DrawingToolId
   points: ChartDrawingPoint[]
   createdAt: number
+  text?: string
 }

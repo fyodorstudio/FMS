@@ -21,6 +21,8 @@ type EconomicCalendarPanelProps = {
   clockOffsetMs: number
   timeDisplay: TimeDisplayPreference
   highlightedEventId?: string | null
+  rangePreset?: CalendarRangePreset
+  onRangePresetChange?: (preset: CalendarRangePreset) => void
 }
 
 function sourceLabel(source: CalendarSourceHealth | null, error: string | null) {
@@ -39,11 +41,15 @@ export function EconomicCalendarPanel({
   clockOffsetMs,
   timeDisplay,
   highlightedEventId,
+  rangePreset: externalRangePreset,
+  onRangePresetChange,
 }: EconomicCalendarPanelProps) {
   const [now, setNow] = useState(() => Date.now() + clockOffsetMs)
   const initialToday = displayDateKey(now, timeDisplay)
   const initialWeek = displayWeekDateKeys(initialToday)
-  const [rangePreset, setRangePreset] = useState<CalendarRangePreset>('this-week')
+  const [internalRangePreset, setInternalRangePreset] = useState<CalendarRangePreset>('this-week')
+  const rangePreset = externalRangePreset ?? internalRangePreset
+  const setRangePreset = onRangePresetChange ?? setInternalRangePreset
   const [customFrom, setCustomFrom] = useState(initialWeek.start)
   const [customTo, setCustomTo] = useState(initialWeek.end)
 

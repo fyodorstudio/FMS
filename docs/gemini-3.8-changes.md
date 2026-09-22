@@ -74,9 +74,43 @@ This document records the architectural improvements, reliability hardening, and
 
 ---
 
-## 6. Verification Summary
+---
+
+## 7. Bridge Timeout Hardening & Rapid Switching Optimization
+
+### A. 30.0s Timeout Protection (`settings.py`)
+- Configured default `mt5_call_timeout_seconds = 30.0` (overridable via `FYODOR_MT5_CALL_TIMEOUT_SECONDS`).
+- Prevents premature child adapter termination during slow broker-side history downloads on CFD/crypto pairs.
+
+### B. Initial Bar Fetch Optimization (`use-mt5-market-data.ts`)
+- Reduced initial load on symbol switch from 5,000 bars to 800 bars (`requestedBarCount = firstLoad ? 800 : ...`).
+- Sub-500ms initial response time avoids IPC queue saturation while demand-based backward history scrolling up to 5,000 bars remains intact.
+
+---
+
+## 8. Drawing Stability & Inline Text Tool
+
+### A. Disappearing Drawing Fix (`ChartDrawingOverlay.tsx`)
+- In `startHandleEdit`, coordinates are now measured relative to `overlayRef.current.getBoundingClientRect()` rather than the 10px handle element, preventing coordinate distortion.
+- Added `timeToIndex` $\to$ `logicalToCoordinate` fallback in `toScreenPoints` to prevent coordinate evaluation failure on off-tick bars or future whitespace.
+
+### B. Position Tool Single-Click Auto-Expansion (`position-drawing-geometry.ts`)
+- Added 15-hour default span and 0.35% minimum price distance in `normalizeDrawingPoints` when single-clicking without dragging.
+
+### C. Inline Text Drawing Tool (`ChartDrawingOverlay.tsx`, `ChartDrawingShape.tsx`, `chart-drawing-overlay.css`)
+- Added inline text editing via `<foreignObject>` with auto-focused `<input>`.
+- Supports Enter / blur to commit, Escape to cancel, and double-click on existing text drawings to re-edit.
+- Persisted to `localStorage` via `updateDrawingText`.
+
+### D. Economic Calendar Timeline Range Synchronization (`EconomicCalendarMarkers.tsx`, `EconomicCalendarPanel.tsx`)
+- Synchronized active range preset between bottom dock calendar and chart timeline strip (`rangePreset` / `calendarRangePreset`).
+
+---
+
+## 9. Verification Summary
 
 - **TypeScript Compilation**: Passed with zero errors (`tsc -b`).
-- **Production Build**: Passed (`vite build`, $234\text{ms}$).
+- **Production Build**: Passed (`vite build`, $216\text{ms}$).
 - **Linter**: Passed with **0 errors and 0 warnings** across all 58 files (`oxlint`).
 - **Python Bridge Compile Check**: Passed with zero syntax/import errors.
+

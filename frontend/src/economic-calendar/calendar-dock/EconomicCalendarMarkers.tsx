@@ -2,6 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { IChartApi, ISeriesApi, Time } from 'lightweight-charts'
 import type { OhlcBar } from '../../market-data/contracts/OhlcBar'
 import type { EconomicCalendarEvent } from '../mt5-calendar/calendar-contract'
+import {
+  calendarDisplayRange,
+  displayDateKey,
+  type CalendarRangePreset,
+} from './calendar-display-range'
+import type { TimeDisplayPreference } from '../../appearance/time-display/time-display-preference'
 import './economic-calendar-markers.css'
 
 type EconomicCalendarMarkersProps = {
@@ -10,6 +16,9 @@ type EconomicCalendarMarkersProps = {
   symbol: string
   bars: OhlcBar[]
   events: EconomicCalendarEvent[]
+  rangePreset?: CalendarRangePreset
+  timeDisplay?: TimeDisplayPreference
+  clockOffsetMs?: number
   onSelectEvent?: (event: EconomicCalendarEvent) => void
 }
 
@@ -62,11 +71,27 @@ export function EconomicCalendarMarkers({
   symbol,
   bars,
   events,
+  rangePreset,
+  timeDisplay,
+  clockOffsetMs,
   onSelectEvent,
 }: EconomicCalendarMarkersProps) {
   const stripRef = useRef<HTMLDivElement>(null)
   const [hoveredGroupId, setHoveredGroupId] = useState<string | null>(null)
   const [revision, setRevision] = useState(0)
+
+  const [now, setNow] = useState(() => Date.now() + (clockOffsetMs ?? 0))
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now() + (clockOffsetMs ?? 0)), 10_000)
+    return () => window.clearInterval(timer)
+  }, [clockOffsetMs])
+
+  const activeRange = useMemo(() => {
+    if (!rangePreset || !timeDisplay) return null
+    const today = displayDateKey(now, timeDisplay)
+    return calendarDisplayRange(rangePreset, today, '', '', timeDisplay)
+  }, [now, rangePreset, timeDisplay])
 
   const eventGroups = useMemo(() => {
     if (bars.length === 0 || events.length === 0) return []
@@ -83,9 +108,14 @@ export function EconomicCalendarMarkers({
       const currency = event.currency.toUpperCase()
       if (!currencies.has(currency)) continue
 
-      const eventSec = Math.floor(event.release_at / 1000)
-      if (eventSec < minBarTime - 86400 || eventSec > maxBarTime + 86400) continue
+      if (activeRange) {
+        if (event.release_at < activeRange.from || event.release_at >= activeRange.to) continue
+      } else {
+        const eventSec = Math.floor(event.release_at / 1000)
+        if (eventSec < minBarTime - 86400 || eventSec > maxBarTime + 86400) continue
+      }
 
+      const eventSec = Math.floor(event.release_at / 1000)
       const barTime = findNearestBarTime(eventSec, barTimes)
       const groupKey = `${currency}-${barTime}`
 
@@ -105,7 +135,7 @@ export function EconomicCalendarMarkers({
     }
 
     return Array.from(map.values())
-  }, [bars, events, symbol])
+  }, [activeRange, bars, events, symbol])
 
   const [containerWidth, setContainerWidth] = useState(800)
 

@@ -6,12 +6,19 @@ export function normalizeDrawingPoints(tool: DrawingToolId, points: ChartDrawing
 
   const entry = points[0]
   const dragged = points.at(-1)!
-  const distance = Math.max(Math.abs(dragged.price - entry.price), Math.abs(entry.price) * 0.001)
   const long = tool === 'long-position'
+
+  const defaultSpanSec = 15 * 3600
+  const time = Math.abs(dragged.time - entry.time) < 60
+    ? ((entry.time + defaultSpanSec) as ChartDrawingPoint['time'])
+    : dragged.time
+
+  const minDelta = Math.abs(entry.price) * 0.0035 || 0.0035
+  const distance = Math.max(Math.abs(dragged.price - entry.price), minDelta)
 
   return [
     entry,
-    { time: dragged.time, price: entry.price + (long ? distance : -distance) },
-    { time: dragged.time, price: entry.price + (long ? -distance : distance) },
+    { time, price: entry.price + (long ? distance : -distance) },
+    { time, price: entry.price + (long ? -distance : distance) },
   ]
 }

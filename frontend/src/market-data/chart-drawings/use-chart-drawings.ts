@@ -79,6 +79,17 @@ export function useChartDrawings(symbol: string, timeframe: ChartTimeframe) {
     })
   }, [])
 
+  const updateDrawingText = useCallback((drawingId: string, text: string) => {
+    setAllDrawings((current) => {
+      const next = current.map((drawing) => {
+        if (drawing.id !== drawingId) return drawing
+        return { ...drawing, text }
+      })
+      saveChartDrawings(next)
+      return next
+    })
+  }, [])
+
   const deleteDrawing = useCallback((drawingId: string) => {
     setAllDrawings((current) => {
       const next = current.filter((drawing) => drawing.id !== drawingId)
@@ -98,6 +109,7 @@ export function useChartDrawings(symbol: string, timeframe: ChartTimeframe) {
     addDrawing,
     updateDrawingPoint,
     updateDrawingPoints,
+    updateDrawingText,
     updatePositionWidth,
     deleteDrawing,
     clearAllDrawings,
