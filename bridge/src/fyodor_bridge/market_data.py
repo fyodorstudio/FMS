@@ -50,15 +50,23 @@ def read_market_watch(mt5: Any) -> list[dict[str, object]]:
     return rows
 
 
-def read_ohlc(mt5: Any, symbol: str, timeframe: str, count: int) -> list[dict[str, float | int]]:
+def read_ohlc(
+    mt5: Any,
+    symbol: str,
+    timeframe: str,
+    start_pos: int,
+    count: int,
+) -> dict[str, object]:
     mt5_timeframe_name = TIMEFRAME_NAMES[timeframe]
     mt5_timeframe = getattr(mt5, mt5_timeframe_name)
     if not mt5.symbol_select(symbol, True):
         raise _last_error(mt5, f"Unable to select {symbol}")
-    rates = mt5.copy_rates_from_pos(symbol, mt5_timeframe, 0, count)
+    rates = mt5.copy_rates_from_pos(symbol, mt5_timeframe, start_pos, count + 1)
     if rates is None:
         raise _last_error(mt5, f"No {timeframe} history returned for {symbol}")
 
+    has_older = len(rates) > count
+    selected_rates = rates[-count:] if has_older else rates
     bars = [
         {
             "time": int(rate["time"]),
@@ -68,8 +76,13 @@ def read_ohlc(mt5: Any, symbol: str, timeframe: str, count: int) -> list[dict[st
             "close": float(rate["close"]),
             "tick_volume": int(rate["tick_volume"]),
         }
-        for rate in rates
+        for rate in selected_rates
     ]
     if not bars:
         raise _last_error(mt5, f"No {timeframe} bars are available for {symbol}")
-    return bars
+    return {
+        "bars": bars,
+        "start_pos": start_pos,
+        "next_start_pos": start_pos + len(bars),
+        "has_older": has_older,
+    }

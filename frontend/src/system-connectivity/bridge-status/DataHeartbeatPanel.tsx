@@ -39,12 +39,21 @@ export function DataHeartbeatPanel({ health, reachable, lastContactAt, roundTrip
 
   const mt5 = health?.mt5
   const calendar = health?.calendar
+  const probeAge = probeStartedAt ? now - probeStartedAt : 0
+  const healthOverdue = !reachable
+    || lastContactAt === null
+    || probeAge > 5_000
+    || now - lastContactAt > 7_000
+  const healthFresh = !healthOverdue
+  const mt5Available = healthFresh && mt5?.connected === true
   const cards = [
     {
       label: 'Bridge',
-      state: reachable ? (probeStartedAt ? 'busy' : 'good') : 'bad',
-      value: reachable ? (probeStartedAt ? 'Checking' : 'Running') : 'Unreachable',
-      detail: probeStartedAt
+      state: healthOverdue ? 'bad' : probeStartedAt ? 'busy' : 'good',
+      value: healthOverdue ? (reachable ? 'Unresponsive' : 'Unreachable') : probeStartedAt ? 'Checking' : 'Running',
+      detail: healthOverdue && probeStartedAt
+        ? `Health probe overdue · ${elapsedLabel(probeAge)}`
+        : probeStartedAt
         ? `Probe ${elapsedLabel(now - probeStartedAt)}`
         : lastContactAt
           ? `${elapsedLabel(roundTripMs)} round trip · ${elapsedLabel(now - lastContactAt)} ago`
@@ -52,38 +61,40 @@ export function DataHeartbeatPanel({ health, reachable, lastContactAt, roundTrip
     },
     {
       label: 'MT5 terminal',
-      state: !reachable ? 'bad' : mt5?.connected ? 'good' : mt5?.process_running ? 'warn' : 'bad',
-      value: !reachable ? 'Unknown' : mt5?.connected ? 'Connected' : mt5?.process_running ? 'Disconnected' : 'Not running',
-      detail: !reachable ? 'Bridge unreachable' : mt5?.connected
+      state: !healthFresh ? 'bad' : mt5?.connected ? 'good' : mt5?.process_running ? 'warn' : 'bad',
+      value: !healthFresh ? 'Unknown' : mt5?.connected ? 'Connected' : mt5?.process_running ? 'Disconnected' : 'Not running',
+      detail: !healthFresh ? 'Fresh bridge health is unavailable' : mt5?.connected
         ? `${mt5.account_server ?? 'Broker'} · login ${mt5.account_login ?? '—'} · generation ${mt5.generation}`
         : mt5?.last_error ?? 'Waiting for status',
     },
     {
       label: 'Market Watch',
-      state: !reachable ? 'bad' : !health?.operations.market_watch ? 'warn' : health.operations.market_watch.state === 'failed' ? 'bad' : health.operations.market_watch.state === 'running' ? 'busy' : 'good',
-      value: health?.operations.market_watch?.state === 'running' ? 'Fetching' : `${health?.operations.market_watch?.count ?? 0} symbols`,
-      detail: operationDetail(health?.operations.market_watch, now),
+      state: !mt5Available ? 'bad' : !health?.operations.market_watch ? 'warn' : health.operations.market_watch.state === 'failed' ? 'bad' : health.operations.market_watch.state === 'running' ? 'busy' : 'good',
+      value: !healthFresh ? 'Unknown' : !mt5Available ? 'Unavailable' : health?.operations.market_watch?.state === 'running' ? 'Fetching' : `${health?.operations.market_watch?.count ?? 0} symbols`,
+      detail: !healthFresh ? 'Fresh bridge health is unavailable' : !mt5Available ? mt5?.last_error ?? 'MT5 is not connected' : operationDetail(health?.operations.market_watch, now),
     },
     {
       label: 'Chart OHLC',
-      state: !reachable ? 'bad' : !health?.operations.ohlc ? 'warn' : health.operations.ohlc.state === 'failed' ? 'bad' : health.operations.ohlc.state === 'running' ? 'busy' : 'good',
-      value: health?.operations.ohlc?.state === 'running' ? 'Fetching' : `${health?.operations.ohlc?.count ?? 0} bars`,
-      detail: operationDetail(health?.operations.ohlc, now),
+      state: !mt5Available ? 'bad' : !health?.operations.ohlc ? 'warn' : health.operations.ohlc.state === 'failed' ? 'bad' : health.operations.ohlc.state === 'running' ? 'busy' : 'good',
+      value: !healthFresh ? 'Unknown' : !mt5Available ? 'Unavailable' : health?.operations.ohlc?.state === 'running' ? 'Fetching' : `${health?.operations.ohlc?.count ?? 0} bars`,
+      detail: !healthFresh ? 'Fresh bridge health is unavailable' : !mt5Available ? mt5?.last_error ?? 'MT5 is not connected' : operationDetail(health?.operations.ohlc, now),
     },
     {
       label: 'Calendar EA',
-      state: !reachable ? 'bad' : calendar?.status === 'live' ? 'good' : calendar?.status === 'stale' ? 'bad' : 'warn',
-      value: !reachable ? 'Unknown' : calendar?.status === 'live' ? 'Live' : calendar?.status.replaceAll('-', ' ') ?? 'Waiting',
-      detail: !reachable ? 'Bridge unreachable' : calendar?.last_heartbeat_at
+      state: !healthFresh ? 'bad' : calendar?.status === 'live' ? 'good' : calendar?.status === 'stale' ? 'bad' : 'warn',
+      value: !healthFresh ? 'Unknown' : calendar?.status === 'live' ? 'Live' : calendar?.status.replaceAll('-', ' ') ?? 'Waiting',
+      detail: !healthFresh ? 'Fresh bridge health is unavailable' : calendar?.last_heartbeat_at
         ? `${calendar.event_count} events · send ${elapsedLabel(calendar.publisher_request_duration_ms)} · ${elapsedLabel(now - calendar.last_heartbeat_at)} ago`
         : 'Attach the calendar publisher EA',
     },
     {
       label: 'Source clock',
-      state: reachable && calendar?.clock_trust === 'observed' ? 'warn' : 'bad',
-      value: reachable && calendar?.clock_trust === 'observed' ? 'Observed' : 'Unverified',
-      detail: !reachable
-        ? 'Bridge unreachable'
+      state: healthFresh && calendar?.clock_trust === 'observed' && calendar.status === 'live' ? 'warn' : 'bad',
+      value: healthFresh && calendar?.clock_trust === 'observed'
+        ? calendar.status === 'live' ? 'Observed' : 'Last observed'
+        : 'Unverified',
+      detail: !healthFresh
+        ? 'Fresh bridge health is unavailable'
         : calendar?.server_utc_offset_seconds === null || calendar?.server_utc_offset_seconds === undefined
         ? 'Waiting for broker clock'
         : `Broker ${formatUtcOffset(calendar.server_utc_offset_seconds / 60)} · verify once before freeze`,

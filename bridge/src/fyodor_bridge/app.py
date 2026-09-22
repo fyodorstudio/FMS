@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .calendar_ingestion import CalendarStore
 from .contracts import CalendarIngestPayload
-from .market_data import TIMEFRAME_NAMES, read_market_watch, read_ohlc
+from .market_data import TIMEFRAME_NAMES
 from .mt5_worker import Mt5UnavailableError, Mt5Worker, SupersededRequest
 from .runtime_activity import ActivityLedger, HeartbeatRegistry, utc_milliseconds
 from .settings import load_settings
@@ -86,7 +86,7 @@ def get_market_watch() -> dict[str, object]:
     component = "market_watch"
     token = heartbeat.begin(component, "Reading visible MT5 symbols")
     try:
-        symbols = mt5_worker.submit(component, read_market_watch, priority=5)
+        symbols = mt5_worker.submit(component, "market-watch", priority=5)
     except Exception as error:
         heartbeat.fail(component, token, str(error))
         raise bridge_error(error) from error
@@ -98,6 +98,7 @@ def get_market_watch() -> dict[str, object]:
 def get_ohlc(
     symbol: str = Query(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9._#-]+$"),
     timeframe: str = Query(pattern="^(M1|M5|M15|M30|H1|H4|D1)$"),
+    start_pos: int = Query(default=0, ge=0, le=10_000_000),
     count: int = Query(default=800, ge=2, le=5000),
 ) -> dict[str, object]:
     if timeframe not in TIMEFRAME_NAMES:
@@ -107,19 +108,29 @@ def get_ohlc(
     token = heartbeat.begin(component, operation_name)
     before = perf_counter()
     try:
-        bars = mt5_worker.submit(
-            component,
-            lambda mt5: read_ohlc(mt5, symbol, timeframe, count),
-            priority=1,
+        page = mt5_worker.submit(
+            "ohlc-history" if start_pos > 0 else "ohlc-live",
+            "ohlc",
+            {
+                "symbol": symbol,
+                "timeframe": timeframe,
+                "start_pos": start_pos,
+                "count": count,
+            },
+            priority=8 if start_pos > 0 else 1,
         )
     except Exception as error:
         heartbeat.fail(component, token, str(error))
         raise bridge_error(error) from error
+    bars = page["bars"]
     duration = heartbeat.succeed(component, token, len(bars))
     return {
         "symbol": symbol,
         "timeframe": timeframe,
         "bars": bars,
+        "start_pos": page["start_pos"],
+        "next_start_pos": page["next_start_pos"],
+        "has_older": page["has_older"],
         "observed_at": utc_milliseconds(),
         "duration_ms": max(duration, round((perf_counter() - before) * 1000)),
         "source_generation": mt5_worker.snapshot()["generation"],

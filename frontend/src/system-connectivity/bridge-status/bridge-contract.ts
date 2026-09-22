@@ -21,6 +21,7 @@ export type BridgeHealth = {
     process_running: boolean
     process_id: number | null
     terminal_path: string | null
+    adapter_process_id: number | null
     connected: boolean
     state: string
     generation: number

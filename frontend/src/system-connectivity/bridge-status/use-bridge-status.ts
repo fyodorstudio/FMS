@@ -42,11 +42,18 @@ export function useBridgeStatus(): BridgeStatusState {
     let activityTimer: number | undefined
     let healthController: AbortController | null = null
     let activityController: AbortController | null = null
+    let healthAbortTimer: number | undefined
+    let activityAbortTimer: number | undefined
 
     const pollHealth = async () => {
       const startedAt = Date.now()
       setState((current) => ({ ...current, probeStartedAt: startedAt }))
       healthController = new AbortController()
+      let timedOut = false
+      healthAbortTimer = window.setTimeout(() => {
+        timedOut = true
+        healthController?.abort()
+      }, 5_000)
       try {
         const health = await bridgeRequest<BridgeHealth>('/health', healthController.signal)
         const finishedAt = Date.now()
@@ -71,8 +78,10 @@ export function useBridgeStatus(): BridgeStatusState {
           error: null,
         })
       } catch (error) {
-        if (disposed || (error instanceof DOMException && error.name === 'AbortError')) return
-        const message = error instanceof Error ? error.message : 'Bridge request failed'
+        if (disposed || (error instanceof DOMException && error.name === 'AbortError' && !timedOut)) return
+        const message = timedOut
+          ? 'Bridge health probe timed out after 5 seconds'
+          : error instanceof Error ? error.message : 'Bridge request failed'
         if (reachableRef.current !== false) {
           appendActivity('Bridge', 'Bridge unreachable', message, { severity: 'error' })
         }
@@ -84,12 +93,14 @@ export function useBridgeStatus(): BridgeStatusState {
           error: message,
         }))
       } finally {
+        if (healthAbortTimer) window.clearTimeout(healthAbortTimer)
         if (!disposed) healthTimer = window.setTimeout(pollHealth, 2_000)
       }
     }
 
     const pollActivity = async () => {
       activityController = new AbortController()
+      activityAbortTimer = window.setTimeout(() => activityController?.abort(), 5_000)
       try {
         const response = await bridgeRequest<ActivityResponse>(
           `/activity?after=${activitySequenceRef.current}`,
@@ -111,6 +122,7 @@ export function useBridgeStatus(): BridgeStatusState {
           // Health polling owns the visible unreachable transition.
         }
       } finally {
+        if (activityAbortTimer) window.clearTimeout(activityAbortTimer)
         if (!disposed) activityTimer = window.setTimeout(pollActivity, 1_000)
       }
     }
@@ -123,6 +135,8 @@ export function useBridgeStatus(): BridgeStatusState {
       activityController?.abort()
       if (healthTimer) window.clearTimeout(healthTimer)
       if (activityTimer) window.clearTimeout(activityTimer)
+      if (healthAbortTimer) window.clearTimeout(healthAbortTimer)
+      if (activityAbortTimer) window.clearTimeout(activityAbortTimer)
     }
   }, [appendActivity])
 

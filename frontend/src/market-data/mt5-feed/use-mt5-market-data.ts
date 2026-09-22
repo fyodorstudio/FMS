@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { UTCTimestamp } from 'lightweight-charts'
 import { BridgeRequestError, bridgeRequest } from '../../system-connectivity/bridge-status/bridge-client'
 import { useActivityLog } from '../../system-observability/activity-log/use-activity-log'
@@ -30,9 +30,18 @@ type OhlcResponse = {
     close: number
     tick_volume: number
   }>
+  start_pos: number
+  next_start_pos: number
+  has_older: boolean
   observed_at: number
   duration_ms: number
   source_generation: number
+}
+
+type ChartHistoryState = {
+  key: string | null
+  loading: boolean
+  complete: boolean
 }
 
 export type FeedStatus = 'waiting' | 'loading' | 'live' | 'stale' | 'unavailable'
@@ -46,6 +55,26 @@ export type Mt5MarketData = {
   marketWatchError: string | null
   chartError: string | null
   barsObservedAt: number | null
+  chartHistoryLoading: boolean
+  chartHistoryComplete: boolean
+  requestOlderBars: () => void
+}
+
+function toBars(response: OhlcResponse): OhlcBar[] {
+  return response.bars.map((bar) => ({
+    time: bar.time as UTCTimestamp,
+    open: bar.open,
+    high: bar.high,
+    low: bar.low,
+    close: bar.close,
+  }))
+}
+
+function mergeBars(older: OhlcBar[], current: OhlcBar[]) {
+  const byTime = new Map<number, OhlcBar>()
+  for (const bar of older) byTime.set(bar.time as number, bar)
+  for (const bar of current) byTime.set(bar.time as number, bar)
+  return [...byTime.values()].sort((left, right) => (left.time as number) - (right.time as number))
 }
 
 function barFingerprint(bars: OhlcBar[]) {
@@ -73,6 +102,7 @@ export function useMt5MarketData(
   const [marketAttemptGeneration, setMarketAttemptGeneration] = useState<number | null>(null)
   const [chartDataKey, setChartDataKey] = useState<string | null>(null)
   const [chartAttemptKey, setChartAttemptKey] = useState<string | null>(null)
+  const [historyState, setHistoryState] = useState<ChartHistoryState>({ key: null, loading: false, complete: false })
   const marketWasLive = useRef(false)
   const chartWasLive = useRef(false)
   const marketGenerationRef = useRef<number | null>(null)
@@ -80,6 +110,8 @@ export function useMt5MarketData(
   const barsRef = useRef<OhlcBar[]>([])
   const lastFullFetchAtRef = useRef(0)
   const fingerprintRef = useRef('empty')
+  const historyRequestRef = useRef<() => void>(() => undefined)
+  const requestOlderBars = useCallback(() => historyRequestRef.current(), [])
 
   useEffect(() => {
     if (!connected) return
@@ -146,9 +178,65 @@ export function useMt5MarketData(
     let disposed = false
     let timer: number | undefined
     let controller: AbortController | null = null
+    let olderController: AbortController | null = null
+    let olderLoading = false
+    let hasOlder = false
+    let nextHistoryStart = 0
     fingerprintRef.current = 'empty'
     chartWasLive.current = false
     lastFullFetchAtRef.current = 0
+
+    const loadOlder = async () => {
+      if (disposed || olderLoading || !hasOlder || chartDataKeyRef.current !== requestedChartKey) return
+      olderLoading = true
+      setHistoryState({ key: requestedChartKey, loading: true, complete: false })
+      olderController = new AbortController()
+      const requestedStart = nextHistoryStart
+      try {
+        const response = await bridgeRequest<OhlcResponse>(
+          `/ohlc?symbol=${encodeURIComponent(activeSymbol)}&timeframe=${timeframe}&start_pos=${requestedStart}&count=5000`,
+          olderController.signal,
+        )
+        if (
+          disposed
+          || response.symbol !== activeSymbol
+          || response.timeframe !== timeframe
+          || response.start_pos !== requestedStart
+          || chartDataKeyRef.current !== requestedChartKey
+        ) return
+        const receivedBars = toBars(response)
+        const nextBars = mergeBars(receivedBars, barsRef.current)
+        const fingerprint = barFingerprint(nextBars)
+        if (fingerprint !== fingerprintRef.current) {
+          fingerprintRef.current = fingerprint
+          barsRef.current = nextBars
+          setBars(nextBars)
+        }
+        nextHistoryStart = response.next_start_pos
+        hasOlder = response.has_older
+        setHistoryState({ key: requestedChartKey, loading: false, complete: !response.has_older })
+        appendActivity(
+          'Chart',
+          response.has_older ? 'Older MT5 history loaded' : 'Beginning of MT5 history reached',
+          `${activeSymbol} ${timeframe} · ${nextBars.length} bars`,
+          { severity: 'success' },
+        )
+      } catch (error) {
+        if (disposed || (error instanceof DOMException && error.name === 'AbortError')) return
+        if (error instanceof BridgeRequestError && error.code === 'superseded') return
+        setHistoryState({ key: requestedChartKey, loading: false, complete: false })
+        appendActivity(
+          'Chart',
+          'Older MT5 history unavailable',
+          error instanceof Error ? error.message : 'History request failed',
+          { severity: 'warning' },
+        )
+      } finally {
+        olderLoading = false
+        olderController = null
+      }
+    }
+    historyRequestRef.current = () => void loadOlder()
 
     const poll = async () => {
       controller = new AbortController()
@@ -158,17 +246,11 @@ export function useMt5MarketData(
       const requestedBarCount = firstLoad ? 5_000 : reconciliation ? 800 : 3
       try {
         const response = await bridgeRequest<OhlcResponse>(
-          `/ohlc?symbol=${encodeURIComponent(activeSymbol)}&timeframe=${timeframe}&count=${requestedBarCount}`,
+          `/ohlc?symbol=${encodeURIComponent(activeSymbol)}&timeframe=${timeframe}&start_pos=0&count=${requestedBarCount}`,
           controller.signal,
         )
-        if (disposed || response.symbol !== activeSymbol || response.timeframe !== timeframe) return
-        const receivedBars: OhlcBar[] = response.bars.map((bar) => ({
-          time: bar.time as UTCTimestamp,
-          open: bar.open,
-          high: bar.high,
-          low: bar.low,
-          close: bar.close,
-        }))
+        if (disposed || response.symbol !== activeSymbol || response.timeframe !== timeframe || response.start_pos !== 0) return
+        const receivedBars = toBars(response)
         const firstReceivedTime = receivedBars[0]?.time
         const nextBars = firstLoad || firstReceivedTime === undefined
           ? receivedBars
@@ -178,6 +260,11 @@ export function useMt5MarketData(
           fingerprintRef.current = fingerprint
           barsRef.current = nextBars
           setBars(nextBars)
+        }
+        if (firstLoad) {
+          nextHistoryStart = response.next_start_pos
+          hasOlder = response.has_older
+          setHistoryState({ key: requestedChartKey, loading: false, complete: !response.has_older })
         }
         if (firstLoad || reconciliation) lastFullFetchAtRef.current = Date.now()
         setChartDataKey(requestedChartKey)
@@ -207,7 +294,9 @@ export function useMt5MarketData(
     void poll()
     return () => {
       disposed = true
+      historyRequestRef.current = () => undefined
       controller?.abort()
+      olderController?.abort()
       if (timer) window.clearTimeout(timer)
     }
   }, [activeSymbol, appendActivity, connected, requestedChartKey, timeframe])
@@ -215,6 +304,7 @@ export function useMt5MarketData(
   const chartIsCurrent = connected && chartDataKey === requestedChartKey
   const marketFailureIsCurrent = marketAttemptGeneration === sourceGeneration && marketWatchStatus === 'unavailable'
   const chartFailureIsCurrent = chartAttemptKey === requestedChartKey && chartStatus === 'unavailable'
+  const historyIsCurrent = historyState.key === requestedChartKey
 
   return {
     activeSymbol,
@@ -225,5 +315,8 @@ export function useMt5MarketData(
     marketWatchError: connected ? marketWatchError : null,
     chartError: chartIsCurrent || chartFailureIsCurrent ? chartError : null,
     barsObservedAt: chartIsCurrent ? barsObservedAt : null,
+    chartHistoryLoading: chartIsCurrent && historyIsCurrent && historyState.loading,
+    chartHistoryComplete: chartIsCurrent && historyIsCurrent && historyState.complete,
+    requestOlderBars,
   }
 }

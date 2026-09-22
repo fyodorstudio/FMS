@@ -32,6 +32,9 @@ type MarketCandlestickChartProps = {
   onUpdatePositionWidth: (drawingId: string, time: ChartDrawingPoint['time'], persist: boolean) => void
   onExitDrawingMode: () => void
   onDataApplied: (barCount: number) => void
+  hasOlderData: boolean
+  isLoadingOlderData: boolean
+  onRequestOlderData: () => void
   renderChartOverlay?: (
     chartApi: IChartApi,
     seriesApi: ISeriesApi<'Candlestick', Time>,
@@ -54,6 +57,9 @@ export function MarketCandlestickChart({
   onUpdatePositionWidth,
   onExitDrawingMode,
   onDataApplied,
+  hasOlderData,
+  isLoadingOlderData,
+  onRequestOlderData,
   renderChartOverlay,
 }: MarketCandlestickChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -64,6 +70,18 @@ export function MarketCandlestickChart({
   const [chartApi, setChartApi] = useState<IChartApi | null>(null)
   const [seriesApi, setSeriesApi] = useState<ISeriesApi<'Candlestick', Time> | null>(null)
   const fittedKeyRef = useRef<string | null>(null)
+  const historyPagingArmedRef = useRef(false)
+  const historyStateRef = useRef({ hasOlderData, isLoadingOlderData })
+  const requestOlderDataRef = useRef(onRequestOlderData)
+
+  useEffect(() => {
+    historyStateRef.current = { hasOlderData, isLoadingOlderData }
+    requestOlderDataRef.current = onRequestOlderData
+  }, [hasOlderData, isLoadingOlderData, onRequestOlderData])
+
+  useEffect(() => {
+    historyPagingArmedRef.current = false
+  }, [fitContentKey])
 
   useEffect(() => {
     const container = containerRef.current
@@ -86,7 +104,22 @@ export function MarketCandlestickChart({
     setChartApi(chart)
     setSeriesApi(series)
 
+    const requestHistoryNearLeftEdge = (range: { from: number; to: number } | null) => {
+      const history = historyStateRef.current
+      if (
+        range
+        && range.from < 100
+        && historyPagingArmedRef.current
+        && history.hasOlderData
+        && !history.isLoadingOlderData
+      ) {
+        requestOlderDataRef.current()
+      }
+    }
+    chart.timeScale().subscribeVisibleLogicalRangeChange(requestHistoryNearLeftEdge)
+
     return () => {
+      chart.timeScale().unsubscribeVisibleLogicalRangeChange(requestHistoryNearLeftEdge)
       seriesRef.current = null
       chartRef.current = null
       setChartApi(null)
@@ -120,18 +153,29 @@ export function MarketCandlestickChart({
         minMove: 10 ** -precision,
       },
     })
+    const preserveRange = fittedKeyRef.current === fitContentKey
+      ? chart.timeScale().getVisibleRange()
+      : null
     series.setData(bars)
     chart.priceScale('right').applyOptions({ autoScale: true })
     if (fittedKeyRef.current !== fitContentKey && bars.length > 0) {
       fittedKeyRef.current = fitContentKey
       chart.timeScale().fitContent()
       onDataApplied(bars.length)
+    } else if (preserveRange) {
+      chart.timeScale().setVisibleRange(preserveRange)
     }
   }, [bars, fitContentKey, onDataApplied, precision])
 
   return (
     <div className="market-chart-host">
-      <div ref={containerRef} className="market-chart-canvas" aria-label="Candlestick chart" />
+      <div
+        ref={containerRef}
+        className="market-chart-canvas"
+        aria-label="Candlestick chart"
+        onPointerDown={() => { historyPagingArmedRef.current = true }}
+        onWheel={() => { historyPagingArmedRef.current = true }}
+      />
       {chartApi && seriesApi && renderChartOverlay?.(chartApi, seriesApi)}
       {chartApi && seriesApi && (
         <ChartDrawingOverlay

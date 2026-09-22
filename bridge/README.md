@@ -4,6 +4,12 @@ This is a local, read-only adapter. It exposes Market Watch, OHLC, health,
 activity, and the MT5 economic-calendar publisher on `127.0.0.1:8001`.
 It contains no FMS logic, persistence, or trading endpoints.
 
+Native MetaTrader5 calls run in a supervised child process. A stuck broker IPC
+call can therefore be terminated without blocking bridge health or Activity.
+Selected-chart OHLC initially loads 5,000 bars, then pages backward from MT5 as
+the chart approaches its oldest loaded bar until MT5 reports its available
+history boundary.
+
 ## First setup
 
 From the repository root:

@@ -237,6 +237,9 @@ export function FyodorTerminalShell() {
               onUpdatePositionWidth={updatePositionWidth}
               onExitDrawingMode={() => setActiveDrawingTool(null)}
               onDataApplied={recordChartData}
+              hasOlderData={!marketData.chartHistoryComplete}
+              isLoadingOlderData={marketData.chartHistoryLoading}
+              onRequestOlderData={marketData.requestOlderBars}
               renderChartOverlay={(chartApi, seriesApi) => (
                 <FmsChartMarkers
                   chartApi={chartApi}
@@ -263,7 +266,10 @@ export function FyodorTerminalShell() {
             />
             <div className="chart-watermark" aria-hidden="true">
               <strong>{activeSymbol}</strong>
-              <span>{timeframe} · {marketData.chartStatus === 'live' ? 'MT5 broker data' : 'Awaiting MT5 data'}</span>
+              <span>
+                {timeframe} · {marketData.chartStatus === 'live' ? 'MT5 broker data' : 'Awaiting MT5 data'}
+                {marketData.chartHistoryLoading ? ' · loading older history' : marketData.chartHistoryComplete ? ' · beginning of MT5 history reached' : ''}
+              </span>
             </div>
           </div>
         </section>
