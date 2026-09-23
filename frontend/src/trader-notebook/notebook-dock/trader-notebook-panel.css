@@ -1,7 +1,7 @@
 .trader-notebook-panel {
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(260px, 1.1fr) minmax(280px, 1.2fr) minmax(320px, 1.4fr);
+  grid-template-columns: minmax(290px, 1.15fr) minmax(300px, 1.25fr) minmax(320px, 1.4fr);
   align-items: stretch;
   background: var(--surface-panel);
   color: var(--text);
@@ -45,7 +45,7 @@
   color: var(--accent);
   cursor: pointer;
   user-select: none;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .chart-projection-toggle input {
@@ -105,6 +105,11 @@
   transition: all 0.12s ease;
 }
 
+.dir-toggle-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .dir-toggle-btn.buy.active {
   background: rgba(16, 185, 129, 0.2);
   color: #10b981;
@@ -120,7 +125,7 @@
 .levels-input-grid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .input-group {
@@ -140,6 +145,13 @@
   letter-spacing: 0.05em;
 }
 
+.input-dual-labels {
+  display: flex;
+  gap: 45px;
+  font-size: 7.5px;
+  color: var(--text-muted);
+}
+
 .set-market-btn {
   background: transparent;
   border: none;
@@ -156,7 +168,7 @@
 }
 
 .input-group input {
-  height: 28px;
+  height: 26px;
   padding: 0 8px;
   background: var(--surface-inset);
   border: 1px solid var(--border-strong);
@@ -167,6 +179,8 @@
   outline: none;
   font-variant-numeric: tabular-nums;
   transition: border-color 0.15s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input-group input:focus {
@@ -174,24 +188,170 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
-.pips-badge {
+.input-group input:read-only {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+}
+
+.dual-inputs-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 6px;
+}
+
+.pips-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pips-input-wrapper input {
+  padding-right: 18px;
+}
+
+.pips-unit {
+  position: absolute;
+  right: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+/* R:R Presets */
+.rr-presets-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 1px;
+}
+
+.presets-label {
   font-size: 8px;
-  font-weight: 750;
-  padding: 1px 4px;
+  color: var(--text-faint);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.rr-preset-btn {
+  flex: 1;
+  padding: 2.5px 0;
+  font-size: 8.5px;
+  font-weight: 700;
   border-radius: 3px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-inset);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s ease;
 }
 
-.pips-badge.positive {
-  background: rgba(16, 185, 129, 0.15);
+.rr-preset-btn:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.rr-preset-btn.active {
+  background: color-mix(in srgb, var(--accent) 15%, var(--surface-inset));
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.rr-preset-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Register Arrow Button */
+.register-action-wrap {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.register-arrow-btn {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 10.5px;
+  font-weight: 750;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+
+.register-arrow-btn.ready {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+
+.register-arrow-btn.ready:hover {
+  background: #0369a1;
+}
+
+.register-arrow-btn.disabled {
+  background: var(--surface-raised);
+  color: var(--text-faint);
+  cursor: not-allowed;
+  border: 1px solid var(--border-subtle);
+}
+
+.reg-success-toast {
+  font-size: 9px;
   color: #10b981;
+  font-weight: 700;
+  text-align: center;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 3px;
+  border-radius: 4px;
 }
 
-.pips-badge.negative {
+.register-hint {
+  font-size: 8px;
+  color: var(--text-faint);
+  line-height: 1.3;
+}
+
+.selected-arrow-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.new-draft-btn {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: 9.5px;
+  font-weight: 700;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text-strong);
+  cursor: pointer;
+}
+
+.new-draft-btn:hover {
+  background: var(--surface-hover);
+}
+
+.delete-arrow-btn {
+  padding: 5px 10px;
+  font-size: 9.5px;
+  font-weight: 700;
   background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 4px;
   color: #ef4444;
+  cursor: pointer;
 }
 
-/* Col 2: Metrics */
+.delete-arrow-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* Col 2: Metrics & Registered Setups List */
 .metrics-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -240,33 +400,130 @@
 .text-rose { color: #f43f5e !important; }
 .text-cyan { color: #06b6d4 !important; }
 
-.planner-guidance-box {
-  background: var(--surface-inset);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  padding: 8px 10px;
+/* Registered Setups on Pair */
+.registered-setups-section {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  flex: 1;
+  min-height: 0;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
 }
 
-.planner-guidance-box strong {
+.setups-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.setups-section-header strong {
   font-size: 9.5px;
   color: var(--text-strong);
-  font-weight: 700;
 }
 
-.planner-guidance-box ul {
-  margin: 0;
-  padding-left: 14px;
-  font-size: 9px;
-  line-height: 1.45;
+.clear-selection-link {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 8.5px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.setups-chips-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 50px;
+}
+
+.empty-arrows-notice {
+  padding: 16px 8px;
+  text-align: center;
+  font-size: 9.5px;
   color: var(--text-muted);
+  line-height: 1.4;
 }
 
-.planner-guidance-box li {
-  margin-bottom: 3px;
+.setup-chip {
+  display: grid;
+  grid-template-columns: 50px 45px 50px 1fr 18px;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+  font-size: 8.5px;
+  transition: all 0.12s ease;
+}
+
+.setup-chip:hover {
+  background: var(--surface-raised);
+  border-color: var(--accent);
+}
+
+.setup-chip.selected {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-inset));
+  border-color: var(--accent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.chip-dir {
+  font-weight: 800;
+  font-size: 7.5px;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.chip-dir.long {
+  background: rgba(16, 185, 129, 0.18);
+  color: #10b981;
+}
+
+.chip-dir.short {
+  background: rgba(239, 68, 68, 0.18);
+  color: #ef4444;
+}
+
+.chip-date {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chip-rr {
+  color: #06b6d4;
+  font-variant-numeric: tabular-nums;
+}
+
+.chip-levels {
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chip-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 2px;
+}
+
+.chip-delete-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
 }
 
 /* Col 3: Journal */

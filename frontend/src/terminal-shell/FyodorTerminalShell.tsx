@@ -30,7 +30,9 @@ import { useBridgeStatus } from '../system-connectivity/bridge-status/use-bridge
 import { ActivityLogPanel } from '../system-observability/activity-log/ActivityLogPanel'
 import { useActivityLog } from '../system-observability/activity-log/use-activity-log'
 import { PlannedTradePriceLines } from '../trader-notebook/chart-levels/PlannedTradePriceLines'
-import { TraderNotebookPanel, type PlannedTradeState } from '../trader-notebook/notebook-dock/TraderNotebookPanel'
+import type { PlannedTradeState } from '../trader-notebook/contracts/trader-notebook-types'
+import { TraderNotebookPanel } from '../trader-notebook/notebook-dock/TraderNotebookPanel'
+import { useRegisteredArrows } from '../trader-notebook/storage/use-registered-arrows'
 import { BottomDockPanel } from '../workspace-docking/bottom-dock/BottomDockPanel'
 import type { BottomDockWindow } from '../workspace-docking/bottom-dock/bottom-dock-window'
 import { LeftDockPanel } from '../workspace-docking/left-dock/LeftDockPanel'
@@ -102,6 +104,8 @@ export function FyodorTerminalShell() {
   const activeSymbol = marketData.activeSymbol
   const quote = marketData.symbols.find((item) => item.symbol === activeSymbol) ?? null
   const bars = marketData.bars
+  const latestBarTime = bars.length > 0 ? (bars[bars.length - 1].time as number) : 0
+  const registeredArrows = useRegisteredArrows(activeSymbol)
 
   const {
     drawings,
@@ -251,12 +255,15 @@ export function FyodorTerminalShell() {
                 renderChartOverlay={(_chartApi, seriesApi) => (
                   <>
                     <PlannedTradePriceLines
+                      chartApi={_chartApi}
                       seriesApi={seriesApi}
-                      visible={plannedTrade.showOnChart}
-                      direction={plannedTrade.direction}
-                      entryPrice={plannedTrade.entryPrice}
-                      tpPrice={plannedTrade.tpPrice}
-                      slPrice={plannedTrade.slPrice}
+                      arrows={registeredArrows.symbolArrows}
+                      selectedArrowId={registeredArrows.selectedArrowId}
+                      draftPlan={plannedTrade}
+                      onSelectArrow={(arrow) => {
+                        registeredArrows.setSelectedArrowId(arrow.id)
+                        setBottomDockWindow('notebook')
+                      }}
                     />
                     <EconomicCalendarMarkers
                       chartApi={_chartApi}
@@ -310,8 +317,24 @@ export function FyodorTerminalShell() {
             <TraderNotebookPanel
               selectedSymbol={activeSymbol}
               quote={quote}
+              latestBarTime={latestBarTime}
               plan={plannedTrade}
+              registeredArrows={registeredArrows.symbolArrows}
+              selectedArrowId={registeredArrows.selectedArrowId}
               onPlanChange={handlePlanChange}
+              onSelectArrowId={registeredArrows.setSelectedArrowId}
+              onRegisterArrow={(arrowData) => {
+                const arrow = registeredArrows.addArrow(arrowData)
+                appendActivity(
+                  'Chart',
+                  'Setup arrow registered',
+                  `${arrow.symbol} ${arrow.direction.toUpperCase()} · ${arrow.rrRatio.toFixed(2)}R`,
+                )
+              }}
+              onDeleteArrow={(id) => {
+                registeredArrows.deleteArrow(id)
+                appendActivity('Chart', 'Setup arrow deleted', id)
+              }}
             />
           )}
           {bottomDockWindow === 'activity' && (

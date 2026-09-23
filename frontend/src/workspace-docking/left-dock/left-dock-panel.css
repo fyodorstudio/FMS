@@ -1,17 +1,17 @@
 .left-dock {
   min-width: 0;
   min-height: 0;
-  display: grid;
-  grid-template-rows: 38px minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid var(--border);
   background: var(--surface-panel);
 }
 
-.left-dock-tabs { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); background: var(--surface-raised); }
-.left-dock-tabs button { min-width: 0; padding: 0 3px; border: 0; border-right: 1px solid var(--border); border-bottom: 2px solid transparent; color: var(--text-muted); background: transparent; cursor: pointer; font-size: 9px; font-weight: 700; }
-.left-dock-tabs button:last-child { border-right: 0; }
-.left-dock-tabs button:hover { color: var(--text-strong); background: var(--surface-hover); }
-.left-dock-tabs button.active { border-bottom-color: var(--accent); color: var(--accent); background: var(--surface-panel); }
-.left-dock-content { min-height: 0; overflow: hidden; }
+.left-dock-content {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
 .left-dock-content > * { height: 100%; }
 .left-dock-content .market-watch { border-right: 0; }

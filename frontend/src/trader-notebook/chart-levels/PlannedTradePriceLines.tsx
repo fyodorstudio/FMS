@@ -1,34 +1,98 @@
 import { useEffect } from 'react'
 import {
+  createSeriesMarkers,
   LineStyle,
+  type IChartApi,
   type IPriceLine,
   type ISeriesApi,
+  type MouseEventParams,
+  type SeriesMarker,
   type Time,
 } from 'lightweight-charts'
+import type { PlannedTradeState, RegisteredTradeArrow } from '../contracts/trader-notebook-types'
 
 type PlannedTradePriceLinesProps = {
+  chartApi: IChartApi
   seriesApi: ISeriesApi<'Candlestick', Time>
-  visible: boolean
-  direction: 'long' | 'short'
-  entryPrice?: number | null
-  tpPrice?: number | null
-  slPrice?: number | null
+  arrows: RegisteredTradeArrow[]
+  selectedArrowId: string | null
+  draftPlan: PlannedTradeState
+  onSelectArrow: (arrow: RegisteredTradeArrow) => void
 }
 
 export function PlannedTradePriceLines({
+  chartApi,
   seriesApi,
-  visible,
-  direction,
-  entryPrice,
-  tpPrice,
-  slPrice,
+  arrows,
+  selectedArrowId,
+  draftPlan,
+  onSelectArrow,
 }: PlannedTradePriceLinesProps) {
+  // 1. Render Registered Arrow Markers on the Candlestick Chart
   useEffect(() => {
-    if (!visible) return
+    const markers: SeriesMarker<Time>[] = arrows.map((arrow) => {
+      const isSelected = arrow.id === selectedArrowId
+      const isLong = arrow.direction === 'long'
+      return {
+        id: arrow.id,
+        time: arrow.time as Time,
+        price: arrow.entryPrice,
+        position: isLong ? 'atPriceBottom' : 'atPriceTop',
+        shape: isLong ? 'arrowUp' : 'arrowDown',
+        color: isSelected ? '#38bdf8' : isLong ? '#10b981' : '#f43f5e',
+        text: isSelected
+          ? `★ ${isLong ? 'LONG' : 'SHORT'} (${arrow.rrRatio.toFixed(2)}R)`
+          : `${isLong ? '↑' : '↓'} ${arrow.rrRatio.toFixed(1)}R`,
+        size: isSelected ? 1.25 : 0.85,
+      }
+    })
+
+    const markerApi = createSeriesMarkers(seriesApi, markers, { zOrder: 'top' })
+    return () => markerApi.detach()
+  }, [arrows, selectedArrowId, seriesApi])
+
+  // 2. Handle click on marker to select arrow
+  useEffect(() => {
+    const handleClick = (param: MouseEventParams<Time>) => {
+      const objectId = param.hoveredInfo?.objectId ?? param.hoveredObjectId
+      if (typeof objectId !== 'string') return
+      const arrow = arrows.find((a) => a.id === objectId)
+      if (arrow) onSelectArrow(arrow)
+    }
+    chartApi.subscribeClick(handleClick)
+    return () => chartApi.unsubscribeClick(handleClick)
+  }, [arrows, chartApi, onSelectArrow])
+
+  // 3. Render Horizontal Lines (Entry, TP, SL)
+  useEffect(() => {
+    const selectedArrow = selectedArrowId ? arrows.find((a) => a.id === selectedArrowId) : null
+
+    // Determine target prices to render
+    let direction: 'long' | 'short' = 'long'
+    let entryPrice: number | null = null
+    let tpPrice: number | null = null
+    let slPrice: number | null = null
+    let labelPrefix = ''
+
+    if (selectedArrow) {
+      direction = selectedArrow.direction
+      entryPrice = selectedArrow.entryPrice
+      tpPrice = selectedArrow.tpPrice
+      slPrice = selectedArrow.slPrice
+      labelPrefix = `[${selectedArrow.rrRatio.toFixed(2)}R] `
+    } else if (draftPlan.showOnChart) {
+      direction = draftPlan.direction
+      entryPrice = draftPlan.entryPrice
+      tpPrice = draftPlan.tpPrice
+      slPrice = draftPlan.slPrice
+      labelPrefix = '[PLAN] '
+    } else {
+      return
+    }
 
     const lines: IPriceLine[] = []
 
-    // 1. Entry Line
+    // A. Entry Price Line
     if (entryPrice != null && !Number.isNaN(entryPrice) && entryPrice > 0) {
       lines.push(
         seriesApi.createPriceLine({
@@ -38,12 +102,12 @@ export function PlannedTradePriceLines({
           lineStyle: LineStyle.Dotted,
           lineVisible: true,
           axisLabelVisible: true,
-          title: `ENTRY (${direction.toUpperCase()}): ${entryPrice.toFixed(5)}`,
+          title: `${labelPrefix}ENTRY (${direction.toUpperCase()}): ${entryPrice.toFixed(5)}`,
         }),
       )
     }
 
-    // 2. Take Profit Line
+    // B. Take Profit Line
     if (tpPrice != null && !Number.isNaN(tpPrice) && tpPrice > 0) {
       lines.push(
         seriesApi.createPriceLine({
@@ -53,12 +117,12 @@ export function PlannedTradePriceLines({
           lineStyle: LineStyle.Dashed,
           lineVisible: true,
           axisLabelVisible: true,
-          title: `TP: ${tpPrice.toFixed(5)}`,
+          title: `${labelPrefix}TP: ${tpPrice.toFixed(5)}`,
         }),
       )
     }
 
-    // 3. Stop Loss Line
+    // C. Stop Loss Line
     if (slPrice != null && !Number.isNaN(slPrice) && slPrice > 0) {
       lines.push(
         seriesApi.createPriceLine({
@@ -68,7 +132,7 @@ export function PlannedTradePriceLines({
           lineStyle: LineStyle.Dashed,
           lineVisible: true,
           axisLabelVisible: true,
-          title: `SL: ${slPrice.toFixed(5)}`,
+          title: `${labelPrefix}SL: ${slPrice.toFixed(5)}`,
         }),
       )
     }
@@ -78,11 +142,11 @@ export function PlannedTradePriceLines({
         try {
           seriesApi.removePriceLine(line)
         } catch {
-          // ignore cleanup errors
+          // ignore
         }
       }
     }
-  }, [direction, entryPrice, seriesApi, slPrice, tpPrice, visible])
+  }, [arrows, draftPlan, selectedArrowId, seriesApi])
 
   return null
 }
