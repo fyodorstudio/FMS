@@ -25,6 +25,8 @@ def main() -> int:
         port=8002,
         log_level="info",
         access_log=False,
+        reload=True,
+        reload_dirs=[str(source_directory)],
     )
     return 0
 

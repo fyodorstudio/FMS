@@ -69,6 +69,9 @@ class SignalEvaluator:
             return {
                 "result": "open",
                 "result_r": None,
+                "entry_price": round(entry_price, 5),
+                "sl_price": round(sl_price, 5),
+                "tp_price": round(tp_price, 5),
                 "mfe_pips": 0.0,
                 "mae_pips": 0.0,
                 "recommended_sl_pips": round(sl_delta / pip_scale, 1),
@@ -130,6 +133,9 @@ class SignalEvaluator:
         return {
             "result": result,
             "result_r": result_r,
+            "entry_price": round(entry_price, 5),
+            "sl_price": round(sl_price, 5),
+            "tp_price": round(tp_price, 5),
             "mfe_pips": round(mfe_pips, 1),
             "mae_pips": round(mae_pips, 1),
             "recommended_sl_pips": round(sl_delta / pip_scale, 1),
@@ -148,9 +154,12 @@ class SignalEvaluator:
         Extracts genuine macroeconomic event surprise triggers and evaluates forward outcomes.
         """
         sym = symbol.upper()
-        if sym not in PAIR_CURRENCIES:
+        if sym in PAIR_CURRENCIES:
+            base_ccy, quote_ccy = PAIR_CURRENCIES[sym]
+        elif len(sym) == 6:
+            base_ccy, quote_ccy = sym[:3], sym[3:]
+        else:
             return []
-        base_ccy, quote_ccy = PAIR_CURRENCIES[sym]
         pip_scale = get_pip_scale(sym)
 
         # Prepare candle arrays
@@ -230,11 +239,26 @@ class SignalEvaluator:
                 pip_scale=pip_scale,
             )
 
+            dir_str = "BUY" if direction == SetupDirection.BUY else "SELL"
+            r_str = f"{path_outcome['result_r']:+.2f}R" if path_outcome['result_r'] is not None else "Open"
+            reason = (
+                f"Macro release '{name}' ({cur}) printed actual {act:g} vs forecast {fct:g} "
+                f"(deviation: {diff:+g}, z-score: {z:+.2f}σ). "
+                f"Dynamic ATR entry placed at {path_outcome['entry_price']:.5f} ({dir_str}) with "
+                f"SL {path_outcome['recommended_sl_pips']}p ({path_outcome['sl_price']:.5f}) and "
+                f"TP {path_outcome['recommended_tp_pips']}p ({path_outcome['tp_price']:.5f}, {self.rr_target:.2f}R). "
+                f"Path outcome: {path_outcome['result']} ({r_str})."
+            )
+
             signals.append({
                 "id": f"MSD_{sym}_{candle_time}",
+                "symbol": sym,
                 "time": candle_time,
                 "releaseTime": ts * 1000,
                 "price": float(closes[idx]),
+                "entry_price": path_outcome["entry_price"],
+                "sl_price": path_outcome["sl_price"],
+                "tp_price": path_outcome["tp_price"],
                 "direction": "long" if direction == SetupDirection.BUY else "short",
                 "method": "M-MSD",
                 "setup_name": "Macro Surprise Divergence",
@@ -247,6 +271,7 @@ class SignalEvaluator:
                 "recommended_sl_pips": path_outcome["recommended_sl_pips"],
                 "mfe_pips": path_outcome["mfe_pips"],
                 "mae_pips": path_outcome["mae_pips"],
+                "reason": reason,
             })
 
         return signals[-max_signals:] if max_signals > 0 else signals
@@ -294,11 +319,26 @@ class SignalEvaluator:
                 pip_scale=pip_scale,
             )
 
+            dir_str = "BUY" if t.direction == SetupDirection.BUY else "SELL"
+            r_str = f"{path_outcome['result_r']:+.2f}R" if path_outcome['result_r'] is not None else "Open"
+            reason = (
+                f"Sovereign market defense footprint on {symbol.upper()}: "
+                f"True range expanded >= 2.0x ATR with a rejection wick >= 45% "
+                f"at key structural liquidity zone. Volatility-scaled entry placed at {path_outcome['entry_price']:.5f} ({dir_str}) "
+                f"with SL {path_outcome['recommended_sl_pips']}p ({path_outcome['sl_price']:.5f}) and "
+                f"TP {path_outcome['recommended_tp_pips']}p ({path_outcome['tp_price']:.5f}, {self.rr_target:.2f}R). "
+                f"Path outcome: {path_outcome['result']} ({r_str})."
+            )
+
             signals.append({
                 "id": f"LAR_{symbol.upper()}_{t.timestamp}",
+                "symbol": symbol.upper(),
                 "time": t.timestamp,
                 "releaseTime": t.timestamp * 1000,
                 "price": float(closes[idx]),
+                "entry_price": path_outcome["entry_price"],
+                "sl_price": path_outcome["sl_price"],
+                "tp_price": path_outcome["tp_price"],
                 "direction": "long" if t.direction == SetupDirection.BUY else "short",
                 "method": "M-LAR",
                 "setup_name": "Liquidity Absorption Rejection",
@@ -311,6 +351,7 @@ class SignalEvaluator:
                 "recommended_sl_pips": path_outcome["recommended_sl_pips"],
                 "mfe_pips": path_outcome["mfe_pips"],
                 "mae_pips": path_outcome["mae_pips"],
+                "reason": reason,
             })
 
         return signals
@@ -358,11 +399,26 @@ class SignalEvaluator:
                 pip_scale=pip_scale,
             )
 
+            dir_str = "BUY" if t.direction == SetupDirection.BUY else "SELL"
+            r_str = f"{path_outcome['result_r']:+.2f}R" if path_outcome['result_r'] is not None else "Open"
+            reason = (
+                f"Volatility regime acceleration & carry unwind cascade on {symbol.upper()}: "
+                f"Normalized volatility metric surged (Z_vol >= 1.50σ), triggering systematic institutional "
+                f"de-grossing. Positioning entered at {path_outcome['entry_price']:.5f} ({dir_str}) "
+                f"with SL {path_outcome['recommended_sl_pips']}p ({path_outcome['sl_price']:.5f}) and "
+                f"TP {path_outcome['recommended_tp_pips']}p ({path_outcome['tp_price']:.5f}, {self.rr_target:.2f}R). "
+                f"Path outcome: {path_outcome['result']} ({r_str})."
+            )
+
             signals.append({
                 "id": f"VRC_{symbol.upper()}_{t.timestamp}",
+                "symbol": symbol.upper(),
                 "time": t.timestamp,
                 "releaseTime": t.timestamp * 1000,
                 "price": float(closes[idx]),
+                "entry_price": path_outcome["entry_price"],
+                "sl_price": path_outcome["sl_price"],
+                "tp_price": path_outcome["tp_price"],
                 "direction": "long" if t.direction == SetupDirection.BUY else "short",
                 "method": "M-VRC",
                 "setup_name": "Carry Liquidation Cascade",
@@ -375,6 +431,7 @@ class SignalEvaluator:
                 "recommended_sl_pips": path_outcome["recommended_sl_pips"],
                 "mfe_pips": path_outcome["mfe_pips"],
                 "mae_pips": path_outcome["mae_pips"],
+                "reason": reason,
             })
 
         return signals
@@ -422,11 +479,26 @@ class SignalEvaluator:
                 pip_scale=pip_scale,
             )
 
+            dir_str = "BUY" if t.direction == SetupDirection.BUY else "SELL"
+            r_str = f"{path_outcome['result_r']:+.2f}R" if path_outcome['result_r'] is not None else "Open"
+            reason = (
+                f"Terms-of-Trade resource pulse divergence on {symbol.upper()}: "
+                f"Relative commodity strength vector decoupled in favor of resource exporter against net importer. "
+                f"Confluent entry placed at {path_outcome['entry_price']:.5f} ({dir_str}) "
+                f"with SL {path_outcome['recommended_sl_pips']}p ({path_outcome['sl_price']:.5f}) and "
+                f"TP {path_outcome['recommended_tp_pips']}p ({path_outcome['tp_price']:.5f}, {self.rr_target:.2f}R). "
+                f"Path outcome: {path_outcome['result']} ({r_str})."
+            )
+
             signals.append({
                 "id": f"TOT_{symbol.upper()}_{t.timestamp}",
+                "symbol": symbol.upper(),
                 "time": t.timestamp,
                 "releaseTime": t.timestamp * 1000,
                 "price": float(closes[idx]),
+                "entry_price": path_outcome["entry_price"],
+                "sl_price": path_outcome["sl_price"],
+                "tp_price": path_outcome["tp_price"],
                 "direction": "long" if t.direction == SetupDirection.BUY else "short",
                 "method": "M-TOT",
                 "setup_name": "Terms-of-Trade Commodity Pulse",
@@ -439,6 +511,7 @@ class SignalEvaluator:
                 "recommended_sl_pips": path_outcome["recommended_sl_pips"],
                 "mfe_pips": path_outcome["mfe_pips"],
                 "mae_pips": path_outcome["mae_pips"],
+                "reason": reason,
             })
 
         return signals
@@ -487,11 +560,26 @@ class SignalEvaluator:
                 pip_scale=pip_scale,
             )
 
+            dir_str = "BUY" if t.direction == SetupDirection.BUY else "SELL"
+            r_str = f"{path_outcome['result_r']:+.2f}R" if path_outcome['result_r'] is not None else "Open"
+            reason = (
+                f"Policy & real yield spread momentum on {symbol.upper()}: "
+                f"Central bank interest rate catalyst shifted sovereign bond yield differentials. "
+                f"Capital gravity entry placed at {path_outcome['entry_price']:.5f} ({dir_str}) "
+                f"with SL {path_outcome['recommended_sl_pips']}p ({path_outcome['sl_price']:.5f}) and "
+                f"TP {path_outcome['recommended_tp_pips']}p ({path_outcome['tp_price']:.5f}, {self.rr_target:.2f}R). "
+                f"Path outcome: {path_outcome['result']} ({r_str})."
+            )
+
             signals.append({
                 "id": f"PYS_{symbol.upper()}_{t.timestamp}",
+                "symbol": symbol.upper(),
                 "time": t.timestamp,
                 "releaseTime": t.timestamp * 1000,
                 "price": float(closes[idx]),
+                "entry_price": path_outcome["entry_price"],
+                "sl_price": path_outcome["sl_price"],
+                "tp_price": path_outcome["tp_price"],
                 "direction": "long" if t.direction == SetupDirection.BUY else "short",
                 "method": "M-PYS",
                 "setup_name": "Policy & Real Yield Spread Momentum",
@@ -504,6 +592,7 @@ class SignalEvaluator:
                 "recommended_sl_pips": path_outcome["recommended_sl_pips"],
                 "mfe_pips": path_outcome["mfe_pips"],
                 "mae_pips": path_outcome["mae_pips"],
+                "reason": reason,
             })
 
         return signals

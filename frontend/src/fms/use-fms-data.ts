@@ -84,7 +84,11 @@ export function useFmsData(activeSymbol: string): FmsDataState {
     const abortController = new AbortController()
 
     const loadSignals = async () => {
-      if (!activeSymbol) return
+      if (!activeSymbol) {
+        setSignals([])
+        return
+      }
+      setSignals([])
       try {
         const sigs = await fetchFmsSignals(activeSymbol, abortController.signal)
         if (!disposed) {

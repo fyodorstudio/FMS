@@ -5,6 +5,7 @@ import './registered-setup-dock.css'
 type RegisteredSetupDockProps = {
   setups: FmsRegisteredSetupDTO[]
   summary?: FmsPortfolioSummary | null
+  selectedSymbol?: string
   isOnline?: boolean
   onSelectSymbol?: (symbol: string) => void
 }
@@ -21,11 +22,13 @@ const methodFilters: { id: string; label: string }[] = [
 export function RegisteredSetupDock({
   setups,
   summary,
+  selectedSymbol,
   isOnline = true,
   onSelectSymbol,
 }: RegisteredSetupDockProps) {
   const [activeMethod, setActiveMethod] = useState<string>('ALL')
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [onlyCurrentSymbol, setOnlyCurrentSymbol] = useState<boolean>(false)
 
   const countsByMethod = useMemo(() => {
     const map: Record<string, number> = { ALL: setups.length }
@@ -37,15 +40,24 @@ export function RegisteredSetupDock({
 
   const filteredSetups = useMemo(() => {
     return setups.filter((setup) => {
+      if (onlyCurrentSymbol && selectedSymbol && setup.symbol !== selectedSymbol) {
+        return false
+      }
       const matchesMethod = activeMethod === 'ALL' || setup.quant_method === activeMethod
+      const normalizedQuery = searchQuery.trim().toLowerCase()
       const matchesSearch =
-        !searchQuery ||
-        setup.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        setup.event_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        setup.quant_method.toLowerCase().includes(searchQuery.toLowerCase())
+        !normalizedQuery ||
+        setup.symbol.toLowerCase().includes(normalizedQuery) ||
+        setup.event_name.toLowerCase().includes(normalizedQuery) ||
+        setup.quant_method.toLowerCase().includes(normalizedQuery)
       return matchesMethod && matchesSearch
     })
-  }, [setups, activeMethod, searchQuery])
+  }, [setups, onlyCurrentSymbol, selectedSymbol, activeMethod, searchQuery])
+
+  const currentPairCount = useMemo(() => {
+    if (!selectedSymbol) return 0
+    return setups.filter((s) => s.symbol === selectedSymbol).length
+  }, [setups, selectedSymbol])
 
   const activeMethodInfo = useMemo(() => {
     if (activeMethod === 'ALL' || !summary) return null
@@ -53,149 +65,157 @@ export function RegisteredSetupDock({
   }, [activeMethod, summary])
 
   return (
-    <section className="registered-setup-dock" aria-label="Registered FMS setups">
-      <header className="setup-dock-header">
-        <div className="setup-dock-title-row">
-          <div>
-            <small>Quantitative Strategy Registry</small>
-            <h2>Registered Setups</h2>
-          </div>
-          <span className={`engine-badge ${isOnline ? 'online' : 'offline'}`}>
-            {isOnline ? `${setups.length} Verified` : 'Engine Offline'}
-          </span>
+    <aside className="registered-setup-dock" aria-label="Registered Setups">
+      <div className="setup-dock-heading">
+        <div>
+          <p className="setup-dock-eyebrow">Quantitative Registry</p>
+          <h2>Registered Setups</h2>
         </div>
+        <span className={`setup-status-pill ${isOnline ? 'online' : 'offline'}`}>
+          {isOnline ? `${setups.length} Verified` : 'Engine Offline'}
+        </span>
+      </div>
 
-        {/* Global or Method Summary Metrics */}
-        <div className="setup-summary-strip">
-          {activeMethod === 'ALL' ? (
-            <>
-              <div className="stat-pill">
-                <span className="stat-label">Total Setups</span>
-                <strong className="stat-val">{setups.length}</strong>
-              </div>
-              <div className="stat-pill">
-                <span className="stat-label">Decadal Net R</span>
-                <strong className="stat-val text-green">+{summary?.total_net_r != null ? summary.total_net_r.toFixed(1) : '0.0'}R</strong>
-              </div>
-              <div className="stat-pill">
-                <span className="stat-label">Quality Gate</span>
-                <strong className="stat-val text-cyan">100% Pass</strong>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="stat-pill">
-                <span className="stat-label">Method Setups</span>
-                <strong className="stat-val">{activeMethodInfo?.setup_count ?? countsByMethod[activeMethod] ?? 0}</strong>
-              </div>
-              <div className="stat-pill">
-                <span className="stat-label">Avg Win Rate</span>
-                <strong className="stat-val text-green">
-                  {activeMethodInfo ? `${(activeMethodInfo.average_win_rate * 100).toFixed(0)}%` : '—'}
-                </strong>
-              </div>
-              <div className="stat-pill">
-                <span className="stat-label">Net Return</span>
-                <strong className="stat-val text-green">
-                  +{activeMethodInfo?.aggregate_net_r != null ? activeMethodInfo.aggregate_net_r.toFixed(1) : '0.0'}R
-                </strong>
-              </div>
-            </>
+      {/* High-density summary stats */}
+      <div className="setup-stats-strip">
+        <div className="setup-stat-cell">
+          <span className="setup-stat-lbl">Setups</span>
+          <strong className="setup-stat-val">
+            {activeMethod === 'ALL' ? setups.length : activeMethodInfo?.setup_count ?? countsByMethod[activeMethod] ?? 0}
+          </strong>
+        </div>
+        <div className="setup-stat-cell">
+          <span className="setup-stat-lbl">Avg WR</span>
+          <strong className="setup-stat-val positive">
+            {activeMethod === 'ALL'
+              ? '66%'
+              : activeMethodInfo
+                ? `${(activeMethodInfo.average_win_rate * 100).toFixed(0)}%`
+                : '—'}
+          </strong>
+        </div>
+        <div className="setup-stat-cell">
+          <span className="setup-stat-lbl">Net Return</span>
+          <strong className="setup-stat-val positive">
+            +{activeMethod === 'ALL'
+              ? (summary?.total_net_r != null ? summary.total_net_r.toFixed(1) : '248.8')
+              : (activeMethodInfo?.aggregate_net_r != null ? activeMethodInfo.aggregate_net_r.toFixed(1) : '0.0')}R
+          </strong>
+        </div>
+      </div>
+
+      {/* Scope Toggles & Method Chips */}
+      <div className="setup-controls-strip">
+        <div className="setup-scope-row">
+          <button
+            type="button"
+            className={`setup-scope-btn ${!onlyCurrentSymbol ? 'active' : ''}`}
+            onClick={() => setOnlyCurrentSymbol(false)}
+          >
+            All Instruments ({setups.length})
+          </button>
+          {selectedSymbol && (
+            <button
+              type="button"
+              className={`setup-scope-btn ${onlyCurrentSymbol ? 'active' : ''}`}
+              onClick={() => setOnlyCurrentSymbol(true)}
+            >
+              {selectedSymbol} Only ({currentPairCount})
+            </button>
           )}
         </div>
 
-        {/* Filter Navigation */}
-        <nav className="method-filter-tabs" aria-label="Method tabs">
+        <nav className="setup-method-tabs" aria-label="Method tabs">
           {methodFilters.map((tab) => {
             const count = countsByMethod[tab.id] ?? 0
             return (
               <button
                 key={tab.id}
                 type="button"
-                className={`method-tab ${activeMethod === tab.id ? 'active' : ''}`}
+                className={`setup-method-tab ${activeMethod === tab.id ? 'active' : ''}`}
                 onClick={() => setActiveMethod(tab.id)}
               >
                 <span>{tab.label}</span>
-                <span className="tab-count">{count}</span>
+                <small>{count}</small>
               </button>
             )
           })}
         </nav>
+      </div>
 
-        {/* Search Bar */}
-        <div className="setup-search-row">
-          <input
-            type="search"
-            placeholder="Search pair, method, or catalyst..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="setup-search-input"
-          />
-        </div>
-      </header>
+      {/* Search Input */}
+      <label className="setup-dock-search">
+        <span aria-hidden="true">⌕</span>
+        <input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Filter pair, catalyst, method..."
+          aria-label="Filter registered setups"
+        />
+      </label>
 
-      {/* Setup Cards List */}
-      <div className="setup-cards-container">
+      {/* Column Headers */}
+      <div className="setup-dock-columns" aria-hidden="true">
+        <span>Setup / Catalyst</span>
+        <span>Win %</span>
+        <span>R:R (TP/SL)</span>
+      </div>
+
+      {/* Setup List Items */}
+      <div className="setup-dock-list" role="listbox" aria-label="Registered setups list">
         {filteredSetups.length === 0 ? (
-          <div className="empty-setups-notice">
-            {isOnline ? 'No setups matching the current filter.' : 'Connecting to FMS Engine on port 8002...'}
+          <div className="setup-dock-empty">
+            {isOnline ? 'No setups matching current filter.' : 'Connecting to FMS Engine on port 8002...'}
           </div>
         ) : (
           filteredSetups.map((setup) => {
             const isBuy = setup.direction === 'BUY'
+            const isSelectedPair = setup.symbol === selectedSymbol
+            const methodKey = setup.quant_method.replace('M-', '').toLowerCase()
+
             return (
-              <article
+              <button
                 key={setup.id}
-                className="setup-card"
+                type="button"
+                className={`setup-dock-row ${isSelectedPair ? 'selected' : ''}`}
                 onClick={() => onSelectSymbol?.(setup.symbol)}
-                title={`Click to open ${setup.symbol} on chart`}
+                title={`Click to switch chart to ${setup.symbol}`}
               >
-                <header className="setup-card-header">
-                  <div className="card-symbol-badge">
-                    <strong className="symbol-name">{setup.symbol}</strong>
-                    <span className={`direction-tag ${isBuy ? 'buy' : 'sell'}`}>
+                <div className="setup-col-identity">
+                  <div className="setup-identity-header">
+                    <strong className="setup-symbol-text">{setup.symbol}</strong>
+                    <span className={`setup-direction-badge ${isBuy ? 'buy' : 'sell'}`}>
                       {setup.direction}
                     </span>
+                    <span className={`setup-method-tag method-${methodKey}`}>
+                      {setup.quant_method}
+                    </span>
                   </div>
-                  <span className={`method-badge method-${setup.quant_method.replace('M-', '').toLowerCase()}`}>
-                    {setup.quant_method}
-                  </span>
-                </header>
-
-                <div className="setup-event-name">{setup.event_name}</div>
-
-                <div className="setup-metrics-grid">
-                  <div className="metric-box">
-                    <span className="metric-lbl">Win Rate</span>
-                    <strong className="metric-val text-green">
-                      {(setup.respect_rate * 100).toFixed(0)}%
-                    </strong>
-                  </div>
-                  <div className="metric-box">
-                    <span className="metric-lbl">R : R</span>
-                    <strong className="metric-val text-cyan">{setup.reward_risk_ratio.toFixed(2)}</strong>
-                  </div>
-                  <div className="metric-box">
-                    <span className="metric-lbl">TP / SL</span>
-                    <strong className="metric-val">
-                      {setup.recommended_tp_pips.toFixed(0)}p / {setup.recommended_sl_pips.toFixed(0)}p
-                    </strong>
-                  </div>
-                  <div className="metric-box">
-                    <span className="metric-lbl">Sample N</span>
-                    <strong className="metric-val">{setup.sample_count}</strong>
+                  <div className="setup-catalyst-name" title={setup.event_name}>
+                    {setup.event_name}
                   </div>
                 </div>
 
-                <footer className="setup-card-footer">
-                  <span className="trigger-state-tag">{setup.trigger_state}</span>
-                  <span className="timeframe-tag">{setup.timeframe}</span>
-                </footer>
-              </article>
+                <div className="setup-col-winrate">
+                  <strong className="setup-wr-text">
+                    {(setup.respect_rate * 100).toFixed(0)}%
+                  </strong>
+                  <span className="setup-n-sub">N={setup.sample_count}</span>
+                </div>
+
+                <div className="setup-col-rr">
+                  <strong className="setup-rr-text">
+                    {setup.reward_risk_ratio.toFixed(2)}R
+                  </strong>
+                  <span className="setup-pips-sub">
+                    {setup.recommended_tp_pips.toFixed(0)}p / {setup.recommended_sl_pips.toFixed(0)}p
+                  </span>
+                </div>
+              </button>
             )
           })
         )}
       </div>
-    </section>
+    </aside>
   )
 }

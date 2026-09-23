@@ -88,14 +88,21 @@ export function FyodorTerminalShell() {
     if (fmsData.isOnline && fmsData.signals.length > 0) {
       return fmsData.signals.map((sig) => ({
         id: sig.id,
-        symbol: activeSymbol,
+        symbol: sig.symbol || activeSymbol,
         timeframe,
         time: sig.time as UTCTimestamp,
-        price: sig.price,
+        price: sig.entry_price ?? sig.price,
+        entryPrice: sig.entry_price ?? sig.price,
+        tpPrice: sig.tp_price,
+        slPrice: sig.sl_price,
+        recommendedTpPips: sig.recommended_tp_pips,
+        recommendedSlPips: sig.recommended_sl_pips,
         direction: sig.direction,
         result: sig.result,
         resultR: sig.result_r,
         version: sig.version,
+        method: sig.method,
+        reason: sig.reason,
         setupName: sig.setup_name,
         eventName: sig.event_name,
         releaseTime: sig.releaseTime,
@@ -108,7 +115,8 @@ export function FyodorTerminalShell() {
     return fmsArrows.filter((arrow) => {
       if (arrowFilter === 'wins') return arrow.result === 'tp-reached'
       if (arrowFilter === 'losses') return arrow.result === 'sl-reached'
-      if (arrowFilter === 'v1' || arrowFilter === 'v2') return arrow.version === arrowFilter
+      if (arrowFilter === 'buys') return arrow.direction === 'long'
+      if (arrowFilter === 'sells') return arrow.direction === 'short'
       return true
     })
   }, [arrowFilter, fmsArrows, pastArrowsVisible])
@@ -122,7 +130,7 @@ export function FyodorTerminalShell() {
         const state: FmsDecisionState = isUpcoming ? 'upcoming' : isCurrent ? 'current' : 'recent'
         return {
           id: sig.id,
-          symbol: activeSymbol,
+          symbol: sig.symbol || activeSymbol,
           setupName: sig.setup_name,
           eventName: sig.event_name,
           releaseTime: sig.releaseTime,
@@ -131,6 +139,14 @@ export function FyodorTerminalShell() {
           result: sig.result as FmsDecisionResult,
           resultR: sig.result_r,
           version: sig.version,
+          method: sig.method,
+          reason: sig.reason,
+          price: sig.entry_price ?? sig.price,
+          entryPrice: sig.entry_price ?? sig.price,
+          tpPrice: sig.tp_price,
+          slPrice: sig.sl_price,
+          recommendedTpPips: sig.recommended_tp_pips,
+          recommendedSlPips: sig.recommended_sl_pips,
         }
       })
     }
@@ -312,6 +328,7 @@ export function FyodorTerminalShell() {
                       chartApi={chartApi}
                       seriesApi={seriesApi}
                       arrows={visibleFmsArrows}
+                      selectedArrowId={selectedFmsResult?.id}
                       onSelectArrow={openFmsResult}
                     />
                     <EconomicCalendarMarkers
@@ -346,9 +363,19 @@ export function FyodorTerminalShell() {
             <FmsArrowControls
               visible={pastArrowsVisible}
               filter={arrowFilter}
+              arrows={visibleFmsArrows}
+              selectedArrowId={selectedFmsResult?.id}
               arrowCount={visibleFmsArrows.length}
               onVisibleChange={setPastArrowsVisible}
               onFilterChange={setArrowFilter}
+              onSelectArrowId={(arrowId) => {
+                if (!arrowId) {
+                  setSelectedFmsResult(null)
+                  return
+                }
+                const match = fmsArrows.find((a) => a.id === arrowId)
+                if (match) openFmsResult(match)
+              }}
             />
             <div className="chart-watermark" aria-hidden="true">
               <strong>{activeSymbol}</strong>

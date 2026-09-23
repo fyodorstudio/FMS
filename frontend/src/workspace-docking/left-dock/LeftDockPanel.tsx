@@ -88,6 +88,7 @@ export function LeftDockPanel({
           <RegisteredSetupDock
             setups={setups}
             summary={summary}
+            selectedSymbol={selectedSymbol}
             isOnline={isFmsOnline}
             onSelectSymbol={onSelectSymbol}
           />

@@ -44,9 +44,13 @@ export type FmsPortfolioSummary = {
 
 export type FmsSignalDTO = {
   id: string
+  symbol: string
   time: number
   releaseTime: number
   price: number
+  entry_price?: number
+  tp_price?: number
+  sl_price?: number
   direction: 'long' | 'short'
   method: QuantMethod
   setup_name: string
@@ -57,6 +61,9 @@ export type FmsSignalDTO = {
   result_r: number | null
   recommended_tp_pips?: number
   recommended_sl_pips?: number
+  mfe_pips?: number
+  mae_pips?: number
+  reason?: string
 }
 
 export type FmsEngineStatus = {
