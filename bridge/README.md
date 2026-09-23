@@ -25,19 +25,19 @@ the exact `terminal64.exe` before starting the application.
 The root `pnpm run dev:all` command uses `bridge/.venv` directly so frontend and
 bridge always start with the same isolated Python dependencies.
 
-## Calendar publisher
+## MQL5 Scripts and EA (`bridge/mql5/`)
 
-Compile and attach `mql5/FyodorCalendarPublisher.mq5` to one chart. Add
-`http://127.0.0.1:8001` to MT5 **Tools > Options > Expert Advisors > Allow
-WebRequest for listed URL**. The EA only reads the MT5 calendar and posts it to
-the local bridge; it cannot place orders.
+1. **`FyodorCalendarPublisher.mq5` (Live Runtime EA)**:
+   - Attach to one MT5 chart to stream live economic calendar releases to the bridge.
+   - Add `http://127.0.0.1:8001` to MT5 **Tools > Options > Expert Advisors > Allow WebRequest for listed URL**.
+   - The EA only reads the MT5 calendar and posts it to the local bridge; it cannot place orders.
 
-`FyodorCalendarPublisher` is the only EA this bridge needs. Detach the older
-`FyodorQuoteBridge` and `FyodorCalendarBridge` EAs from every chart so they do
-not create duplicate or competing feeds. The Python bridge reads Market Watch
-and OHLC directly; the publisher owns only the calendar. Its default source
-window is 14 days back through 60 days ahead, while the app initially displays
-the current week and offers previous-week, next-week, and custom views.
+2. **`FyodorMasterExport.mq5` (One-Time Master Historical Exporter)**:
+   - Standalone script to export your broker's entire historical economic calendar (all countries, multi-year depth) and historical OHLC candles directly to standard CSV files in MT5's `MQL5/Files/` folder.
+   - Useful for offline data audits, backups, and quantitative research against raw broker history.
+   - Pre-compiled binary `FyodorMasterExport.ex5` is included and ready to run.
+
+Older predecessor scripts are preserved under `bridge/mql5/legacy/`.
 
 ## Bridge v1 acceptance checklist
 
