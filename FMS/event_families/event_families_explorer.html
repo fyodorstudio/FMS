@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FMS Event Families Explorer & Precedent Registry</title>
+  <style>
+    :root {
+      --bg-root: #090d16;
+      --bg-panel: #0f172a;
+      --bg-card: #1e293b;
+      --bg-hover: #273549;
+      --border: #334155;
+      --border-subtle: #1e293b;
+      --accent: #38bdf8;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --green: #10b981;
+      --red: #f43f5e;
+      --amber: #f59e0b;
+      --purple: #a855f7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-root);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .title-block h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-block p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .stats-strip {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat-badge {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      text-align: right;
+    }
+    .stat-badge span { font-size: 10px; color: var(--text-faint); text-transform: uppercase; font-weight: 700; display: block; }
+    .stat-badge strong { font-size: 14px; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+      background: var(--bg-panel);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px 6px 32px;
+      color: #ffffff;
+      font-size: 12px;
+      outline: none;
+    }
+    .search-box input:focus { border-color: var(--accent); }
+    .search-icon { position: absolute; left: 10px; top: 7px; font-size: 12px; color: var(--text-faint); }
+
+    .filter-group {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-card);
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .filter-btn:hover { color: #ffffff; }
+    .filter-btn.active {
+      background: var(--accent);
+      color: #090d16;
+    }
+
+    /* Table */
+    .table-container {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    th {
+      background: #141f36;
+      color: var(--text-faint);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 750;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+    th:hover { background: #1c2b48; color: #ffffff; }
+    th.sorted { color: var(--accent); }
+    th .sort-arrow { font-size: 9px; margin-left: 4px; }
+
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-variant-numeric: tabular-nums;
+    }
+
+    tr:hover td {
+      background: var(--bg-hover);
+      cursor: pointer;
+    }
+
+    tr.selected td {
+      background: #1b3052;
+    }
+
+    .badge-family {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+    }
+    .family-monetary { background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .family-inflation { background: rgba(244, 63, 94, 0.18); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .family-labor { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .family-growth { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .family-sentiment { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .ccy-tag {
+      font-weight: 800;
+      color: #ffffff;
+      background: var(--bg-card);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 10.5px;
+    }
+
+    .n-cell {
+      font-weight: 800;
+      color: #38bdf8;
+      font-size: 13px;
+    }
+
+    .respect-cell { font-weight: 750; }
+    .respect-high { color: var(--green); }
+    .respect-mid { color: var(--amber); }
+
+    .inverted-pill {
+      font-size: 9px;
+      color: #fb7185;
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      border-radius: 3px;
+      padding: 1px 4px;
+      margin-left: 6px;
+      font-weight: 700;
+    }
+
+    /* Detail Drawer */
+    .detail-card {
+      margin-top: 16px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 22px;
+      display: none;
+    }
+    .detail-card.active { display: block; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .detail-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+    .detail-item label { font-size: 9.5px; color: var(--text-faint); text-transform: uppercase; font-weight: 750; display: block; }
+    .detail-item strong { font-size: 14px; color: #ffffff; }
+
+    .formula-box {
+      margin-top: 12px;
+      background: #090d16;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title-block">
+      <h1>
+        <span>⚡</span> FMS Event Families Explorer & Precedent Registry
+      </h1>
+      <p>Institutional macroeconomic catalyst database with sortable observation sample depth ($N$).</p>
+    </div>
+    <div class="stats-strip">
+      <div class="stat-badge">
+        <span>Total Events</span>
+        <strong id="stat-total-events">32</strong>
+      </div>
+      <div class="stat-badge">
+        <span>Families</span>
+        <strong>5</strong>
+      </div>
+      <div class="stat-badge">
+        <span>Max Sample Depth</span>
+        <strong id="stat-max-n">136</strong>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search event, currency, or family..." oninput="renderTable()">
+    </div>
+
+    <!-- Family Filter Tabs -->
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setFamilyFilter('ALL', this)">All Families</button>
+      <button class="filter-btn" onclick="setFamilyFilter('MONETARY_POLICY', this)">Monetary Policy</button>
+      <button class="filter-btn" onclick="setFamilyFilter('INFLATION', this)">Inflation</button>
+      <button class="filter-btn" onclick="setFamilyFilter('LABOR', this)">Labor</button>
+      <button class="filter-btn" onclick="setFamilyFilter('GROWTH', this)">Growth</button>
+      <button class="filter-btn" onclick="setFamilyFilter('SENTIMENT', this)">Sentiment</button>
+    </div>
+
+    <!-- Currency Filter -->
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setCcyFilter('ALL', this)">All CCY</button>
+      <button class="filter-btn" onclick="setCcyFilter('USD', this)">USD</button>
+      <button class="filter-btn" onclick="setCcyFilter('EUR', this)">EUR</button>
+      <button class="filter-btn" onclick="setCcyFilter('GBP', this)">GBP</button>
+      <button class="filter-btn" onclick="setCcyFilter('JPY', this)">JPY</button>
+      <button class="filter-btn" onclick="setCcyFilter('AUD', this)">AUD</button>
+      <button class="filter-btn" onclick="setCcyFilter('CAD', this)">CAD</button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="handleSort('name')">Event Name <span id="sort-name" class="sort-arrow"></span></th>
+          <th onclick="handleSort('currency')">CCY <span id="sort-currency" class="sort-arrow"></span></th>
+          <th onclick="handleSort('family')">Family <span id="sort-family" class="sort-arrow"></span></th>
+          <th onclick="handleSort('sample_n')" class="sorted">Sample (N) <span id="sort-sample_n" class="sort-arrow">▼</span></th>
+          <th onclick="handleSort('sigma')">Historical σ <span id="sort-sigma" class="sort-arrow"></span></th>
+          <th onclick="handleSort('respect_rate')">Precedent Respect Rate <span id="sort-respect_rate" class="sort-arrow"></span></th>
+          <th onclick="handleSort('typical_excursion_pips')">Avg 15m Excursion <span id="sort-typical_excursion_pips" class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Rendered by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Detail Drawer -->
+  <div id="detailCard" class="detail-card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 id="detName" style="color: #ffffff; font-size: 15px;">Event Name</h3>
+      <span id="detFamilyBadge" class="badge-family">FAMILY</span>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <label>Currency Pair Focus</label>
+        <strong id="detPair">EURUSD</strong>
+      </div>
+      <div class="detail-item">
+        <label>Total Observations (N)</label>
+        <strong id="detN" style="color: #38bdf8;">0</strong>
+      </div>
+      <div class="detail-item">
+        <label>Precedent Respect Rate</label>
+        <strong id="detRespect" style="color: #10b981;">0%</strong>
+      </div>
+      <div class="detail-item">
+        <label>Avg 15m Price Drift</label>
+        <strong id="detExcursion">0 pips</strong>
+      </div>
+    </div>
+    <div class="formula-box" id="detFormula">
+      Surprise ΔS = Actual - Forecast | Momentum ΔM = Actual - Previous | Z = ΔS / σ
+    </div>
+    <p id="detNotes" style="font-size: 11.5px; color: var(--text-muted); margin-top: 10px;"></p>
+  </div>
+
+  <script>
+    const EVENT_CATALOG = [
+      // 1. Monetary Policy
+      { id: 'fed_funds', name: 'Federal Funds Target Rate', currency: 'USD', family: 'MONETARY_POLICY', sample_n: 88, sigma: 0.12, respect_rate: 68.2, typical_excursion_pips: 48, inverted: false, pair: 'EURUSD', notes: 'FOMC benchmark rate. Primary institutional driver of global macro yield spreads.' },
+      { id: 'ecb_refi', name: 'ECB Main Refinancing Rate', currency: 'EUR', family: 'MONETARY_POLICY', sample_n: 76, sigma: 0.10, respect_rate: 64.5, typical_excursion_pips: 42, inverted: false, pair: 'EURUSD', notes: 'European Central Bank benchmark. Watch deposit facility rate and lag to US policy.' },
+      { id: 'boe_rate', name: 'BOE Official Bank Rate', currency: 'GBP', family: 'MONETARY_POLICY', sample_n: 74, sigma: 0.14, respect_rate: 66.2, typical_excursion_pips: 54, inverted: false, pair: 'GBPUSD', notes: 'Bank of England MPC decision. Accompanied by vote split (Hawks vs Doves).' },
+      { id: 'boj_rate', name: 'BOJ Policy Rate & YCC', currency: 'JPY', family: 'MONETARY_POLICY', sample_n: 68, sigma: 0.08, respect_rate: 72.1, typical_excursion_pips: 78, inverted: false, pair: 'USDJPY', notes: 'Bank of Japan rate decision. Unwinds triggers massive carry liquidation.' },
+      { id: 'rba_rate', name: 'RBA Cash Rate Target', currency: 'AUD', family: 'MONETARY_POLICY', sample_n: 78, sigma: 0.15, respect_rate: 61.5, typical_excursion_pips: 36, inverted: false, pair: 'AUDUSD', notes: 'Reserve Bank of Australia benchmark. Highly sensitive to China growth impulse.' },
+      { id: 'boc_rate', name: 'BOC Overnight Rate Target', currency: 'CAD', family: 'MONETARY_POLICY', sample_n: 72, sigma: 0.12, respect_rate: 62.5, typical_excursion_pips: 38, inverted: false, pair: 'USDCAD', notes: 'Bank of Canada rate. Strongly correlated with US-Canada yield differentials and WTI.' },
+      { id: 'snb_rate', name: 'SNB Policy Rate', currency: 'CHF', family: 'MONETARY_POLICY', sample_n: 42, sigma: 0.15, respect_rate: 69.0, typical_excursion_pips: 65, inverted: false, pair: 'USDCHF', notes: 'Swiss National Bank quarterly meeting. Interventions produce extreme directional asymmetry.' },
+      { id: 'fomc_minutes', name: 'FOMC Meeting Minutes', currency: 'USD', family: 'MONETARY_POLICY', sample_n: 64, sigma: 0.20, respect_rate: 57.8, typical_excursion_pips: 28, inverted: false, pair: 'EURUSD', notes: '3 weeks post-FOMC. Details balance sheet policy and terminal rate consensus.' },
+      { id: 'ecb_statement', name: 'ECB Monetary Policy Statement', currency: 'EUR', family: 'MONETARY_POLICY', sample_n: 60, sigma: 0.18, respect_rate: 58.3, typical_excursion_pips: 32, inverted: false, pair: 'EURUSD', notes: 'Statement and Lagarde press conference. High intraday volatility.' },
+
+      // 2. Inflation
+      { id: 'us_cpi_yoy', name: 'US Consumer Price Index (CPI YoY)', currency: 'USD', family: 'INFLATION', sample_n: 120, sigma: 0.18, respect_rate: 67.5, typical_excursion_pips: 52, inverted: false, pair: 'EURUSD', notes: 'Headline US inflation. Heavy catalyst for front-end 2Y Treasury yields.' },
+      { id: 'us_core_cpi_mom', name: 'US Core CPI (MoM)', currency: 'USD', family: 'INFLATION', sample_n: 120, sigma: 0.08, respect_rate: 70.0, typical_excursion_pips: 56, inverted: false, pair: 'EURUSD', notes: 'Excludes volatile food and energy. Fed watch gauge for underlying price pressures.' },
+      { id: 'us_core_pce', name: 'US Core PCE Price Index (MoM)', currency: 'USD', family: 'INFLATION', sample_n: 114, sigma: 0.07, respect_rate: 63.2, typical_excursion_pips: 34, inverted: false, pair: 'EURUSD', notes: 'Federal Reserve officially mandated inflation target gauge.' },
+      { id: 'ez_cpi_yoy', name: 'Eurozone Harmonised CPI (YoY)', currency: 'EUR', family: 'INFLATION', sample_n: 112, sigma: 0.22, respect_rate: 59.8, typical_excursion_pips: 36, inverted: false, pair: 'EURUSD', notes: 'Pan-European inflation metric. Influences ECB terminal rate trajectory.' },
+      { id: 'uk_cpi_yoy', name: 'UK Consumer Price Index (YoY)', currency: 'GBP', family: 'INFLATION', sample_n: 116, sigma: 0.25, respect_rate: 62.1, typical_excursion_pips: 46, inverted: false, pair: 'GBPUSD', notes: 'UK inflation print. High volatility and persistence on Sterling.' },
+      { id: 'jp_cpi_yoy', name: 'Japan National Core CPI (YoY)', currency: 'JPY', family: 'INFLATION', sample_n: 108, sigma: 0.15, respect_rate: 64.8, typical_excursion_pips: 44, inverted: false, pair: 'USDJPY', notes: 'Crucial for BOJ departure from negative rates and yield curve control.' },
+      { id: 'au_cpi_qoq', name: 'Australia Trimmed Mean CPI (QoQ)', currency: 'AUD', family: 'INFLATION', sample_n: 42, sigma: 0.18, respect_rate: 64.3, typical_excursion_pips: 40, inverted: false, pair: 'AUDUSD', notes: 'Quarterly release. Core indicator monitored by RBA board.' },
+      { id: 'ca_cpi_yoy', name: 'Canada Consumer Price Index (YoY)', currency: 'CAD', family: 'INFLATION', sample_n: 110, sigma: 0.20, respect_rate: 58.2, typical_excursion_pips: 35, inverted: false, pair: 'USDCAD', notes: 'Statistics Canada CPI. Drives immediate Loonie rebalancing.' },
+
+      // 3. Labor
+      { id: 'us_nfp', name: 'US Non-Farm Payrolls (NFP)', currency: 'USD', family: 'LABOR', sample_n: 136, sigma: 55.0, respect_rate: 66.9, typical_excursion_pips: 58, inverted: false, pair: 'EURUSD', notes: 'Premier monthly jobs catalyst. High initial noise and spread expansion.' },
+      { id: 'us_unemp', name: 'US Unemployment Rate', currency: 'USD', family: 'LABOR', sample_n: 136, sigma: 0.15, respect_rate: 61.8, typical_excursion_pips: 38, inverted: true, pair: 'EURUSD', notes: 'INVERTED: Lower actual is bullish for USD. Watch for Sahm Rule trigger levels.' },
+      { id: 'us_wages', name: 'US Average Hourly Earnings (MoM)', currency: 'USD', family: 'LABOR', sample_n: 132, sigma: 0.10, respect_rate: 63.6, typical_excursion_pips: 36, inverted: false, pair: 'EURUSD', notes: 'Wage inflation indicator. Dictates second-round price spirals.' },
+      { id: 'us_claims', name: 'US Initial Jobless Claims', currency: 'USD', family: 'LABOR', sample_n: 250, sigma: 12.0, respect_rate: 56.4, typical_excursion_pips: 22, inverted: true, pair: 'EURUSD', notes: 'INVERTED: Weekly high-frequency labor signal. Lead indicator for monthly NFP.' },
+      { id: 'uk_claimant', name: 'UK Claimant Count Change', currency: 'GBP', family: 'LABOR', sample_n: 118, sigma: 14.0, respect_rate: 55.1, typical_excursion_pips: 30, inverted: true, pair: 'GBPUSD', notes: 'INVERTED: British labor demand and benefits claim volume.' },
+      { id: 'au_emp_change', name: 'Australia Employment Change', currency: 'AUD', family: 'LABOR', sample_n: 112, sigma: 18.0, respect_rate: 62.5, typical_excursion_pips: 38, inverted: false, pair: 'AUDUSD', notes: 'Australian headline job creation. Full-time vs part-time breakdown.' },
+      { id: 'ca_emp_change', name: 'Canada Employment Change', currency: 'CAD', family: 'LABOR', sample_n: 110, sigma: 22.0, respect_rate: 60.0, typical_excursion_pips: 36, inverted: false, pair: 'USDCAD', notes: 'Coincides with US NFP once per quarter. Extreme double-release volatility.' },
+
+      // 4. Growth
+      { id: 'us_gdp_qoq', name: 'US Gross Domestic Product (Annualized QoQ)', currency: 'USD', family: 'GROWTH', sample_n: 42, sigma: 0.45, respect_rate: 61.9, typical_excursion_pips: 35, inverted: false, pair: 'EURUSD', notes: 'Quarterly macro growth summary. Advance print has highest market impact.' },
+      { id: 'ez_gdp_qoq', name: 'Eurozone Gross Domestic Product (QoQ)', currency: 'EUR', family: 'GROWTH', sample_n: 40, sigma: 0.20, respect_rate: 57.5, typical_excursion_pips: 28, inverted: false, pair: 'EURUSD', notes: 'Preliminary quarterly growth print across EMU member states.' },
+      { id: 'uk_gdp_mom', name: 'UK Gross Domestic Product (MoM)', currency: 'GBP', family: 'GROWTH', sample_n: 94, sigma: 0.25, respect_rate: 58.5, typical_excursion_pips: 32, inverted: false, pair: 'GBPUSD', notes: 'Monthly UK economic output. Key for Bank of England recession probability.' },
+      { id: 'cn_gdp_yoy', name: 'China Gross Domestic Product (YoY)', currency: 'CNY', family: 'GROWTH', sample_n: 38, sigma: 0.35, respect_rate: 65.8, typical_excursion_pips: 42, inverted: false, pair: 'AUDUSD', notes: 'Major proxy catalyst for AUD, NZD, and global commodity complex.' },
+      { id: 'us_retail_sales', name: 'US Retail Sales (MoM)', currency: 'USD', family: 'GROWTH', sample_n: 118, sigma: 0.38, respect_rate: 64.4, typical_excursion_pips: 40, inverted: false, pair: 'EURUSD', notes: 'Consumer spending indicator representing ~70% of US economic output.' },
+      { id: 'au_retail_sales', name: 'Australia Retail Sales (MoM)', currency: 'AUD', family: 'GROWTH', sample_n: 104, sigma: 0.40, respect_rate: 57.7, typical_excursion_pips: 26, inverted: false, pair: 'AUDUSD', notes: 'Consumer demand indicator across Australian states.' },
+      { id: 'us_ind_prod', name: 'US Industrial Production (MoM)', currency: 'USD', family: 'GROWTH', sample_n: 112, sigma: 0.30, respect_rate: 54.5, typical_excursion_pips: 22, inverted: false, pair: 'EURUSD', notes: 'Output of factories, mines, and utilities in the United States.' },
+
+      // 5. Sentiment
+      { id: 'us_ism_mfg', name: 'US ISM Manufacturing PMI', currency: 'USD', family: 'SENTIMENT', sample_n: 118, sigma: 1.10, respect_rate: 63.6, typical_excursion_pips: 38, inverted: false, pair: 'EURUSD', notes: 'Over/under 50 threshold indicates expansion vs contraction in manufacturing.' },
+      { id: 'us_ism_serv', name: 'US ISM Services PMI', currency: 'USD', family: 'SENTIMENT', sample_n: 116, sigma: 1.25, respect_rate: 65.5, typical_excursion_pips: 42, inverted: false, pair: 'EURUSD', notes: 'Services sector health. Dominant component of US employment and services inflation.' },
+      { id: 'ez_mfg_pmi', name: 'Eurozone Flash Manufacturing PMI', currency: 'EUR', family: 'SENTIMENT', sample_n: 114, sigma: 0.85, respect_rate: 58.8, typical_excursion_pips: 30, inverted: false, pair: 'EURUSD', notes: 'S&P Global flash survey. Highly driven by German industrial performance.' },
+      { id: 'uk_serv_pmi', name: 'UK Flash Services PMI', currency: 'GBP', family: 'SENTIMENT', sample_n: 112, sigma: 0.95, respect_rate: 60.7, typical_excursion_pips: 34, inverted: false, pair: 'GBPUSD', notes: 'UK services sector survey. High correlation with Bank of England policy expectations.' },
+      { id: 'us_mich_sent', name: 'Michigan Consumer Sentiment', currency: 'USD', family: 'SENTIMENT', sample_n: 116, sigma: 1.80, respect_rate: 56.9, typical_excursion_pips: 25, inverted: false, pair: 'EURUSD', notes: 'Consumer confidence & 1Y / 5Y inflation expectation sub-indices.' },
+    ];
+
+    let currentFamilyFilter = 'ALL';
+    let currentCcyFilter = 'ALL';
+    let sortKey = 'sample_n';
+    let sortAsc = false; // Default: Highest N to Lowest N
+    let selectedEventId = null;
+
+    function formatFamily(fam) {
+      switch(fam) {
+        case 'MONETARY_POLICY': return '<span class="badge-family family-monetary">Monetary Policy</span>';
+        case 'INFLATION': return '<span class="badge-family family-inflation">Inflation</span>';
+        case 'LABOR': return '<span class="badge-family family-labor">Labor</span>';
+        case 'GROWTH': return '<span class="badge-family family-growth">Growth</span>';
+        case 'SENTIMENT': return '<span class="badge-family family-sentiment">Sentiment</span>';
+        default: return fam;
+      }
+    }
+
+    function setFamilyFilter(fam, btn) {
+      currentFamilyFilter = fam;
+      document.querySelectorAll('.filter-group:nth-of-type(1) .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    }
+
+    function setCcyFilter(ccy, btn) {
+      currentCcyFilter = ccy;
+      document.querySelectorAll('.filter-group:nth-of-type(2) .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    }
+
+    function handleSort(key) {
+      if (sortKey === key) {
+        sortAsc = !sortAsc;
+      } else {
+        sortKey = key;
+        sortAsc = (key === 'name' || key === 'currency'); // Default string ascending, numeric descending
+      }
+      updateSortHeaders();
+      renderTable();
+    }
+
+    function updateSortHeaders() {
+      document.querySelectorAll('th').forEach(th => th.classList.remove('sorted'));
+      document.querySelectorAll('.sort-arrow').forEach(span => span.textContent = '');
+
+      const activeHeader = document.querySelector(`th[onclick*="'${sortKey}'"]`);
+      if (activeHeader) {
+        activeHeader.classList.add('sorted');
+        const arrowSpan = document.getElementById(`sort-${sortKey}`);
+        if (arrowSpan) arrowSpan.textContent = sortAsc ? '▲' : '▼';
+      }
+    }
+
+    function renderTable() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const tbody = document.getElementById('tableBody');
+
+      let filtered = EVENT_CATALOG.filter(item => {
+        if (currentFamilyFilter !== 'ALL' && item.family !== currentFamilyFilter) return false;
+        if (currentCcyFilter !== 'ALL' && item.currency !== currentCcyFilter) return false;
+        if (q) {
+          const matchName = item.name.toLowerCase().includes(q);
+          const matchCcy = item.currency.toLowerCase().includes(q);
+          const matchFam = item.family.toLowerCase().includes(q);
+          if (!matchName && !matchCcy && !matchFam) return false;
+        }
+        return true;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        let valA = a[sortKey];
+        let valB = b[sortKey];
+        if (typeof valA === 'string') {
+          return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+        return sortAsc ? valA - valB : valB - valA;
+      });
+
+      // Render
+      tbody.innerHTML = '';
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        if (item.id === selectedEventId) tr.classList.add('selected');
+        tr.onclick = () => selectEvent(item);
+
+        const respectClass = item.respect_rate >= 65 ? 'respect-high' : item.respect_rate >= 58 ? 'respect-mid' : '';
+
+        tr.innerHTML = `
+          <td>
+            <strong>${item.name}</strong>
+            ${item.inverted ? '<span class="inverted-pill">INVERTED</span>' : ''}
+          </td>
+          <td><span class="ccy-tag">${item.currency}</span></td>
+          <td>${formatFamily(item.family)}</td>
+          <td class="n-cell">${item.sample_n}</td>
+          <td>±${item.sigma.toFixed(2)}</td>
+          <td class="respect-cell ${respectClass}">${item.respect_rate.toFixed(1)}%</td>
+          <td>${item.typical_excursion_pips} p</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update Top stats
+      document.getElementById('stat-total-events').textContent = filtered.length;
+      const maxN = filtered.reduce((max, cur) => cur.sample_n > max ? cur.sample_n : max, 0);
+      document.getElementById('stat-max-n').textContent = maxN;
+    }
+
+    function selectEvent(item) {
+      selectedEventId = item.id;
+      renderTable();
+
+      const drawer = document.getElementById('detailCard');
+      drawer.classList.add('active');
+
+      document.getElementById('detName').textContent = `${item.name} (${item.currency})`;
+      document.getElementById('detFamilyBadge').innerHTML = formatFamily(item.family);
+      document.getElementById('detPair').textContent = item.pair;
+      document.getElementById('detN').textContent = `${item.sample_n} releases`;
+      document.getElementById('detRespect').textContent = `${item.respect_rate.toFixed(1)}%`;
+      document.getElementById('detExcursion').textContent = `±${item.typical_excursion_pips} pips`;
+      document.getElementById('detNotes').textContent = item.notes;
+
+      if (item.inverted) {
+        document.getElementById('detFormula').textContent =
+          `[INVERTED INDICATOR]: Effective Z = -1.0 * (Actual - Forecast) / ${item.sigma} | Effective Momentum = -1.0 * (Actual - Previous)`;
+      } else {
+        document.getElementById('detFormula').textContent =
+          `Surprise ΔS = Actual - Forecast | Normalized Z = (Actual - Forecast) / ${item.sigma} | Momentum ΔM = Actual - Previous`;
+      }
+
+      drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Initial load
+    updateSortHeaders();
+    renderTable();
+  </script>
+</body>
+</html>
