@@ -179,8 +179,8 @@ export function TraderNotebookPanel({
       rrRatio: calculatedMetrics.rrRatio!,
       note,
     })
-    setRegSuccessMsg(`✓ Registered ${direction.toUpperCase()} setup arrow on chart!`)
-    setTimeout(() => setRegSuccessMsg(null), 4000)
+    setRegSuccessMsg('✓ Registered!')
+    setTimeout(() => setRegSuccessMsg(null), 2500)
   }
 
   return (
@@ -343,53 +343,45 @@ export function TraderNotebookPanel({
               ))}
             </div>
           )}
-
-          {/* Register Arrow CTA Button */}
-          {!selectedArrow ? (
-            <div className="register-action-wrap">
-              <button
-                type="button"
-                className={`register-arrow-btn ${canRegister ? 'ready' : 'disabled'}`}
-                onClick={handleRegisterClick}
-                disabled={!canRegister}
-              >
-                ↗ Register Setup Arrow on Chart
-              </button>
-              {regSuccessMsg && <div className="reg-success-toast">{regSuccessMsg}</div>}
-              {!canRegister && (
-                <small className="register-hint">
-                  Set Entry, Stop Loss, and Take Profit to pin this setup arrow to the chart.
-                </small>
-              )}
-            </div>
-          ) : (
-            <div className="register-action-wrap">
-              <div className="selected-arrow-actions">
-                <button
-                  type="button"
-                  className="new-draft-btn"
-                  onClick={() => onSelectArrowId(null)}
-                >
-                  + Create New Plan
-                </button>
-                <button
-                  type="button"
-                  className="delete-arrow-btn"
-                  onClick={() => onDeleteArrow(selectedArrow.id)}
-                >
-                  Delete Arrow
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
       {/* Col 2: Metric Calculations & Registered Setups List */}
       <div className="notebook-col notebook-metrics-col">
         <div className="notebook-col-header">
-          <span className="notebook-eyebrow">Risk / Reward Math</span>
-          <span className="source-tag">100% Deterministic</span>
+          <span className="notebook-eyebrow">
+            {selectedArrow ? 'Setup Analysis' : 'Risk / Reward Math'}
+          </span>
+          {!selectedArrow ? (
+            <button
+              type="button"
+              className={`register-arrow-btn-compact ${regSuccessMsg ? 'success' : canRegister ? 'ready' : 'disabled'}`}
+              onClick={handleRegisterClick}
+              disabled={!canRegister}
+              title={canRegister ? 'Pin this setup arrow to chart' : 'Set Entry, SL, and TP to register arrow'}
+            >
+              {regSuccessMsg ? '✓ Registered!' : '↗ Register Setup Arrow'}
+            </button>
+          ) : (
+            <div className="selected-arrow-header-actions">
+              <button
+                type="button"
+                className="new-draft-btn-compact"
+                onClick={() => onSelectArrowId(null)}
+                title="Start drafting a new setup plan"
+              >
+                + New Plan
+              </button>
+              <button
+                type="button"
+                className="delete-arrow-btn-compact"
+                onClick={() => onDeleteArrow(selectedArrow.id)}
+                title="Delete this registered setup arrow"
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 3 Metric Cards */}
