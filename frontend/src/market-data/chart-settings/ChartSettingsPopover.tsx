@@ -78,7 +78,7 @@ export function ChartSettingsPopover({
 
         <div className="chart-settings-section time-display-section">
           <h2>Universal time presentation</h2>
-          <p>One clock applies to the chart, Activity, Calendar and FMS timestamps.</p>
+          <p>One clock applies to the chart, Activity, and Calendar timestamps.</p>
           <div className="time-setting-row">
             <label>
               <span>Display clock</span>

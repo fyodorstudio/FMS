@@ -15,7 +15,6 @@ type TerminalStatusBarProps = {
   settingsOpen: boolean
   calendarStatus: string
   calendarEventCount: number
-  fmsStatus?: { isOnline: boolean; setupCount: number }
   onToggleBottomDock: (window: BottomDockWindow) => void
   onThemeChanged: (theme: ColorTheme) => void
   onToggleSettings: () => void
@@ -33,7 +32,6 @@ export function TerminalStatusBar({
   settingsOpen,
   calendarStatus,
   calendarEventCount,
-  fmsStatus,
   onToggleBottomDock,
   onThemeChanged,
   onToggleSettings,
@@ -50,17 +48,14 @@ export function TerminalStatusBar({
       <span className="status-message"><i className={`status-dot ${sourceState}`} /> {sourceLabel} · {sourceSymbolCount} symbols</span>
       <span className="status-selection">{selectedSymbol} · {timeframe} · {barCount} bars</span>
       <div className="status-actions">
-        {fmsStatus && (
-          <span className="status-action" style={{ cursor: 'default', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <i className={`status-dot ${fmsStatus.isOnline ? 'live' : 'waiting'}`} />
-            FMS {fmsStatus.isOnline ? `${fmsStatus.setupCount} Setups` : 'Offline'}
-          </span>
-        )}
-        <button className={`status-action${bottomDockWindow === 'activity' ? ' active' : ''}`} type="button" onClick={() => onToggleBottomDock('activity')} aria-expanded={bottomDockWindow === 'activity'}>
-          Activity <span className="activity-count">{activityCount}</span>
+        <button className={`status-action${bottomDockWindow === 'notebook' ? ' active' : ''}`} type="button" onClick={() => onToggleBottomDock('notebook')} aria-expanded={bottomDockWindow === 'notebook'}>
+          Notebook
         </button>
         <button className={`status-action${bottomDockWindow === 'calendar' ? ' active' : ''}`} type="button" onClick={() => onToggleBottomDock('calendar')} aria-expanded={bottomDockWindow === 'calendar'}>
           Calendar <span className={`preview-label${calendarStatus === 'live' ? ' live' : ''}`}>{calendarBadge}</span>
+        </button>
+        <button className={`status-action${bottomDockWindow === 'activity' ? ' active' : ''}`} type="button" onClick={() => onToggleBottomDock('activity')} aria-expanded={bottomDockWindow === 'activity'}>
+          Activity <span className="activity-count">{activityCount}</span>
         </button>
         <ColorThemeButton onThemeChanged={onThemeChanged} />
         <button className={`status-action${settingsOpen ? ' active' : ''}`} type="button" onClick={onToggleSettings} aria-expanded={settingsOpen}>

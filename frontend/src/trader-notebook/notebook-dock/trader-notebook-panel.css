@@ -1,0 +1,316 @@
+.trader-notebook-panel {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(260px, 1.1fr) minmax(280px, 1.2fr) minmax(320px, 1.4fr);
+  align-items: stretch;
+  background: var(--surface-panel);
+  color: var(--text);
+  font-family: inherit;
+  overflow: hidden;
+}
+
+.notebook-col {
+  padding: 12px 14px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.notebook-col:last-child {
+  border-right: none;
+}
+
+.notebook-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.notebook-eyebrow {
+  color: var(--text-faint);
+  font-size: 8.5px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.chart-projection-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--accent);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+}
+
+.chart-projection-toggle input {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.source-tag {
+  font-size: 8px;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  letter-spacing: 0.03em;
+}
+
+.durability-tag {
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #06b6d4;
+  letter-spacing: 0.02em;
+}
+
+/* Col 1: Symbol & Inputs */
+.notebook-symbol-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.notebook-symbol-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-strong);
+  letter-spacing: 0.02em;
+}
+
+.direction-toggle-group {
+  display: flex;
+  gap: 4px;
+}
+
+.dir-toggle-btn {
+  font-size: 8.5px;
+  font-weight: 750;
+  padding: 2.5px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-inset);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.dir-toggle-btn.buy.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border-color: #10b981;
+}
+
+.dir-toggle-btn.sell.active {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.levels-input-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.input-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.set-market-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.set-market-btn:hover {
+  color: var(--text-strong);
+}
+
+.input-group input {
+  height: 28px;
+  padding: 0 8px;
+  background: var(--surface-inset);
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  color: var(--text-strong);
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.15s ease;
+}
+
+.input-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.pips-badge {
+  font-size: 8px;
+  font-weight: 750;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.pips-badge.positive {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.pips-badge.negative {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Col 2: Metrics */
+.metrics-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.metric-card {
+  background: var(--surface-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric-card.highlight {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.metric-lbl {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-val {
+  font-size: 12px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+.metric-sub {
+  font-size: 8px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-green { color: #10b981 !important; }
+.text-rose { color: #f43f5e !important; }
+.text-cyan { color: #06b6d4 !important; }
+
+.planner-guidance-box {
+  background: var(--surface-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.planner-guidance-box strong {
+  font-size: 9.5px;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.planner-guidance-box ul {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 9px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.planner-guidance-box li {
+  margin-bottom: 3px;
+}
+
+/* Col 3: Journal */
+.journal-textarea-container {
+  flex: 1;
+  display: flex;
+  min-height: 80px;
+}
+
+.journal-textarea {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-inset);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--text-strong);
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.45;
+  outline: none;
+  resize: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.journal-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.journal-col-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 8.5px;
+  color: var(--text-faint);
+}
+
+.durability-hint {
+  color: #10b981;
+}
+
+.font-mono {
+  font-family: var(--font-mono, monospace);
+}

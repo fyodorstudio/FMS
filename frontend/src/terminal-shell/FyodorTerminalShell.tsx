@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { readColorTheme, type ColorTheme } from '../appearance/color-theme/color-theme-preference'
 import {
   readTimeDisplayPreference,
@@ -10,18 +10,6 @@ import { EconomicCalendarMarkers } from '../economic-calendar/calendar-dock/Econ
 import { EconomicCalendarPanel } from '../economic-calendar/calendar-dock/EconomicCalendarPanel'
 import type { CalendarRangePreset } from '../economic-calendar/calendar-dock/calendar-display-range'
 import { useMt5EconomicCalendar } from '../economic-calendar/mt5-calendar/use-mt5-economic-calendar'
-import { FmsArrowControls } from '../fms/chart-arrows/FmsArrowControls'
-import { FmsChartMarkers } from '../fms/chart-arrows/FmsChartMarkers'
-import { FmsPastResultPanel } from '../fms/past-result-dock/FmsPastResultPanel'
-import type {
-  FmsArrowFilter,
-  FmsChartArrow,
-  FmsDecision,
-  FmsDecisionResult,
-  FmsDecisionState,
-} from '../fms/placeholder-feed/fms-placeholder-types'
-import type { UTCTimestamp } from 'lightweight-charts'
-import { useFmsData } from '../fms/use-fms-data'
 import { MarketCandlestickChart } from '../market-data/candlestick-chart/MarketCandlestickChart'
 import { MarketChartErrorBoundary } from '../market-data/candlestick-chart/MarketChartErrorBoundary'
 import { FloatingDrawingToolbar } from '../market-data/chart-drawings/FloatingDrawingToolbar'
@@ -41,19 +29,22 @@ import { DataHeartbeatPanel } from '../system-connectivity/bridge-status/DataHea
 import { useBridgeStatus } from '../system-connectivity/bridge-status/use-bridge-status'
 import { ActivityLogPanel } from '../system-observability/activity-log/ActivityLogPanel'
 import { useActivityLog } from '../system-observability/activity-log/use-activity-log'
+import { PlannedTradePriceLines } from '../trader-notebook/chart-levels/PlannedTradePriceLines'
+import { TraderNotebookPanel, type PlannedTradeState } from '../trader-notebook/notebook-dock/TraderNotebookPanel'
 import { BottomDockPanel } from '../workspace-docking/bottom-dock/BottomDockPanel'
 import type { BottomDockWindow } from '../workspace-docking/bottom-dock/bottom-dock-window'
 import { LeftDockPanel } from '../workspace-docking/left-dock/LeftDockPanel'
-import {
-  readLeftDockWindow,
-  saveLeftDockWindow,
-  type LeftDockWindow,
-} from '../workspace-docking/left-dock/left-dock-window'
 import { ChartWorkspaceHeader } from './ChartWorkspaceHeader'
 import { TerminalStatusBar } from './TerminalStatusBar'
 import './terminal-shell.layout.css'
 
-type SelectedFmsResult = FmsChartArrow | FmsDecision
+const defaultTradePlan: PlannedTradeState = {
+  direction: 'long',
+  entryPrice: null,
+  tpPrice: null,
+  slPrice: null,
+  showOnChart: true,
+}
 
 export function FyodorTerminalShell() {
   const [selectedSymbol, setSelectedSymbol] = useState('EURUSD')
@@ -63,13 +54,43 @@ export function FyodorTerminalShell() {
   const [timeDisplay, setTimeDisplay] = useState<TimeDisplayPreference>(readTimeDisplayPreference)
   const [activeDrawingTool, setActiveDrawingTool] = useState<DrawingToolId | null>(null)
   const [selectedDrawingId, setSelectedDrawingId] = useState<string | null>(null)
-  const [bottomDockWindow, setBottomDockWindow] = useState<BottomDockWindow | null>(null)
-  const [leftDockWindow, setLeftDockWindow] = useState<LeftDockWindow>(readLeftDockWindow)
+  const [bottomDockWindow, setBottomDockWindow] = useState<BottomDockWindow | null>('notebook')
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const [pastArrowsVisible, setPastArrowsVisible] = useState(true)
-  const [arrowFilter, setArrowFilter] = useState<FmsArrowFilter>('all')
-  const [selectedFmsResult, setSelectedFmsResult] = useState<SelectedFmsResult | null>(null)
   const { entries, appendActivity, clearActivity } = useActivityLog()
+
+  // Planned trade state for the active symbol
+  const [prevSymbolForPlan, setPrevSymbolForPlan] = useState(selectedSymbol)
+  const [plannedTrade, setPlannedTrade] = useState<PlannedTradeState>(() => {
+    const saved = localStorage.getItem(`trader_plan_${selectedSymbol}`)
+    if (saved) {
+      try {
+        return JSON.parse(saved) as PlannedTradeState
+      } catch {
+        // fallback
+      }
+    }
+    return defaultTradePlan
+  })
+
+  if (selectedSymbol !== prevSymbolForPlan) {
+    setPrevSymbolForPlan(selectedSymbol)
+    const saved = localStorage.getItem(`trader_plan_${selectedSymbol}`)
+    if (saved) {
+      try {
+        setPlannedTrade(JSON.parse(saved) as PlannedTradeState)
+      } catch {
+        setPlannedTrade(defaultTradePlan)
+      }
+    } else {
+      setPlannedTrade(defaultTradePlan)
+    }
+  }
+
+  const handlePlanChange = (nextPlan: PlannedTradeState) => {
+    setPlannedTrade(nextPlan)
+    localStorage.setItem(`trader_plan_${selectedSymbol}`, JSON.stringify(nextPlan))
+  }
+
   const bridge = useBridgeStatus()
   const mt5Connected = bridge.health?.mt5.connected === true
   const marketData = useMt5MarketData(mt5Connected, bridge.health?.mt5.generation ?? 0, selectedSymbol, timeframe)
@@ -81,77 +102,6 @@ export function FyodorTerminalShell() {
   const activeSymbol = marketData.activeSymbol
   const quote = marketData.symbols.find((item) => item.symbol === activeSymbol) ?? null
   const bars = marketData.bars
-
-  const fmsData = useFmsData(activeSymbol)
-
-  const fmsArrows = useMemo(() => {
-    if (fmsData.isOnline && fmsData.signals.length > 0) {
-      return fmsData.signals.map((sig) => ({
-        id: sig.id,
-        symbol: sig.symbol || activeSymbol,
-        timeframe,
-        time: sig.time as UTCTimestamp,
-        price: sig.entry_price ?? sig.price,
-        entryPrice: sig.entry_price ?? sig.price,
-        tpPrice: sig.tp_price,
-        slPrice: sig.sl_price,
-        recommendedTpPips: sig.recommended_tp_pips,
-        recommendedSlPips: sig.recommended_sl_pips,
-        direction: sig.direction,
-        result: sig.result,
-        resultR: sig.result_r,
-        version: sig.version,
-        method: sig.method,
-        reason: sig.reason,
-        setupName: sig.setup_name,
-        eventName: sig.event_name,
-        releaseTime: sig.releaseTime,
-      }))
-    }
-    return []
-  }, [activeSymbol, fmsData.isOnline, fmsData.signals, timeframe])
-  const visibleFmsArrows = useMemo(() => {
-    if (!pastArrowsVisible) return []
-    return fmsArrows.filter((arrow) => {
-      if (arrowFilter === 'wins') return arrow.result === 'tp-reached'
-      if (arrowFilter === 'losses') return arrow.result === 'sl-reached'
-      if (arrowFilter === 'buys') return arrow.direction === 'long'
-      if (arrowFilter === 'sells') return arrow.direction === 'short'
-      return true
-    })
-  }, [arrowFilter, fmsArrows, pastArrowsVisible])
-
-  const decisions = useMemo<FmsDecision[]>(() => {
-    if (fmsData.isOnline && fmsData.signals.length > 0) {
-      const referenceTimeMs = bars.length > 0 ? Number(bars[bars.length - 1].time) * 1000 : 0
-      return fmsData.signals.map((sig) => {
-        const isUpcoming = sig.releaseTime > referenceTimeMs
-        const isCurrent = !isUpcoming && (referenceTimeMs - sig.releaseTime) < 86_400_000
-        const state: FmsDecisionState = isUpcoming ? 'upcoming' : isCurrent ? 'current' : 'recent'
-        return {
-          id: sig.id,
-          symbol: sig.symbol || activeSymbol,
-          setupName: sig.setup_name,
-          eventName: sig.event_name,
-          releaseTime: sig.releaseTime,
-          state,
-          direction: sig.direction,
-          result: sig.result as FmsDecisionResult,
-          resultR: sig.result_r,
-          version: sig.version,
-          method: sig.method,
-          reason: sig.reason,
-          price: sig.entry_price ?? sig.price,
-          entryPrice: sig.entry_price ?? sig.price,
-          tpPrice: sig.tp_price,
-          slPrice: sig.sl_price,
-          recommendedTpPips: sig.recommended_tp_pips,
-          recommendedSlPips: sig.recommended_sl_pips,
-        }
-      })
-    }
-    return []
-  }, [activeSymbol, bars, fmsData.isOnline, fmsData.signals])
 
   const {
     drawings,
@@ -186,11 +136,6 @@ export function FyodorTerminalShell() {
     setTimeframe(nextTimeframe)
     setSelectedDrawingId(null)
     appendActivity('Chart', 'Timeframe selected', `${activeSymbol} ${nextTimeframe}`)
-  }
-
-  const selectLeftDockWindow = (window: LeftDockWindow) => {
-    setLeftDockWindow(window)
-    saveLeftDockWindow(window)
   }
 
   const recordChartData = useCallback(
@@ -239,21 +184,11 @@ export function FyodorTerminalShell() {
     appendActivity('Drawing', 'All drawings deleted', `${totalDrawingCount} removed`)
   }
 
-  const openFmsResult = (result: SelectedFmsResult) => {
-    setSelectedFmsResult(result)
-    setBottomDockWindow('past-result')
-  }
-
-  const goToPlaceholderArrow = (decision: FmsDecision) => {
-    selectSymbol(decision.symbol)
-    setPastArrowsVisible(true)
-    setArrowFilter(decision.version)
-    openFmsResult(decision)
-  }
-
   const toggleBottomDock = (window: BottomDockWindow) => {
     setBottomDockWindow((current) => current === window ? null : window)
   }
+
+
 
   const sourceState = !bridge.reachable || marketData.marketWatchStatus === 'unavailable'
     ? 'error'
@@ -275,20 +210,11 @@ export function FyodorTerminalShell() {
     <div className={`terminal-shell${bottomDockWindow ? ' bottom-dock-open' : ''}`}>
       <main className="terminal-workspace">
         <LeftDockPanel
-          activeWindow={leftDockWindow}
           symbols={marketData.symbols}
           selectedSymbol={activeSymbol}
           marketWatchStatus={marketData.marketWatchStatus}
           marketWatchError={marketData.marketWatchError}
-          decisions={decisions}
-          setups={fmsData.setups}
-          summary={fmsData.summary}
-          isFmsOnline={fmsData.isOnline}
-          timeDisplay={timeDisplay}
-          onSelectWindow={selectLeftDockWindow}
           onSelectSymbol={selectSymbol}
-          onOpenResult={openFmsResult}
-          onGoToArrow={goToPlaceholderArrow}
         />
 
         <section className="chart-workspace" aria-label={`${activeSymbol} chart workspace`}>
@@ -322,17 +248,18 @@ export function FyodorTerminalShell() {
                 hasOlderData={!marketData.chartHistoryComplete}
                 isLoadingOlderData={marketData.chartHistoryLoading}
                 onRequestOlderData={marketData.requestOlderBars}
-                renderChartOverlay={(chartApi, seriesApi) => (
+                renderChartOverlay={(_chartApi, seriesApi) => (
                   <>
-                    <FmsChartMarkers
-                      chartApi={chartApi}
+                    <PlannedTradePriceLines
                       seriesApi={seriesApi}
-                      arrows={visibleFmsArrows}
-                      selectedArrowId={selectedFmsResult?.id}
-                      onSelectArrow={openFmsResult}
+                      visible={plannedTrade.showOnChart}
+                      direction={plannedTrade.direction}
+                      entryPrice={plannedTrade.entryPrice}
+                      tpPrice={plannedTrade.tpPrice}
+                      slPrice={plannedTrade.slPrice}
                     />
                     <EconomicCalendarMarkers
-                      chartApi={chartApi}
+                      chartApi={_chartApi}
                       seriesApi={seriesApi}
                       symbol={activeSymbol}
                       bars={bars}
@@ -360,23 +287,6 @@ export function FyodorTerminalShell() {
               onToolChange={chooseDrawingTool}
               onClearAll={deleteAllDrawings}
             />
-            <FmsArrowControls
-              visible={pastArrowsVisible}
-              filter={arrowFilter}
-              arrows={visibleFmsArrows}
-              selectedArrowId={selectedFmsResult?.id}
-              arrowCount={visibleFmsArrows.length}
-              onVisibleChange={setPastArrowsVisible}
-              onFilterChange={setArrowFilter}
-              onSelectArrowId={(arrowId) => {
-                if (!arrowId) {
-                  setSelectedFmsResult(null)
-                  return
-                }
-                const match = fmsArrows.find((a) => a.id === arrowId)
-                if (match) openFmsResult(match)
-              }}
-            />
             <div className="chart-watermark" aria-hidden="true">
               <strong>{activeSymbol}</strong>
               <span>
@@ -392,10 +302,18 @@ export function FyodorTerminalShell() {
         <BottomDockPanel
           activeWindow={bottomDockWindow}
           activityCount={entries.length}
-          hasPastResult={selectedFmsResult !== null}
+          selectedSymbol={activeSymbol}
           onSelectWindow={setBottomDockWindow}
           onClose={() => setBottomDockWindow(null)}
         >
+          {bottomDockWindow === 'notebook' && (
+            <TraderNotebookPanel
+              selectedSymbol={activeSymbol}
+              quote={quote}
+              plan={plannedTrade}
+              onPlanChange={handlePlanChange}
+            />
+          )}
           {bottomDockWindow === 'activity' && (
             <ActivityLogPanel
               entries={entries}
@@ -424,7 +342,6 @@ export function FyodorTerminalShell() {
               onRangePresetChange={setCalendarRangePreset}
             />
           )}
-          {bottomDockWindow === 'past-result' && <FmsPastResultPanel result={selectedFmsResult} timeDisplay={timeDisplay} />}
         </BottomDockPanel>
       )}
 
@@ -439,11 +356,10 @@ export function FyodorTerminalShell() {
         bottomDockWindow={bottomDockWindow}
         settingsOpen={settingsOpen}
         calendarStatus={calendarStatus}
-        calendarEventCount={bridge.health?.calendar.event_count ?? 0}
-        fmsStatus={{ isOnline: fmsData.isOnline, setupCount: fmsData.setups.length }}
+        calendarEventCount={calendar.events.length}
         onToggleBottomDock={toggleBottomDock}
         onThemeChanged={changeTheme}
-        onToggleSettings={() => setSettingsOpen((open) => !open)}
+        onToggleSettings={() => setSettingsOpen((current) => !current)}
       />
 
       {settingsOpen && (

@@ -5,7 +5,7 @@ import './bottom-dock-panel.css'
 type BottomDockPanelProps = {
   activeWindow: BottomDockWindow
   activityCount: number
-  hasPastResult: boolean
+  selectedSymbol: string
   onSelectWindow: (window: BottomDockWindow) => void
   onClose: () => void
   children: ReactNode
@@ -14,7 +14,7 @@ type BottomDockPanelProps = {
 export function BottomDockPanel({
   activeWindow,
   activityCount,
-  hasPastResult,
+  selectedSymbol,
   onSelectWindow,
   onClose,
   children,
@@ -24,10 +24,10 @@ export function BottomDockPanel({
       <header className="bottom-dock-tabs">
         <button
           type="button"
-          className={activeWindow === 'past-result' ? 'active' : ''}
-          onClick={() => onSelectWindow('past-result')}
+          className={activeWindow === 'notebook' ? 'active' : ''}
+          onClick={() => onSelectWindow('notebook')}
         >
-          Past Result <span>{hasPastResult ? '1 selected' : 'Empty'}</span>
+          Notebook <span>{selectedSymbol}</span>
         </button>
         <button
           type="button"

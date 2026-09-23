@@ -1,1 +1,1 @@
-export type BottomDockWindow = 'past-result' | 'calendar' | 'activity'
+export type BottomDockWindow = 'notebook' | 'calendar' | 'activity'
