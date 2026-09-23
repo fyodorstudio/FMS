@@ -57,8 +57,4 @@ Nice-to-have enhancements and future refinements identified during initial codeb
 
 ---
 
-## 5. Phase 2: FMS Setup Engine Preparation
 
-- [ ] **Stateless Pure-Function Design**
-  - Keep core FMS calculation rules as pure functions `(bars, calendarEvents, parameters) => setups` isolated from UI and transport state.
-  - Ensure setup rules are independently verifiable and testable without requiring an active MT5 connection.

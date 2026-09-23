@@ -2,7 +2,7 @@
 
 This is a local, read-only adapter. It exposes Market Watch, OHLC, health,
 activity, and the MT5 economic-calendar publisher on `127.0.0.1:8001`.
-It contains no FMS logic, persistence, or trading endpoints.
+It contains no persistence or trading endpoints.
 
 Native MetaTrader5 calls run in a supervised child process. A stuck broker IPC
 call can therefore be terminated without blocking bridge health or Activity.
@@ -59,5 +59,4 @@ Bridge v1 is not frozen until the owner manually confirms all of these:
 - A longer session keeps the UI responsive and does not accumulate queued requests.
 
 After acceptance, `/api/v1` and calendar protocol version 1 become the frozen
-contract. FMS consumes their raw outputs later but does not add logic to or
-modify this bridge.
+contract.

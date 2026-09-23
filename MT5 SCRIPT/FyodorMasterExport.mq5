@@ -4,7 +4,7 @@
 //|                                  Copyright 2026, Fyodor Terminal |
 //+------------------------------------------------------------------+
 #property copyright   "Fyodor Terminal"
-#property link        "https://github.com/fyodorstudio/FMS"
+#property link        "https://github.com/fyodorstudio/fyodor-terminal"
 #property version     "2.00"
 #property description "One-time complete export of MT5 economic calendar history and OHLC candles."
 #property description "Generates 100% real broker data with zero simulation, synthetic seeds, or mocks."
