@@ -57884,53 +57884,53 @@ event_id,value_id,timestamp,currency,country_code,event_name,importance,actual,f
 380010023,281633,1781262000,EUR,IT,Quarterly Unemployment Rate,medium,5.3,4.8,5.6,5.7
 380010023,281634,1789124400,EUR,IT,Quarterly Unemployment Rate,medium,5.6,4.5,5.3,5.5
 380010023,281635,1796994000,EUR,IT,Quarterly Unemployment Rate,medium,,5.4,5.6,
-380010024,82758,1420804800,EUR,IT,Government Deficit – GDP Ratio,medium,3.0,,1.3,1.1
-380010024,82759,1427972400,EUR,IT,Government Deficit – GDP Ratio,medium,2.3,,3.0,3.5
-380010024,82760,1435748400,EUR,IT,Government Deficit – GDP Ratio,medium,5.6,,2.3,
-380010024,82761,1443697200,EUR,IT,Government Deficit – GDP Ratio,medium,0.9,,5.6,
-380010024,82762,1452254400,EUR,IT,Government Deficit – GDP Ratio,medium,2.4,,0.9,
-380010024,82763,1459767600,EUR,IT,Government Deficit – GDP Ratio,medium,2.2,,2.4,2.0
-380010024,82764,1467284400,EUR,IT,Government Deficit – GDP Ratio,medium,4.7,,2.2,
-380010024,82765,1475492400,EUR,IT,Government Deficit – GDP Ratio,medium,0.2,,4.7,4.6
-380010024,82766,1483617600,EUR,IT,Government Deficit – GDP Ratio,medium,2.1,,0.2,
-380010024,82767,1491303600,EUR,IT,Government Deficit – GDP Ratio,medium,2.3,,2.1,2.3
-380010024,82768,1498820400,EUR,IT,Government Deficit – GDP Ratio,medium,4.3,,2.3,2.4
-380010024,82769,1507028400,EUR,IT,Government Deficit – GDP Ratio,medium,0.5,,4.3,
-380010024,82770,1515153600,EUR,IT,Government Deficit – GDP Ratio,medium,2.1,,0.5,0.6
-380010024,82771,1522843200,EUR,IT,Government Deficit – GDP Ratio,medium,1.6,,2.1,
-380010024,82772,1530183600,EUR,IT,Government Deficit – GDP Ratio,medium,3.5,,1.6,
-380010024,82773,1538564400,EUR,IT,Government Deficit – GDP Ratio,medium,0.5,,3.5,3.4
-380010024,84223,1546862400,EUR,IT,Government Deficit – GDP Ratio,medium,1.7,2.8,0.5,0.6
-380010024,84302,1554289200,EUR,IT,Government Deficit – GDP Ratio,medium,2.0,2.8,1.7,2.2
-380010024,84370,1561546800,EUR,IT,Government Deficit – GDP Ratio,medium,4.1,3.1,2.0,1.7
-380010024,84457,1570186800,EUR,IT,Government Deficit – GDP Ratio,medium,1.1,3.1,4.1,7.1
-380010024,119630,1578398400,EUR,IT,Government Deficit – GDP Ratio,medium,1.8,1.7,1.1,1.0
-380010024,119959,1585911600,EUR,IT,Government Deficit – GDP Ratio,medium,-2.4,1.7,1.8,2.2
-380010024,120032,1593169200,EUR,IT,Government Deficit – GDP Ratio,medium,10.8,-9.8,-2.4,
-380010024,120132,1601636400,EUR,IT,Government Deficit – GDP Ratio,medium,10.3,9.9,10.8,9.8
-380010024,147046,1610107200,EUR,IT,Government Deficit – GDP Ratio,medium,9.4,9.4,10.3,11.2
-380010024,147047,1617361200,EUR,IT,Government Deficit – GDP Ratio,medium,5.2,3.0,9.4,10.1
-380010024,148004,1625140800,EUR,IT,Government Deficit – GDP Ratio,medium,13.1,5.7,5.2,
-380010024,147048,1633431600,EUR,IT,Government Deficit – GDP Ratio,medium,7.6,16.0,13.1,13.0
-380010024,162657,1641556800,EUR,IT,Government Deficit – GDP Ratio,medium,6.2,13.8,7.6,7.5
-380010024,165377,1649156400,EUR,IT,Government Deficit – GDP Ratio,medium,3.0,7.0,6.2,6.3
-380010024,165378,1657018800,EUR,IT,Government Deficit – GDP Ratio,medium,9.0,11.4,3.0,
-380010024,165379,1664967600,EUR,IT,Government Deficit – GDP Ratio,medium,3.1,4.9,9.0,
-380010024,178677,1672920000,EUR,IT,Government Deficit – GDP Ratio,medium,4.7,4.5,3.1,3.0
-380010024,178678,1680692400,EUR,IT,Government Deficit – GDP Ratio,medium,5.6,2.3,4.7,9.2
-380010024,178679,1688468400,EUR,IT,Government Deficit – GDP Ratio,medium,12.1,10.9,5.6,
-380010024,178680,1696417200,EUR,IT,Government Deficit – GDP Ratio,medium,5.4,5.1,12.1,11.3
-380010024,193297,1704456000,EUR,IT,Government Deficit – GDP Ratio,medium,5.0,7.3,5.4,5.1
-380010024,194657,1712318400,EUR,IT,Government Deficit – GDP Ratio,medium,5.5,3.8,5.0,6.1
-380010024,194658,1719921600,EUR,IT,Government Deficit – GDP Ratio,medium,8.8,10.1,5.5,5.7
-380010024,194659,1728039600,EUR,IT,Government Deficit – GDP Ratio,medium,3.4,5.4,8.8,8.4
-380010024,235439,1743768000,EUR,IT,Government Deficit – GDP Ratio,medium,-0.4,6.1,3.4,2.7
-380010024,235440,1751281200,EUR,IT,Government Deficit – GDP Ratio,medium,8.5,3.4,-0.4,-0.3
-380010024,235441,1759492800,EUR,IT,Government Deficit – GDP Ratio,medium,2.0,5.2,8.5,8.1
-380010024,280601,1767787200,EUR,IT,Government Deficit – GDP Ratio,medium,3.4,5.5,2.0,2.1
-380010024,281636,1775217600,EUR,IT,Government Deficit – GDP Ratio,medium,-1.4,-7.2,3.4,3.2
-380010024,281637,1782903600,EUR,IT,Government Deficit – GDP Ratio,medium,7.8,12.4,-1.4,
-380010024,281638,1791198000,EUR,IT,Government Deficit – GDP Ratio,medium,,-6.4,7.8,
+380010024,82758,1420804800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,3.0,,1.3,1.1
+380010024,82759,1427972400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.3,,3.0,3.5
+380010024,82760,1435748400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,5.6,,2.3,
+380010024,82761,1443697200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,0.9,,5.6,
+380010024,82762,1452254400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.4,,0.9,
+380010024,82763,1459767600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.2,,2.4,2.0
+380010024,82764,1467284400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,4.7,,2.2,
+380010024,82765,1475492400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,0.2,,4.7,4.6
+380010024,82766,1483617600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.1,,0.2,
+380010024,82767,1491303600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.3,,2.1,2.3
+380010024,82768,1498820400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,4.3,,2.3,2.4
+380010024,82769,1507028400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,0.5,,4.3,
+380010024,82770,1515153600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.1,,0.5,0.6
+380010024,82771,1522843200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,1.6,,2.1,
+380010024,82772,1530183600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,3.5,,1.6,
+380010024,82773,1538564400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,0.5,,3.5,3.4
+380010024,84223,1546862400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,1.7,2.8,0.5,0.6
+380010024,84302,1554289200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.0,2.8,1.7,2.2
+380010024,84370,1561546800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,4.1,3.1,2.0,1.7
+380010024,84457,1570186800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,1.1,3.1,4.1,7.1
+380010024,119630,1578398400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,1.8,1.7,1.1,1.0
+380010024,119959,1585911600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,-2.4,1.7,1.8,2.2
+380010024,120032,1593169200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,10.8,-9.8,-2.4,
+380010024,120132,1601636400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,10.3,9.9,10.8,9.8
+380010024,147046,1610107200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,9.4,9.4,10.3,11.2
+380010024,147047,1617361200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,5.2,3.0,9.4,10.1
+380010024,148004,1625140800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,13.1,5.7,5.2,
+380010024,147048,1633431600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,7.6,16.0,13.1,13.0
+380010024,162657,1641556800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,6.2,13.8,7.6,7.5
+380010024,165377,1649156400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,3.0,7.0,6.2,6.3
+380010024,165378,1657018800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,9.0,11.4,3.0,
+380010024,165379,1664967600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,3.1,4.9,9.0,
+380010024,178677,1672920000,EUR,IT,Government Deficit â€“ GDP Ratio,medium,4.7,4.5,3.1,3.0
+380010024,178678,1680692400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,5.6,2.3,4.7,9.2
+380010024,178679,1688468400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,12.1,10.9,5.6,
+380010024,178680,1696417200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,5.4,5.1,12.1,11.3
+380010024,193297,1704456000,EUR,IT,Government Deficit â€“ GDP Ratio,medium,5.0,7.3,5.4,5.1
+380010024,194657,1712318400,EUR,IT,Government Deficit â€“ GDP Ratio,medium,5.5,3.8,5.0,6.1
+380010024,194658,1719921600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,8.8,10.1,5.5,5.7
+380010024,194659,1728039600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,3.4,5.4,8.8,8.4
+380010024,235439,1743768000,EUR,IT,Government Deficit â€“ GDP Ratio,medium,-0.4,6.1,3.4,2.7
+380010024,235440,1751281200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,8.5,3.4,-0.4,-0.3
+380010024,235441,1759492800,EUR,IT,Government Deficit â€“ GDP Ratio,medium,2.0,5.2,8.5,8.1
+380010024,280601,1767787200,EUR,IT,Government Deficit â€“ GDP Ratio,medium,3.4,5.5,2.0,2.1
+380010024,281636,1775217600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,-1.4,-7.2,3.4,3.2
+380010024,281637,1782903600,EUR,IT,Government Deficit â€“ GDP Ratio,medium,7.8,12.4,-1.4,
+380010024,281638,1791198000,EUR,IT,Government Deficit â€“ GDP Ratio,medium,,-6.4,7.8,
 380010025,106060,1421236800,EUR,IT,CPI FOI excl. Tobacco m/m,medium,0.0,,-0.2,
 380010025,106061,1424437200,EUR,IT,CPI FOI excl. Tobacco m/m,medium,-0.5,,0.0,
 380010025,106062,1426248000,EUR,IT,CPI FOI excl. Tobacco m/m,medium,0.3,,-0.5,
@@ -78031,16 +78031,16 @@ event_id,value_id,timestamp,currency,country_code,event_name,importance,actual,f
 724060006,300234,1786752000,EUR,ES,Assumption of Mary,low,,,,
 724060006,300235,1818374400,EUR,ES,Assumption of Mary,low,,,,
 724060006,300236,1849910400,EUR,ES,Assumption of Mary,low,,,,
-724060007,87273,1570838400,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,87284,1602460800,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,119331,1633996800,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,147762,1665532800,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,175352,1697068800,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,206327,1728691200,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,252697,1760313600,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,300237,1791763200,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,300238,1823299200,EUR,ES,Fiesta Nacional de España,low,,,,
-724060007,300239,1854921600,EUR,ES,Fiesta Nacional de España,low,,,,
+724060007,87273,1570838400,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,87284,1602460800,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,119331,1633996800,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,147762,1665532800,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,175352,1697068800,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,206327,1728691200,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,252697,1760313600,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,300237,1791763200,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,300238,1823299200,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
+724060007,300239,1854921600,EUR,ES,Fiesta Nacional de EspaÃ±a,low,,,,
 724060008,87274,1572566400,EUR,ES,All Saints' Day,low,,,,
 724060008,87285,1604188800,EUR,ES,All Saints' Day,low,,,,
 724060008,97552,1604275200,EUR,ES,All Saints' Day,low,,,,
@@ -78697,282 +78697,282 @@ event_id,value_id,timestamp,currency,country_code,event_name,importance,actual,f
 724500003,310199,1785924900,EUR,ES,S&P Global Composite PMI,high,56.5,,53.3,
 724500003,313895,1788430500,EUR,ES,S&P Global Composite PMI,high,55.8,,56.5,
 724500003,318239,1791195300,EUR,ES,S&P Global Composite PMI,high,,,55.8,
-826010001,28101,1421843400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.8,,1.6,
-826010001,28102,1424262600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.7,,1.8,
-826010001,28103,1426681800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.6,,1.7,
-826010001,28104,1429270200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.8,,1.6,
-826010001,28105,1431516600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.2,,1.8,1.9
-826010001,28106,1434540600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.7,,2.2,2.3
-826010001,28107,1436959800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.8,,2.7,
-826010001,28108,1439379000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.8,,2.8,
-826010001,28109,1442403000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.9,,2.8,
-826010001,28110,1444822200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.8,,2.9,
-826010001,28111,1447245000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.5,,2.8,
-826010001,28112,1450269000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.0,,2.5,2.4
-826010001,28113,1453293000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.9,,2.0,
-826010001,28114,1455712200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.0,,1.9,
-826010001,28115,1458131400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.2,,2.0,
-826010001,28116,1461151800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.2,,2.2,
-826010001,28117,1463571000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.1,,2.2,
-826010001,28118,1465990200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.3,,2.1,2.2
-826010001,28119,1469014200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.2,,2.3,
-826010001,28120,1471433400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.3,,2.2,
-826010001,28121,1473852600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.1,,2.3,
-826010001,28122,1476876600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.3,,2.1,2.2
-826010001,28123,1479299400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.4,,2.3,
-826010001,28124,1481718600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.6,,2.4,
-826010001,28125,1484742600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.7,,2.6,
-826010001,28126,1487161800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.6,,2.7,
-826010001,28127,1489581000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.3,,2.6,
-826010001,28128,1491996600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.2,,2.3,2.4
-826010001,28129,1495020600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.1,,2.2,
-826010001,28130,1497439800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.7,,2.1,1.8
-826010001,29670,1499859000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.0,1.4,1.7,1.8
-826010001,29719,1502883000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.1,2.3,2.0,2.0
-826010001,29761,1505302200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.1,2.3,2.1,2.1
-826010001,29799,1508326200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.1,1.6,2.1,2.2
-826010001,29841,1510749000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.2,1.8,2.1,2.2
-826010001,29878,1513168200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.3,2.3,2.2,
-826010001,29918,1516797000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.4,2.5,2.3,
-826010001,29942,1519216200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.5,2.3,2.4,2.3
-826010001,29961,1521635400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.6,2.7,2.5,
-826010001,56867,1523964600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.8,2.9,2.6,
-826010001,56878,1526383800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.9,3.1,2.8,
-826010001,56882,1528803000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.8,2.8,2.9,
-826010001,56893,1531827000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.7,2.6,2.8,
-826010001,56897,1534246200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.7,2.6,2.7,2.8
-826010001,56908,1536665400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.9,2.8,2.7,
-826010001,56919,1539689400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.1,3.0,2.9,
-826010001,56930,1542112200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.2,3.1,3.1,
-826010001,56941,1544531400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.3,3.1,3.2,
-826010001,56959,1548160200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.3,3.3,3.3,
-826010001,56970,1550579400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,3.3,3.3,3.4
-826010001,57123,1552998600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,3.3,3.4,
-826010001,57127,1555414200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,3.3,3.4,3.5
-826010001,57131,1557833400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.3,3.4,3.4,
-826010001,57135,1560252600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,3.4,3.3,
-826010001,60542,1563276600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.6,3.4,3.4,
-826010001,60546,1565695800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.9,3.5,3.6,
-826010001,60550,1568115000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.8,3.8,3.9,
-826010001,60554,1571139000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.8,3.9,3.8,3.9
-826010001,60558,1573561800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.6,3.8,3.8,
-826010001,60562,1576585800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.5,3.6,3.6,
-826010001,84788,1579609800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,3.4,3.5,
-826010001,84794,1582029000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.2,3.3,3.4,
-826010001,84806,1584448200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.1,3.3,3.2,
-826010001,130287,1587459600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.9,3.1,3.1,
-826010001,130337,1589878800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.7,2.9,2.9,
-826010001,134708,1592298000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.7,2.5,2.7,
-826010001,134763,1594890000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,0.7,1.4,1.7,
-826010001,136595,1597136400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,-0.2,0.4,0.7,
-826010001,136931,1600160400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,0.2,-0.6,-0.2,
-826010001,136932,1602579600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,0.8,0.6,0.2,
-826010001,136933,1605002400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,1.9,1.2,0.8,0.9
-826010001,136934,1608026400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,2.8,2.4,1.9,
-826010001,141990,1611655200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.6,3.3,2.8,
-826010001,141991,1614074400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.1,4.1,3.6,
-826010001,141992,1616493600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.2,4.2,4.1,
-826010001,139764,1618909200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.4,3.9,4.2,4.3
-826010001,139765,1621328400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.6,4.7,4.4,
-826010001,139766,1623747600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.6,5.1,4.6,
-826010001,139767,1626339600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.6,6.1,5.6,5.7
-826010001,139768,1629190800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.4,6.9,6.6,
-826010001,139769,1631610000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.8,7.1,7.4,7.3
-826010001,139770,1634029200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.0,6.3,6.8,
-826010001,141993,1637056800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.9,5.5,6.0,
-826010001,141994,1639476000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.3,4.4,4.9,5.0
-826010001,148224,1642500000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.8,4.3,4.3,
-826010001,148225,1644919200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.7,4.0,3.8,
-826010001,148226,1647338400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.8,4.1,3.7,
-826010001,148227,1649754000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.0,3.7,3.8,
-826010001,148228,1652778000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.2,3.5,4.0,4.1
-826010001,148229,1655197200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.2,3.7,4.2,
-826010001,148230,1658221200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.3,4.1,4.2,
-826010001,148231,1660640400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.7,4.4,4.3,4.4
-826010001,148232,1663059600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.2,5.2,4.7,
-826010001,148233,1665478800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.4,5.2,5.2,
-826010001,148234,1668506400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.7,5.0,5.4,5.5
-826010001,148235,1670925600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.1,5.7,5.7,5.8
-826010001,166972,1673949600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.4,6.6,6.1,
-826010001,166973,1676368800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.7,6.2,6.4,6.5
-826010001,166974,1678788000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.5,6.8,6.7,
-826010001,166975,1681808400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.6,6.2,6.5,6.6
-826010001,167045,1684227600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.7,6.8,6.6,
-826010001,167085,1686646800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.2,7.0,6.7,6.8
-826010001,167046,1689066000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.3,7.2,7.2,7.3
-826010001,186030,1692090000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.8,7.6,7.3,7.5
-826010001,186031,1694509200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.8,7.8,7.8,
-826010001,188230,1697533200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.8,8.3,7.8,7.9
-826010001,186033,1699956000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.7,8.3,7.8,7.9
-826010001,186034,1702375200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,7.3,7.1,7.7,7.8
-826010001,186035,1705399200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.6,7.1,7.3,7.2
-826010001,181131,1707818400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.2,6.0,6.6,6.7
-826010001,181925,1710237600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.1,5.8,6.2,
-826010001,186924,1713258000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.0,6.8,6.1,
-826010001,210866,1715677200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.0,,6.0,6.0
-826010001,207538,1718096400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,6.0,5.9,6.0,
-826010001,214445,1721293200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.7,,6.0,6.0
-826010001,215332,1723539600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.4,5.3,5.7,5.8
-826010001,227726,1725962400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.1,,5.4,5.4
-826010001,227725,1728986400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.9,,5.1,5.1
-826010001,225880,1731405600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.8,5.3,4.9,4.9
-826010001,233806,1734429600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.2,5.1,4.8,4.9
-826010001,307602,1737450000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.6,,5.2,5.2
-826010001,248784,1739872800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.9,5.6,5.6,5.6
-826010001,251879,1742464800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.9,6.2,5.9,
-826010001,307601,1747126800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.6,,5.9,5.9
-826010001,259817,1749546000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.2,6.1,5.6,5.5
-826010001,263185,1752742800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.0,4.5,5.2,5.3
-826010001,307600,1754989200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,5.0,,5.0,5.0
-826010001,307599,1758013200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.8,,5.0,5.0
-826010001,272298,1760432400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.7,4.1,4.8,4.8
-826010001,307598,1762851600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.6,,4.7,4.7
-826010001,307597,1765875600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.6,,4.6,4.7
-826010001,307596,1768899600,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.5,,4.6,4.6
-826010001,307595,1771318800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,4.2,,4.5,4.4
-826010001,307594,1773910800,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.8,,4.2,4.1
-826010001,307593,1776762000,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.6,,3.8,3.8
-826010001,303698,1779181200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,5.0,3.6,3.6
-826010001,307869,1781773200,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,2.9,3.4,
-826010001,311888,1784624400,GBP,GB,Average Weekly Earnings, Regular Pay y/y,medium,3.4,3.3,3.4,
-826010002,27189,1421843400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.8,,1.4,
-826010002,27190,1424262600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.1,,1.8,1.7
-826010002,27191,1426681800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.9,,2.1,
-826010002,27192,1429270200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.7,,1.9,1.8
-826010002,27193,1431516600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.9,,1.7,
-826010002,27194,1434540600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.7,,1.9,
-826010002,27195,1436959800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.2,,2.7,
-826010002,27196,1439379000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.4,,3.2,
-826010002,27197,1442403000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.9,,2.4,2.6
-826010002,27198,1444822200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.0,,2.9,
-826010002,27199,1447245000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.0,,3.0,
-826010002,27200,1450269000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.4,,3.0,
-826010002,27201,1453293000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.0,,2.4,
-826010002,27202,1455712200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.9,,2.0,2.1
-826010002,27203,1458131400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.1,,1.9,
-826010002,27204,1461151800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.8,,2.1,
-826010002,27205,1463571000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.0,,1.8,
-826010002,27206,1465990200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.0,,2.0,
-826010002,27207,1469014200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.3,,2.0,
-826010002,27208,1471433400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.4,,2.3,
-826010002,27209,1473852600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.3,,2.4,2.5
-826010002,27210,1476876600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.3,,2.3,2.4
-826010002,27211,1479299400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.3,,2.3,
-826010002,27212,1481718600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.5,,2.3,2.4
-826010002,27213,1484742600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.8,,2.5,2.6
-826010002,27214,1487161800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.6,,2.8,
-826010002,27215,1489581000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.2,,2.6,
-826010002,27216,1491996600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.3,,2.2,
-826010002,27217,1495020600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.4,,2.3,
-826010002,27218,1497439800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.1,,2.4,2.3
-826010002,29671,1499859000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.8,1.8,2.1,2.1
-826010002,29720,1502883000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.1,1.3,1.8,1.9
-826010002,29762,1505302200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.1,2.3,2.1,2.1
-826010002,29801,1508326200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.2,2.5,2.1,2.2
-826010002,29842,1510749000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.2,2.1,2.2,2.3
-826010002,29879,1513168200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.5,2.2,2.2,2.3
-826010002,29919,1516797000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.5,2.3,2.5,
-826010002,29943,1519216200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.5,2.5,2.5,
-826010002,29962,1521635400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.8,2.5,2.5,2.7
-826010002,56868,1523964600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.8,2.6,2.8,
-826010002,56879,1526383800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.6,2.8,2.8,
-826010002,56883,1528803000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.5,2.7,2.6,
-826010002,56894,1531827000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.5,2.5,2.5,2.6
-826010002,56898,1534246200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.4,2.5,2.5,
-826010002,56909,1536665400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.6,2.4,2.4,
-826010002,56920,1539689400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.7,2.5,2.6,
-826010002,56931,1542112200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.0,2.6,2.7,2.8
-826010002,56942,1544531400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.3,2.8,3.0,3.1
-826010002,56960,1548160200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.4,3.1,3.3,
-826010002,56971,1550579400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.4,3.3,3.4,
-826010002,57124,1552998600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.4,3.4,3.4,3.5
-826010002,57128,1555414200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.5,3.1,3.4,3.5
-826010002,57132,1557833400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.2,3.1,3.5,
-826010002,57136,1560252600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.1,3.0,3.2,3.3
-826010002,60543,1563276600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.4,2.9,3.1,3.2
-826010002,60547,1565695800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.7,3.0,3.4,3.5
-826010002,60551,1568115000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.0,3.3,3.7,3.8
-826010002,60555,1571139000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.8,3.7,4.0,3.9
-826010002,60559,1573561800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.6,3.8,3.8,3.7
-826010002,60563,1576585800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.2,3.7,3.6,3.7
-826010002,84789,1579609800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.2,3.4,3.2,
-826010002,84795,1582029000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.9,3.2,3.2,
-826010002,84807,1584448200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.1,3.0,2.9,
-826010002,130288,1587459600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.8,3.0,3.1,
-826010002,130338,1589878800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.4,2.9,2.8,
-826010002,134709,1592298000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.0,2.6,2.4,2.3
-826010002,134764,1594890000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,-0.3,1.5,1.0,
-826010002,136604,1597136400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,-1.2,-0.8,-0.3,
-826010002,136935,1600160400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,-1.0,-0.7,-1.2,
-826010002,136936,1602579600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,0.0,-0.4,-1.0,
-826010002,136937,1605002400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,1.3,0.6,0.0,0.1
-826010002,136938,1608026400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,2.7,1.9,1.3,1.4
-826010002,141995,1611655200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.6,3.0,2.7,2.8
-826010002,141996,1614074400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.7,3.3,3.6,3.7
-826010002,141997,1616493600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.8,4.8,4.7,
-826010002,139776,1618909200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.5,4.6,4.8,
-826010002,139777,1621328400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.0,3.9,4.5,
-826010002,139778,1623747600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.6,3.7,4.0,4.3
-826010002,139779,1626339600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,7.3,6.4,5.6,5.7
-826010002,139780,1629190800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,8.8,8.1,7.3,7.4
-826010002,139781,1631610000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,8.3,8.5,8.8,
-826010002,139782,1634029200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,7.2,7.4,8.3,
-826010002,141998,1637056800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.8,6.3,7.2,
-826010002,141999,1639476000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.9,5.2,5.8,5.9
-826010002,148236,1642500000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.2,4.1,4.9,
-826010002,148237,1644919200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.3,3.5,4.2,
-826010002,148238,1647338400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.8,4.9,4.3,4.6
-826010002,148239,1649754000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.4,5.7,4.8,
-826010002,148240,1652778000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,7.0,5.5,5.4,5.6
-826010002,148241,1655197200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.8,7.3,7.0,
-826010002,148242,1658221200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.2,6.1,6.8,
-826010002,148243,1660640400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.1,5.2,6.2,6.4
-826010002,148244,1663059600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.5,4.7,5.1,5.2
-826010002,148245,1665478800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.0,6.5,5.5,
-826010002,148246,1668506400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.0,7.0,6.0,6.1
-826010002,148247,1670925600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.1,5.4,6.0,
-826010002,166976,1673949600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.4,5.6,6.1,6.2
-826010002,166977,1676368800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.9,7.3,6.4,6.5
-826010002,166978,1678788000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.7,5.5,5.9,6.0
-826010002,166979,1681808400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.9,4.9,5.7,5.9
-826010002,167052,1684227600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.8,5.1,5.9,5.8
-826010002,167086,1686646800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.5,6.1,5.8,6.1
-826010002,167053,1689066000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.9,7.5,6.5,6.7
-826010002,186036,1692090000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,8.2,7.5,6.9,7.2
-826010002,186037,1694509200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,8.5,8.3,8.2,8.4
-826010002,188231,1697533200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,8.1,8.6,8.5,8.5
-826010002,186039,1699956000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,7.9,8.6,8.1,8.2
-826010002,186040,1702375200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,7.2,7.4,7.9,8.0
-826010002,186041,1705399200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.5,6.3,7.2,
-826010002,181132,1707818400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.8,5.8,6.5,6.7
-826010002,181926,1710237600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.6,5.9,5.8,
-826010002,186931,1713258000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.6,6.2,5.6,
-826010002,210867,1715677200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.7,,5.6,5.6
-826010002,207541,1718096400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.9,6.2,5.7,5.9
-826010002,214446,1721293200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.7,,5.9,5.9
-826010002,215333,1723539600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.5,5.4,5.7,
-826010002,227728,1725962400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.0,,4.5,4.5
-826010002,227727,1728986400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.8,,4.0,4.1
-826010002,225881,1731405600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.3,4.4,3.8,3.9
-826010002,233809,1734429600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.2,5.1,4.3,4.4
-826010002,307612,1737450000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.6,,5.2,5.2
-826010002,248786,1739872800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,6.0,6.0,5.6,5.5
-826010002,251881,1742464800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.8,6.3,6.0,6.1
-826010002,307611,1747126800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.5,,5.8,5.8
-826010002,259819,1749546000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.3,5.8,5.5,5.6
-826010002,263186,1752742800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.0,4.9,5.3,5.4
-826010002,307610,1754989200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.6,,5.0,5.0
-826010002,307609,1758013200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.7,,4.6,4.6
-826010002,272300,1760432400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,5.0,4.7,4.7,4.8
-826010002,307608,1762851600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.8,,5.0,5.0
-826010002,307607,1765875600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.7,,4.8,4.9
-826010002,307606,1768899600,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.7,,4.7,4.8
-826010002,307605,1771318800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.2,,4.7,4.6
-826010002,307604,1773910800,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.9,,4.2,4.2
-826010002,307603,1776762000,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,3.8,,3.9,4.1
-826010002,303700,1779181200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.1,5.2,3.8,3.9
-826010002,307872,1781773200,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.4,4.5,4.1,4.4
-826010002,311891,1784624400,GBP,GB,Average Weekly Earnings, Total Pay y/y,high,4.3,4.6,4.4,
+826010001,28101,1421843400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.8,,1.6,
+826010001,28102,1424262600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.7,,1.8,
+826010001,28103,1426681800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.6,,1.7,
+826010001,28104,1429270200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.8,,1.6,
+826010001,28105,1431516600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.2,,1.8,1.9
+826010001,28106,1434540600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.7,,2.2,2.3
+826010001,28107,1436959800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.8,,2.7,
+826010001,28108,1439379000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.8,,2.8,
+826010001,28109,1442403000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.9,,2.8,
+826010001,28110,1444822200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.8,,2.9,
+826010001,28111,1447245000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.5,,2.8,
+826010001,28112,1450269000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.0,,2.5,2.4
+826010001,28113,1453293000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.9,,2.0,
+826010001,28114,1455712200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.0,,1.9,
+826010001,28115,1458131400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.2,,2.0,
+826010001,28116,1461151800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.2,,2.2,
+826010001,28117,1463571000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.1,,2.2,
+826010001,28118,1465990200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.3,,2.1,2.2
+826010001,28119,1469014200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.2,,2.3,
+826010001,28120,1471433400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.3,,2.2,
+826010001,28121,1473852600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.1,,2.3,
+826010001,28122,1476876600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.3,,2.1,2.2
+826010001,28123,1479299400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.4,,2.3,
+826010001,28124,1481718600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.6,,2.4,
+826010001,28125,1484742600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.7,,2.6,
+826010001,28126,1487161800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.6,,2.7,
+826010001,28127,1489581000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.3,,2.6,
+826010001,28128,1491996600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.2,,2.3,2.4
+826010001,28129,1495020600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.1,,2.2,
+826010001,28130,1497439800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.7,,2.1,1.8
+826010001,29670,1499859000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.0,1.4,1.7,1.8
+826010001,29719,1502883000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.1,2.3,2.0,2.0
+826010001,29761,1505302200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.1,2.3,2.1,2.1
+826010001,29799,1508326200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.1,1.6,2.1,2.2
+826010001,29841,1510749000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.2,1.8,2.1,2.2
+826010001,29878,1513168200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.3,2.3,2.2,
+826010001,29918,1516797000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.4,2.5,2.3,
+826010001,29942,1519216200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.5,2.3,2.4,2.3
+826010001,29961,1521635400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.6,2.7,2.5,
+826010001,56867,1523964600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.8,2.9,2.6,
+826010001,56878,1526383800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.9,3.1,2.8,
+826010001,56882,1528803000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.8,2.8,2.9,
+826010001,56893,1531827000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.7,2.6,2.8,
+826010001,56897,1534246200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.7,2.6,2.7,2.8
+826010001,56908,1536665400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.9,2.8,2.7,
+826010001,56919,1539689400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.1,3.0,2.9,
+826010001,56930,1542112200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.2,3.1,3.1,
+826010001,56941,1544531400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.3,3.1,3.2,
+826010001,56959,1548160200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.3,3.3,3.3,
+826010001,56970,1550579400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,3.3,3.3,3.4
+826010001,57123,1552998600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,3.3,3.4,
+826010001,57127,1555414200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,3.3,3.4,3.5
+826010001,57131,1557833400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.3,3.4,3.4,
+826010001,57135,1560252600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,3.4,3.3,
+826010001,60542,1563276600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.6,3.4,3.4,
+826010001,60546,1565695800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.9,3.5,3.6,
+826010001,60550,1568115000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.8,3.8,3.9,
+826010001,60554,1571139000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.8,3.9,3.8,3.9
+826010001,60558,1573561800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.6,3.8,3.8,
+826010001,60562,1576585800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.5,3.6,3.6,
+826010001,84788,1579609800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,3.4,3.5,
+826010001,84794,1582029000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.2,3.3,3.4,
+826010001,84806,1584448200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.1,3.3,3.2,
+826010001,130287,1587459600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.9,3.1,3.1,
+826010001,130337,1589878800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.7,2.9,2.9,
+826010001,134708,1592298000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.7,2.5,2.7,
+826010001,134763,1594890000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,0.7,1.4,1.7,
+826010001,136595,1597136400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,-0.2,0.4,0.7,
+826010001,136931,1600160400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,0.2,-0.6,-0.2,
+826010001,136932,1602579600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,0.8,0.6,0.2,
+826010001,136933,1605002400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,1.9,1.2,0.8,0.9
+826010001,136934,1608026400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,2.8,2.4,1.9,
+826010001,141990,1611655200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.6,3.3,2.8,
+826010001,141991,1614074400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.1,4.1,3.6,
+826010001,141992,1616493600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.2,4.2,4.1,
+826010001,139764,1618909200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.4,3.9,4.2,4.3
+826010001,139765,1621328400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.6,4.7,4.4,
+826010001,139766,1623747600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.6,5.1,4.6,
+826010001,139767,1626339600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.6,6.1,5.6,5.7
+826010001,139768,1629190800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.4,6.9,6.6,
+826010001,139769,1631610000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.8,7.1,7.4,7.3
+826010001,139770,1634029200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.0,6.3,6.8,
+826010001,141993,1637056800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.9,5.5,6.0,
+826010001,141994,1639476000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.3,4.4,4.9,5.0
+826010001,148224,1642500000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.8,4.3,4.3,
+826010001,148225,1644919200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.7,4.0,3.8,
+826010001,148226,1647338400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.8,4.1,3.7,
+826010001,148227,1649754000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.0,3.7,3.8,
+826010001,148228,1652778000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.2,3.5,4.0,4.1
+826010001,148229,1655197200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.2,3.7,4.2,
+826010001,148230,1658221200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.3,4.1,4.2,
+826010001,148231,1660640400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.7,4.4,4.3,4.4
+826010001,148232,1663059600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.2,5.2,4.7,
+826010001,148233,1665478800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.4,5.2,5.2,
+826010001,148234,1668506400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.7,5.0,5.4,5.5
+826010001,148235,1670925600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.1,5.7,5.7,5.8
+826010001,166972,1673949600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.4,6.6,6.1,
+826010001,166973,1676368800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.7,6.2,6.4,6.5
+826010001,166974,1678788000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.5,6.8,6.7,
+826010001,166975,1681808400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.6,6.2,6.5,6.6
+826010001,167045,1684227600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.7,6.8,6.6,
+826010001,167085,1686646800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.2,7.0,6.7,6.8
+826010001,167046,1689066000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.3,7.2,7.2,7.3
+826010001,186030,1692090000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.8,7.6,7.3,7.5
+826010001,186031,1694509200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.8,7.8,7.8,
+826010001,188230,1697533200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.8,8.3,7.8,7.9
+826010001,186033,1699956000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.7,8.3,7.8,7.9
+826010001,186034,1702375200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,7.3,7.1,7.7,7.8
+826010001,186035,1705399200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.6,7.1,7.3,7.2
+826010001,181131,1707818400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.2,6.0,6.6,6.7
+826010001,181925,1710237600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.1,5.8,6.2,
+826010001,186924,1713258000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.0,6.8,6.1,
+826010001,210866,1715677200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.0,,6.0,6.0
+826010001,207538,1718096400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,6.0,5.9,6.0,
+826010001,214445,1721293200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.7,,6.0,6.0
+826010001,215332,1723539600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.4,5.3,5.7,5.8
+826010001,227726,1725962400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.1,,5.4,5.4
+826010001,227725,1728986400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.9,,5.1,5.1
+826010001,225880,1731405600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.8,5.3,4.9,4.9
+826010001,233806,1734429600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.2,5.1,4.8,4.9
+826010001,307602,1737450000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.6,,5.2,5.2
+826010001,248784,1739872800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.9,5.6,5.6,5.6
+826010001,251879,1742464800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.9,6.2,5.9,
+826010001,307601,1747126800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.6,,5.9,5.9
+826010001,259817,1749546000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.2,6.1,5.6,5.5
+826010001,263185,1752742800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.0,4.5,5.2,5.3
+826010001,307600,1754989200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,5.0,,5.0,5.0
+826010001,307599,1758013200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.8,,5.0,5.0
+826010001,272298,1760432400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.7,4.1,4.8,4.8
+826010001,307598,1762851600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.6,,4.7,4.7
+826010001,307597,1765875600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.6,,4.6,4.7
+826010001,307596,1768899600,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.5,,4.6,4.6
+826010001,307595,1771318800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,4.2,,4.5,4.4
+826010001,307594,1773910800,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.8,,4.2,4.1
+826010001,307593,1776762000,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.6,,3.8,3.8
+826010001,303698,1779181200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,5.0,3.6,3.6
+826010001,307869,1781773200,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,2.9,3.4,
+826010001,311888,1784624400,GBP,GB,"Average Weekly Earnings, Regular Pay y/y",medium,3.4,3.3,3.4,
+826010002,27189,1421843400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.8,,1.4,
+826010002,27190,1424262600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.1,,1.8,1.7
+826010002,27191,1426681800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.9,,2.1,
+826010002,27192,1429270200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.7,,1.9,1.8
+826010002,27193,1431516600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.9,,1.7,
+826010002,27194,1434540600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.7,,1.9,
+826010002,27195,1436959800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.2,,2.7,
+826010002,27196,1439379000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.4,,3.2,
+826010002,27197,1442403000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.9,,2.4,2.6
+826010002,27198,1444822200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.0,,2.9,
+826010002,27199,1447245000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.0,,3.0,
+826010002,27200,1450269000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.4,,3.0,
+826010002,27201,1453293000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.0,,2.4,
+826010002,27202,1455712200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.9,,2.0,2.1
+826010002,27203,1458131400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.1,,1.9,
+826010002,27204,1461151800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.8,,2.1,
+826010002,27205,1463571000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.0,,1.8,
+826010002,27206,1465990200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.0,,2.0,
+826010002,27207,1469014200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.3,,2.0,
+826010002,27208,1471433400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.4,,2.3,
+826010002,27209,1473852600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.3,,2.4,2.5
+826010002,27210,1476876600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.3,,2.3,2.4
+826010002,27211,1479299400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.3,,2.3,
+826010002,27212,1481718600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.5,,2.3,2.4
+826010002,27213,1484742600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.8,,2.5,2.6
+826010002,27214,1487161800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.6,,2.8,
+826010002,27215,1489581000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.2,,2.6,
+826010002,27216,1491996600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.3,,2.2,
+826010002,27217,1495020600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.4,,2.3,
+826010002,27218,1497439800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.1,,2.4,2.3
+826010002,29671,1499859000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.8,1.8,2.1,2.1
+826010002,29720,1502883000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.1,1.3,1.8,1.9
+826010002,29762,1505302200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.1,2.3,2.1,2.1
+826010002,29801,1508326200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.2,2.5,2.1,2.2
+826010002,29842,1510749000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.2,2.1,2.2,2.3
+826010002,29879,1513168200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.5,2.2,2.2,2.3
+826010002,29919,1516797000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.5,2.3,2.5,
+826010002,29943,1519216200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.5,2.5,2.5,
+826010002,29962,1521635400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.8,2.5,2.5,2.7
+826010002,56868,1523964600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.8,2.6,2.8,
+826010002,56879,1526383800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.6,2.8,2.8,
+826010002,56883,1528803000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.5,2.7,2.6,
+826010002,56894,1531827000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.5,2.5,2.5,2.6
+826010002,56898,1534246200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.4,2.5,2.5,
+826010002,56909,1536665400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.6,2.4,2.4,
+826010002,56920,1539689400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.7,2.5,2.6,
+826010002,56931,1542112200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.0,2.6,2.7,2.8
+826010002,56942,1544531400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.3,2.8,3.0,3.1
+826010002,56960,1548160200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.4,3.1,3.3,
+826010002,56971,1550579400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.4,3.3,3.4,
+826010002,57124,1552998600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.4,3.4,3.4,3.5
+826010002,57128,1555414200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.5,3.1,3.4,3.5
+826010002,57132,1557833400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.2,3.1,3.5,
+826010002,57136,1560252600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.1,3.0,3.2,3.3
+826010002,60543,1563276600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.4,2.9,3.1,3.2
+826010002,60547,1565695800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.7,3.0,3.4,3.5
+826010002,60551,1568115000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.0,3.3,3.7,3.8
+826010002,60555,1571139000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.8,3.7,4.0,3.9
+826010002,60559,1573561800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.6,3.8,3.8,3.7
+826010002,60563,1576585800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.2,3.7,3.6,3.7
+826010002,84789,1579609800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.2,3.4,3.2,
+826010002,84795,1582029000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.9,3.2,3.2,
+826010002,84807,1584448200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.1,3.0,2.9,
+826010002,130288,1587459600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.8,3.0,3.1,
+826010002,130338,1589878800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.4,2.9,2.8,
+826010002,134709,1592298000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.0,2.6,2.4,2.3
+826010002,134764,1594890000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,-0.3,1.5,1.0,
+826010002,136604,1597136400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,-1.2,-0.8,-0.3,
+826010002,136935,1600160400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,-1.0,-0.7,-1.2,
+826010002,136936,1602579600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,0.0,-0.4,-1.0,
+826010002,136937,1605002400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,1.3,0.6,0.0,0.1
+826010002,136938,1608026400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,2.7,1.9,1.3,1.4
+826010002,141995,1611655200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.6,3.0,2.7,2.8
+826010002,141996,1614074400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.7,3.3,3.6,3.7
+826010002,141997,1616493600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.8,4.8,4.7,
+826010002,139776,1618909200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.5,4.6,4.8,
+826010002,139777,1621328400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.0,3.9,4.5,
+826010002,139778,1623747600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.6,3.7,4.0,4.3
+826010002,139779,1626339600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,7.3,6.4,5.6,5.7
+826010002,139780,1629190800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,8.8,8.1,7.3,7.4
+826010002,139781,1631610000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,8.3,8.5,8.8,
+826010002,139782,1634029200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,7.2,7.4,8.3,
+826010002,141998,1637056800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.8,6.3,7.2,
+826010002,141999,1639476000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.9,5.2,5.8,5.9
+826010002,148236,1642500000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.2,4.1,4.9,
+826010002,148237,1644919200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.3,3.5,4.2,
+826010002,148238,1647338400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.8,4.9,4.3,4.6
+826010002,148239,1649754000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.4,5.7,4.8,
+826010002,148240,1652778000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,7.0,5.5,5.4,5.6
+826010002,148241,1655197200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.8,7.3,7.0,
+826010002,148242,1658221200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.2,6.1,6.8,
+826010002,148243,1660640400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.1,5.2,6.2,6.4
+826010002,148244,1663059600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.5,4.7,5.1,5.2
+826010002,148245,1665478800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.0,6.5,5.5,
+826010002,148246,1668506400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.0,7.0,6.0,6.1
+826010002,148247,1670925600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.1,5.4,6.0,
+826010002,166976,1673949600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.4,5.6,6.1,6.2
+826010002,166977,1676368800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.9,7.3,6.4,6.5
+826010002,166978,1678788000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.7,5.5,5.9,6.0
+826010002,166979,1681808400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.9,4.9,5.7,5.9
+826010002,167052,1684227600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.8,5.1,5.9,5.8
+826010002,167086,1686646800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.5,6.1,5.8,6.1
+826010002,167053,1689066000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.9,7.5,6.5,6.7
+826010002,186036,1692090000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,8.2,7.5,6.9,7.2
+826010002,186037,1694509200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,8.5,8.3,8.2,8.4
+826010002,188231,1697533200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,8.1,8.6,8.5,8.5
+826010002,186039,1699956000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,7.9,8.6,8.1,8.2
+826010002,186040,1702375200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,7.2,7.4,7.9,8.0
+826010002,186041,1705399200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.5,6.3,7.2,
+826010002,181132,1707818400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.8,5.8,6.5,6.7
+826010002,181926,1710237600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.6,5.9,5.8,
+826010002,186931,1713258000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.6,6.2,5.6,
+826010002,210867,1715677200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.7,,5.6,5.6
+826010002,207541,1718096400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.9,6.2,5.7,5.9
+826010002,214446,1721293200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.7,,5.9,5.9
+826010002,215333,1723539600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.5,5.4,5.7,
+826010002,227728,1725962400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.0,,4.5,4.5
+826010002,227727,1728986400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.8,,4.0,4.1
+826010002,225881,1731405600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.3,4.4,3.8,3.9
+826010002,233809,1734429600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.2,5.1,4.3,4.4
+826010002,307612,1737450000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.6,,5.2,5.2
+826010002,248786,1739872800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,6.0,6.0,5.6,5.5
+826010002,251881,1742464800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.8,6.3,6.0,6.1
+826010002,307611,1747126800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.5,,5.8,5.8
+826010002,259819,1749546000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.3,5.8,5.5,5.6
+826010002,263186,1752742800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.0,4.9,5.3,5.4
+826010002,307610,1754989200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.6,,5.0,5.0
+826010002,307609,1758013200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.7,,4.6,4.6
+826010002,272300,1760432400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,5.0,4.7,4.7,4.8
+826010002,307608,1762851600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.8,,5.0,5.0
+826010002,307607,1765875600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.7,,4.8,4.9
+826010002,307606,1768899600,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.7,,4.7,4.8
+826010002,307605,1771318800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.2,,4.7,4.6
+826010002,307604,1773910800,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.9,,4.2,4.2
+826010002,307603,1776762000,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,3.8,,3.9,4.1
+826010002,303700,1779181200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.1,5.2,3.8,3.9
+826010002,307872,1781773200,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.4,4.5,4.1,4.4
+826010002,311891,1784624400,GBP,GB,"Average Weekly Earnings, Total Pay y/y",high,4.3,4.6,4.4,
 826010003,26945,1421843400,GBP,GB,Unemployment Rate,high,5.8,,6.0,
 826010003,26946,1424262600,GBP,GB,Unemployment Rate,high,5.7,,5.8,
 826010003,26947,1426681800,GBP,GB,Unemployment Rate,high,5.7,,5.7,
@@ -107136,55 +107136,55 @@ event_id,value_id,timestamp,currency,country_code,event_name,importance,actual,f
 36010034,302087,1787805000,AUD,AU,Building Capital Expenditure q/q,medium,2.1,-1.6,-3.8,-3.3
 36010034,305384,1795663800,AUD,AU,Building Capital Expenditure q/q,medium,,-1.4,2.1,
 36010034,317571,1803526200,AUD,AU,Building Capital Expenditure q/q,medium,,,,
-36010035,48367,1424921400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-1.3,,4.4,3.7
-36010035,48368,1432787400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.5,,-1.3,0.5
-36010035,48369,1440649800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-1.2,,-0.5,-0.8
-36010035,48370,1448508600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-8.2,,-1.2,-2.9
-36010035,48371,1456371000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.1,,-8.2,-8.5
-36010035,48372,1464237000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.5,,0.1,1.8
-36010035,48373,1472704200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.8,,-0.5,0.3
-36010035,48374,1480563000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-1.9,,2.8,4.2
-36010035,48375,1487820600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.4,,-1.9,-3.0
-36010035,48376,1496291400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.1,,0.4,-0.5
-36010035,48377,1504153800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.7,,-0.1,0.1
-36010035,51327,1512012600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.7,,2.7,2.1
-36010035,51482,1519875000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.2,-2.9,0.7,2.1
-36010035,54244,1527741000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.5,1.0,2.2,1.8
-36010035,57304,1535603400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.9,-1.8,2.5,3.6
-36010035,59802,1543462200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.2,-0.9,-0.9,-0.3
-36010035,60874,1551324600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.7,6.1,2.2,3.5
-36010035,76664,1559190600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.5,4.2,0.7,0.0
-36010035,93914,1567053000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.5,0.2,-0.5,
-36010035,97434,1574911800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-3.5,0.1,2.5,2.0
-36010035,105545,1582774200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.8,1.3,-3.5,-3.6
-36010035,116290,1590640200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-2.3,-0.3,0.8,0.4
-36010035,129891,1598502600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-7.6,0.3,-2.3,-3.1
-36010035,134499,1606361400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-2.2,-4.2,-7.6,-7.9
-36010035,137184,1614223800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,5.7,-1.8,-2.2,-2.4
-36010035,143227,1622089800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,9.1,0.8,5.7,7.3
-36010035,150044,1629952200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,4.3,7.3,9.1,8.8
-36010035,152296,1637811000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-4.1,-1.9,4.3,2.7
-36010035,154731,1645673400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.1,-12.0,-4.1,-3.3
-36010035,159432,1653539400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,1.2,-8.4,-0.1,0.7
-36010035,166697,1662006600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,2.1,-0.8,1.2,1.5
-36010035,173689,1669865400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-1.6,0.3,2.1,2.2
-36010035,178858,1677123000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.6,0.1,-1.6,-1.2
-36010035,183428,1685593800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,3.7,-0.1,0.6,
-36010035,184974,1693456200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,1.9,-0.1,3.7,4.2
-36010035,187776,1701315000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.5,-0.1,1.9,2.2
-36010035,193390,1709177400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.1,0.0,0.5,0.6
-36010035,197951,1717043400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,3.3,-0.6,-0.1,0.4
-36010035,209800,1724905800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.5,-0.1,3.3,3.7
-36010035,220478,1732764600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,1.1,0.2,-0.5,-1.0
-36010035,236957,1740627000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-0.8,0.0,1.1,1.3
-36010035,253119,1748493000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-1.3,0.0,-0.8,-0.6
-36010035,261710,1756355400,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,0.3,0.0,-1.3,-1.7
-36010035,270585,1764214200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,11.5,-0.1,0.3,0.7
-36010035,281869,1772076600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-1.7,8.5,11.5,11.2
-36010035,295282,1779942600,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,18.1,-0.7,-1.7,-1.3
-36010035,302088,1787805000,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,-8.9,9.6,18.1,18.4
-36010035,305385,1795663800,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,,5.1,-8.9,
-36010035,317572,1803526200,AUD,AU,Equipment, Plant and Machinery Capital Expenditure q/q,medium,,,,
+36010035,48367,1424921400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-1.3,,4.4,3.7
+36010035,48368,1432787400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.5,,-1.3,0.5
+36010035,48369,1440649800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-1.2,,-0.5,-0.8
+36010035,48370,1448508600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-8.2,,-1.2,-2.9
+36010035,48371,1456371000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.1,,-8.2,-8.5
+36010035,48372,1464237000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.5,,0.1,1.8
+36010035,48373,1472704200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.8,,-0.5,0.3
+36010035,48374,1480563000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-1.9,,2.8,4.2
+36010035,48375,1487820600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.4,,-1.9,-3.0
+36010035,48376,1496291400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.1,,0.4,-0.5
+36010035,48377,1504153800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.7,,-0.1,0.1
+36010035,51327,1512012600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.7,,2.7,2.1
+36010035,51482,1519875000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.2,-2.9,0.7,2.1
+36010035,54244,1527741000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.5,1.0,2.2,1.8
+36010035,57304,1535603400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.9,-1.8,2.5,3.6
+36010035,59802,1543462200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.2,-0.9,-0.9,-0.3
+36010035,60874,1551324600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.7,6.1,2.2,3.5
+36010035,76664,1559190600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.5,4.2,0.7,0.0
+36010035,93914,1567053000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.5,0.2,-0.5,
+36010035,97434,1574911800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-3.5,0.1,2.5,2.0
+36010035,105545,1582774200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.8,1.3,-3.5,-3.6
+36010035,116290,1590640200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-2.3,-0.3,0.8,0.4
+36010035,129891,1598502600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-7.6,0.3,-2.3,-3.1
+36010035,134499,1606361400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-2.2,-4.2,-7.6,-7.9
+36010035,137184,1614223800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,5.7,-1.8,-2.2,-2.4
+36010035,143227,1622089800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,9.1,0.8,5.7,7.3
+36010035,150044,1629952200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,4.3,7.3,9.1,8.8
+36010035,152296,1637811000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-4.1,-1.9,4.3,2.7
+36010035,154731,1645673400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.1,-12.0,-4.1,-3.3
+36010035,159432,1653539400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,1.2,-8.4,-0.1,0.7
+36010035,166697,1662006600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,2.1,-0.8,1.2,1.5
+36010035,173689,1669865400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-1.6,0.3,2.1,2.2
+36010035,178858,1677123000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.6,0.1,-1.6,-1.2
+36010035,183428,1685593800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,3.7,-0.1,0.6,
+36010035,184974,1693456200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,1.9,-0.1,3.7,4.2
+36010035,187776,1701315000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.5,-0.1,1.9,2.2
+36010035,193390,1709177400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.1,0.0,0.5,0.6
+36010035,197951,1717043400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,3.3,-0.6,-0.1,0.4
+36010035,209800,1724905800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.5,-0.1,3.3,3.7
+36010035,220478,1732764600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,1.1,0.2,-0.5,-1.0
+36010035,236957,1740627000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-0.8,0.0,1.1,1.3
+36010035,253119,1748493000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-1.3,0.0,-0.8,-0.6
+36010035,261710,1756355400,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,0.3,0.0,-1.3,-1.7
+36010035,270585,1764214200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,11.5,-0.1,0.3,0.7
+36010035,281869,1772076600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-1.7,8.5,11.5,11.2
+36010035,295282,1779942600,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,18.1,-0.7,-1.7,-1.3
+36010035,302088,1787805000,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,-8.9,9.6,18.1,18.4
+36010035,305385,1795663800,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,,5.1,-8.9,
+36010035,317572,1803526200,AUD,AU,"Equipment, Plant and Machinery Capital Expenditure q/q",medium,,,,
 36010036,50164,1425353400,AUD,AU,Current Account,medium,-9.600,,-12.100,-12.500
 36010036,50165,1433219400,AUD,AU,Current Account,medium,-10.700,,-9.600,-10.200
 36010036,50166,1441081800,AUD,AU,Current Account,medium,-19.000,,-10.700,-13.500
@@ -116964,141 +116964,141 @@ event_id,value_id,timestamp,currency,country_code,event_name,importance,actual,f
 124060001,267450,1798138800,CAD,CA,Budget Balance,medium,,,,
 124060001,289666,1801249200,CAD,CA,Budget Balance,medium,,,,
 124060001,316906,1803668400,CAD,CA,Budget Balance,medium,,,,
-124060002,103871,1422644400,CAD,CA,Budget Balance, Fiscal Year,medium,-3.330,,-3.950,
-124060002,103872,1425063600,CAD,CA,Budget Balance, Fiscal Year,medium,-0.900,,-3.330,
-124060002,103873,1427479200,CAD,CA,Budget Balance, Fiscal Year,medium,1.310,,-0.900,
-124060002,103874,1429657800,CAD,CA,Budget Balance, Fiscal Year,medium,5.940,,1.310,
-124060002,103875,1432922400,CAD,CA,Budget Balance, Fiscal Year,medium,2.940,,5.940,
-124060002,103876,1437580800,CAD,CA,Budget Balance, Fiscal Year,medium,3.900,,2.940,
-124060002,103877,1440784800,CAD,CA,Budget Balance, Fiscal Year,medium,5.010,,3.900,
-124060002,103878,1443204000,CAD,CA,Budget Balance, Fiscal Year,medium,5.160,,5.010,
-124060002,103879,1446228000,CAD,CA,Budget Balance, Fiscal Year,medium,2.820,,5.160,
-124060002,103880,1448045100,CAD,CA,Budget Balance, Fiscal Year,medium,1.580,,2.820,
-124060002,103881,1450810800,CAD,CA,Budget Balance, Fiscal Year,medium,0.630,,1.580,
-124060002,103882,1454094000,CAD,CA,Budget Balance, Fiscal Year,medium,1.030,,0.630,
-124060002,103883,1456513200,CAD,CA,Budget Balance, Fiscal Year,medium,3.200,,1.030,
-124060002,103884,1458928800,CAD,CA,Budget Balance, Fiscal Year,medium,4.270,,3.200,
-124060002,103885,1461952800,CAD,CA,Budget Balance, Fiscal Year,medium,7.500,,4.270,
-124060002,103886,1464372000,CAD,CA,Budget Balance, Fiscal Year,medium,-1.960,,7.500,
-124060002,103887,1469815200,CAD,CA,Budget Balance, Fiscal Year,medium,0.110,,-1.960,
-124060002,103888,1472234400,CAD,CA,Budget Balance, Fiscal Year,medium,-1.000,,0.110,
-124060002,103889,1475258400,CAD,CA,Budget Balance, Fiscal Year,medium,-2.760,,-1.000,
-124060002,103890,1477677600,CAD,CA,Budget Balance, Fiscal Year,medium,-5.450,,-2.760,
-124060002,103891,1480100400,CAD,CA,Budget Balance, Fiscal Year,medium,-7.810,,-5.450,
-124060002,103892,1482519600,CAD,CA,Budget Balance, Fiscal Year,medium,-9.340,,-7.810,
-124060002,103893,1485543600,CAD,CA,Budget Balance, Fiscal Year,medium,-12.660,,-9.340,
-124060002,103894,1487962800,CAD,CA,Budget Balance, Fiscal Year,medium,-13.990,,-12.660,
-124060002,103895,1490983200,CAD,CA,Budget Balance, Fiscal Year,medium,-12.750,,-13.990,
-124060002,103896,1493402400,CAD,CA,Budget Balance, Fiscal Year,medium,-11.460,,-12.750,
-124060002,103897,1495821600,CAD,CA,Budget Balance, Fiscal Year,medium,-21.850,,-11.460,
-124060002,103898,1501264800,CAD,CA,Budget Balance, Fiscal Year,medium,0.070,,-21.850,
-124060002,103899,1503684000,CAD,CA,Budget Balance, Fiscal Year,medium,0.080,,0.070,
-124060002,103900,1506708000,CAD,CA,Budget Balance, Fiscal Year,medium,-0.110,,0.080,
-124060002,103901,1509127200,CAD,CA,Budget Balance, Fiscal Year,medium,-2.700,,-0.110,
-124060002,103902,1511550000,CAD,CA,Budget Balance, Fiscal Year,medium,-5.930,,-2.700,
-124060002,103903,1513969200,CAD,CA,Budget Balance, Fiscal Year,medium,-6.280,,-5.930,
-124060002,103904,1516993200,CAD,CA,Budget Balance, Fiscal Year,medium,-9.120,,-6.280,
-124060002,103905,1519776000,CAD,CA,Budget Balance, Fiscal Year,medium,-8.550,,-9.120,
-124060002,103906,1522346400,CAD,CA,Budget Balance, Fiscal Year,medium,-8.380,,-8.550,
-124060002,103907,1524852000,CAD,CA,Budget Balance, Fiscal Year,medium,-5.560,,-8.380,
-124060002,103908,1527271200,CAD,CA,Budget Balance, Fiscal Year,medium,-16.190,,-5.560,
-124060002,103909,1532714400,CAD,CA,Budget Balance, Fiscal Year,medium,3.180,,-16.190,
-124060002,103910,1535738400,CAD,CA,Budget Balance, Fiscal Year,medium,4.290,,3.180,
-124060002,103911,1538157600,CAD,CA,Budget Balance, Fiscal Year,medium,4.430,,4.290,
-124060002,103912,1540576800,CAD,CA,Budget Balance, Fiscal Year,medium,2.560,,4.430,
-124060002,103913,1543604400,CAD,CA,Budget Balance, Fiscal Year,medium,1.210,,2.560,
-124060002,103914,1545418800,CAD,CA,Budget Balance, Fiscal Year,medium,0.090,,1.210,
-124060002,103915,1548442800,CAD,CA,Budget Balance, Fiscal Year,medium,-2.127,,0.090,
-124060002,103916,1550862000,CAD,CA,Budget Balance, Fiscal Year,medium,0.324,,-2.127,
-124060002,103917,1553882400,CAD,CA,Budget Balance, Fiscal Year,medium,-1.212,,0.324,
-124060002,103918,1556301600,CAD,CA,Budget Balance, Fiscal Year,medium,3.094,,-1.212,
-124060002,103919,1559325600,CAD,CA,Budget Balance, Fiscal Year,medium,-11.806,,3.094,
-124060002,103920,1564164000,CAD,CA,Budget Balance, Fiscal Year,medium,-1.413,,-11.806,
-124060002,105220,1567188000,CAD,CA,Budget Balance, Fiscal Year,medium,-0.456,3.147,-1.413,
-124060002,105222,1569607200,CAD,CA,Budget Balance, Fiscal Year,medium,-1.557,3.028,-0.456,
-124060002,108939,1572026400,CAD,CA,Budget Balance, Fiscal Year,medium,-5.223,-3.724,-1.557,
-124060002,108941,1575054000,CAD,CA,Budget Balance, Fiscal Year,medium,-5.801,-1.184,-5.223,
-124060002,108943,1576868400,CAD,CA,Budget Balance, Fiscal Year,medium,-9.054,-0.368,-5.801,
-124060002,117657,1580497200,CAD,CA,Budget Balance, Fiscal Year,medium,-11.754,-13.870,-9.054,
-124060002,117659,1582916400,CAD,CA,Budget Balance, Fiscal Year,medium,-10.970,-7.028,-11.754,
-124060002,117661,1585332000,CAD,CA,Budget Balance, Fiscal Year,medium,-10.555,-8.670,-10.970,
-124060002,117663,1587751200,CAD,CA,Budget Balance, Fiscal Year,medium,-6.978,-2.932,-10.555,
-124060002,117665,1590775200,CAD,CA,Budget Balance, Fiscal Year,medium,-21.772,-18.712,-6.978,
-124060002,134141,1596218400,CAD,CA,Budget Balance, Fiscal Year,medium,-86.769,-15.221,-21.772,
-124060002,134143,1598637600,CAD,CA,Budget Balance, Fiscal Year,medium,-120.350,-93.167,-86.769,
-124060002,134145,1601056800,CAD,CA,Budget Balance, Fiscal Year,medium,-148.579,-114.718,-120.350,
-124060002,134244,1604080800,CAD,CA,Budget Balance, Fiscal Year,medium,-170.517,-180.900,-148.579,
-124060002,142981,1606762800,CAD,CA,Budget Balance, Fiscal Year,medium,-198.110,-203.647,-170.517,
-124060002,134248,1608318000,CAD,CA,Budget Balance, Fiscal Year,medium,-216.616,-212.323,-198.110,
-124060002,145574,1611946800,CAD,CA,Budget Balance, Fiscal Year,medium,-232.020,-213.246,-216.616,
-124060002,145575,1614366000,CAD,CA,Budget Balance, Fiscal Year,medium,-248.172,-266.208,-232.020,
-124060002,145576,1616781600,CAD,CA,Budget Balance, Fiscal Year,medium,-268.181,-283.042,-248.172,
-124060002,145577,1619805600,CAD,CA,Budget Balance, Fiscal Year,medium,-282.555,-230.475,-268.181,
-124060002,145578,1622224800,CAD,CA,Budget Balance, Fiscal Year,medium,-313.999,-255.488,-282.555,
-124060002,145579,1627668000,CAD,CA,Budget Balance, Fiscal Year,medium,-23.762,-355.701,-313.999,
-124060002,145580,1630087200,CAD,CA,Budget Balance, Fiscal Year,medium,-36.471,22.118,-23.762,
-124060002,145581,1632506400,CAD,CA,Budget Balance, Fiscal Year,medium,-48.452,10.378,-36.471,
-124060002,145582,1635530400,CAD,CA,Budget Balance, Fiscal Year,medium,-57.154,73.282,-48.452,
-124060002,145583,1637953200,CAD,CA,Budget Balance, Fiscal Year,medium,-68.568,-53.063,-57.154,
-124060002,145584,1639767600,CAD,CA,Budget Balance, Fiscal Year,medium,-72.252,-63.312,-68.568,
-124060002,157347,1643396400,CAD,CA,Budget Balance, Fiscal Year,medium,-73.695,-70.955,-72.252,
-124060002,157348,1645815600,CAD,CA,Budget Balance, Fiscal Year,medium,-70.113,-73.553,-73.695,
-124060002,157349,1648231200,CAD,CA,Budget Balance, Fiscal Year,medium,-75.289,-72.408,-70.113,
-124060002,157350,1651255200,CAD,CA,Budget Balance, Fiscal Year,medium,-69.819,-73.297,-75.289,
-124060002,157351,1653674400,CAD,CA,Budget Balance, Fiscal Year,medium,-95.566,-73.046,-69.819,
-124060002,157352,1659117600,CAD,CA,Budget Balance, Fiscal Year,medium,5.323,-83.817,-95.566,
-124060002,157353,1661536800,CAD,CA,Budget Balance, Fiscal Year,medium,10.200,-45.116,5.323,
-124060002,170979,1663956000,CAD,CA,Budget Balance, Fiscal Year,medium,6.332,7.761,10.200,
-124060002,157355,1666980000,CAD,CA,Budget Balance, Fiscal Year,medium,3.878,8.265,6.332,
-124060002,157356,1669402800,CAD,CA,Budget Balance, Fiscal Year,medium,1.722,5.104,3.878,
-124060002,157357,1671822000,CAD,CA,Budget Balance, Fiscal Year,medium,-0.174,2.799,1.722,
-124060002,174864,1674846000,CAD,CA,Budget Balance, Fiscal Year,medium,-3.554,0.774,-0.174,
-124060002,174865,1677265200,CAD,CA,Budget Balance, Fiscal Year,medium,-5.536,-1.863,-3.554,
-124060002,182196,1680026400,CAD,CA,Budget Balance, Fiscal Year,medium,-6.442,-4.544,-5.536,
-124060002,174867,1682704800,CAD,CA,Budget Balance, Fiscal Year,medium,3.091,-5.988,-6.442,
-124060002,174868,1685124000,CAD,CA,Budget Balance, Fiscal Year,medium,-41.314,-1.675,3.091,
-124060002,174869,1690567200,CAD,CA,Budget Balance, Fiscal Year,medium,1.519,-19.170,-41.314,
-124060002,174870,1692986400,CAD,CA,Budget Balance, Fiscal Year,medium,3.624,-19.895,1.519,
-124060002,174871,1696010400,CAD,CA,Budget Balance, Fiscal Year,medium,-1.236,2.571,3.624,
-124060002,174872,1698429600,CAD,CA,Budget Balance, Fiscal Year,medium,-4.287,1.194,-1.236,
-124060002,174873,1700852400,CAD,CA,Budget Balance, Fiscal Year,medium,-8.170,-2.761,-4.287,
-124060002,174874,1703271600,CAD,CA,Budget Balance, Fiscal Year,medium,-15.131,-6.228,-8.170,
-124060002,189383,1706295600,CAD,CA,Budget Balance, Fiscal Year,medium,-19.141,-4.955,-15.131,
-124060002,189384,1708714800,CAD,CA,Budget Balance, Fiscal Year,medium,-23.613,-9.131,-19.141,
-124060002,189385,1711130400,CAD,CA,Budget Balance, Fiscal Year,medium,-25.673,-10.786,-23.613,
-124060002,189386,1714154400,CAD,CA,Budget Balance, Fiscal Year,medium,-17.334,,-25.673,
-124060002,189387,1717178400,CAD,CA,Budget Balance, Fiscal Year,medium,-50.928,-10.820,-17.334,
-124060002,189388,1722016800,CAD,CA,Budget Balance, Fiscal Year,medium,-3.893,-18.685,-50.928,
-124060002,189389,1725040800,CAD,CA,Budget Balance, Fiscal Year,medium,-2.882,-13.271,-3.893,
-124060002,189390,1727460000,CAD,CA,Budget Balance, Fiscal Year,medium,-7.294,-2.596,-2.882,
-124060002,189391,1729879200,CAD,CA,Budget Balance, Fiscal Year,medium,-9.841,5.596,-7.294,
-124060002,189392,1732906800,CAD,CA,Budget Balance, Fiscal Year,medium,-13.010,3.599,-9.841,
-124060002,189393,1734721200,CAD,CA,Budget Balance, Fiscal Year,medium,-14.504,-6.283,-13.010,
-124060002,220238,1738350000,CAD,CA,Budget Balance, Fiscal Year,medium,-22.717,-18.163,-14.504,
-124060002,220239,1740769200,CAD,CA,Budget Balance, Fiscal Year,medium,-21.715,-16.661,-22.717,
-124060002,220240,1743184800,CAD,CA,Budget Balance, Fiscal Year,medium,-26.849,-12.346,-21.715,
-124060002,220241,1745604000,CAD,CA,Budget Balance, Fiscal Year,medium,-19.274,-9.147,-26.849,
-124060002,220242,1748628000,CAD,CA,Budget Balance, Fiscal Year,medium,-43.154,-9.594,-19.274,
-124060002,220243,1753466400,CAD,CA,Budget Balance, Fiscal Year,medium,-6.500,-13.057,-43.154,-43.154
-124060002,220244,1756490400,CAD,CA,Budget Balance, Fiscal Year,medium,-3.338,,-6.500,
-124060002,220245,1758909600,CAD,CA,Budget Balance, Fiscal Year,medium,-7.790,-10.718,-3.338,-3.338
-124060002,220246,1761933600,CAD,CA,Budget Balance, Fiscal Year,medium,-11.070,-14.456,-7.790,-7.790
-124060002,220247,1764356400,CAD,CA,Budget Balance, Fiscal Year,medium,-16.091,-6.901,-11.070,
-124060002,220248,1766602800,CAD,CA,Budget Balance, Fiscal Year,medium,-18.369,-14.599,-16.091,
-124060002,267451,1769799600,CAD,CA,Budget Balance, Fiscal Year,medium,-26.386,-14.665,-18.369,
-124060002,267452,1772218800,CAD,CA,Budget Balance, Fiscal Year,medium,-26.140,-17.847,-26.386,
-124060002,267453,1774634400,CAD,CA,Budget Balance, Fiscal Year,medium,-31.209,-20.139,-26.140,
-124060002,267454,1777053600,CAD,CA,Budget Balance, Fiscal Year,medium,-25.549,,-31.209,
-124060002,267455,1780077600,CAD,CA,Budget Balance, Fiscal Year,medium,-55.277,-14.937,-25.549,
-124060002,267456,1785520800,CAD,CA,Budget Balance, Fiscal Year,medium,-1.359,-16.315,-1.046,
-124060002,314266,1785520800,CAD,CA,Budget Balance, Fiscal Year,medium,-1.046,-29.118,-55.277,
-124060002,267457,1787940000,CAD,CA,Budget Balance, Fiscal Year,medium,-0.370,-17.633,-1.359,
-124060002,267458,1790359200,CAD,CA,Budget Balance, Fiscal Year,medium,,-17.718,-0.370,
-124060002,267459,1793383200,CAD,CA,Budget Balance, Fiscal Year,medium,,,,
-124060002,267460,1795806000,CAD,CA,Budget Balance, Fiscal Year,medium,,,,
-124060002,267461,1798138800,CAD,CA,Budget Balance, Fiscal Year,medium,,,,
-124060002,289667,1801249200,CAD,CA,Budget Balance, Fiscal Year,medium,,,,
-124060002,316907,1803668400,CAD,CA,Budget Balance, Fiscal Year,medium,,,,
+124060002,103871,1422644400,CAD,CA,"Budget Balance, Fiscal Year",medium,-3.330,,-3.950,
+124060002,103872,1425063600,CAD,CA,"Budget Balance, Fiscal Year",medium,-0.900,,-3.330,
+124060002,103873,1427479200,CAD,CA,"Budget Balance, Fiscal Year",medium,1.310,,-0.900,
+124060002,103874,1429657800,CAD,CA,"Budget Balance, Fiscal Year",medium,5.940,,1.310,
+124060002,103875,1432922400,CAD,CA,"Budget Balance, Fiscal Year",medium,2.940,,5.940,
+124060002,103876,1437580800,CAD,CA,"Budget Balance, Fiscal Year",medium,3.900,,2.940,
+124060002,103877,1440784800,CAD,CA,"Budget Balance, Fiscal Year",medium,5.010,,3.900,
+124060002,103878,1443204000,CAD,CA,"Budget Balance, Fiscal Year",medium,5.160,,5.010,
+124060002,103879,1446228000,CAD,CA,"Budget Balance, Fiscal Year",medium,2.820,,5.160,
+124060002,103880,1448045100,CAD,CA,"Budget Balance, Fiscal Year",medium,1.580,,2.820,
+124060002,103881,1450810800,CAD,CA,"Budget Balance, Fiscal Year",medium,0.630,,1.580,
+124060002,103882,1454094000,CAD,CA,"Budget Balance, Fiscal Year",medium,1.030,,0.630,
+124060002,103883,1456513200,CAD,CA,"Budget Balance, Fiscal Year",medium,3.200,,1.030,
+124060002,103884,1458928800,CAD,CA,"Budget Balance, Fiscal Year",medium,4.270,,3.200,
+124060002,103885,1461952800,CAD,CA,"Budget Balance, Fiscal Year",medium,7.500,,4.270,
+124060002,103886,1464372000,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.960,,7.500,
+124060002,103887,1469815200,CAD,CA,"Budget Balance, Fiscal Year",medium,0.110,,-1.960,
+124060002,103888,1472234400,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.000,,0.110,
+124060002,103889,1475258400,CAD,CA,"Budget Balance, Fiscal Year",medium,-2.760,,-1.000,
+124060002,103890,1477677600,CAD,CA,"Budget Balance, Fiscal Year",medium,-5.450,,-2.760,
+124060002,103891,1480100400,CAD,CA,"Budget Balance, Fiscal Year",medium,-7.810,,-5.450,
+124060002,103892,1482519600,CAD,CA,"Budget Balance, Fiscal Year",medium,-9.340,,-7.810,
+124060002,103893,1485543600,CAD,CA,"Budget Balance, Fiscal Year",medium,-12.660,,-9.340,
+124060002,103894,1487962800,CAD,CA,"Budget Balance, Fiscal Year",medium,-13.990,,-12.660,
+124060002,103895,1490983200,CAD,CA,"Budget Balance, Fiscal Year",medium,-12.750,,-13.990,
+124060002,103896,1493402400,CAD,CA,"Budget Balance, Fiscal Year",medium,-11.460,,-12.750,
+124060002,103897,1495821600,CAD,CA,"Budget Balance, Fiscal Year",medium,-21.850,,-11.460,
+124060002,103898,1501264800,CAD,CA,"Budget Balance, Fiscal Year",medium,0.070,,-21.850,
+124060002,103899,1503684000,CAD,CA,"Budget Balance, Fiscal Year",medium,0.080,,0.070,
+124060002,103900,1506708000,CAD,CA,"Budget Balance, Fiscal Year",medium,-0.110,,0.080,
+124060002,103901,1509127200,CAD,CA,"Budget Balance, Fiscal Year",medium,-2.700,,-0.110,
+124060002,103902,1511550000,CAD,CA,"Budget Balance, Fiscal Year",medium,-5.930,,-2.700,
+124060002,103903,1513969200,CAD,CA,"Budget Balance, Fiscal Year",medium,-6.280,,-5.930,
+124060002,103904,1516993200,CAD,CA,"Budget Balance, Fiscal Year",medium,-9.120,,-6.280,
+124060002,103905,1519776000,CAD,CA,"Budget Balance, Fiscal Year",medium,-8.550,,-9.120,
+124060002,103906,1522346400,CAD,CA,"Budget Balance, Fiscal Year",medium,-8.380,,-8.550,
+124060002,103907,1524852000,CAD,CA,"Budget Balance, Fiscal Year",medium,-5.560,,-8.380,
+124060002,103908,1527271200,CAD,CA,"Budget Balance, Fiscal Year",medium,-16.190,,-5.560,
+124060002,103909,1532714400,CAD,CA,"Budget Balance, Fiscal Year",medium,3.180,,-16.190,
+124060002,103910,1535738400,CAD,CA,"Budget Balance, Fiscal Year",medium,4.290,,3.180,
+124060002,103911,1538157600,CAD,CA,"Budget Balance, Fiscal Year",medium,4.430,,4.290,
+124060002,103912,1540576800,CAD,CA,"Budget Balance, Fiscal Year",medium,2.560,,4.430,
+124060002,103913,1543604400,CAD,CA,"Budget Balance, Fiscal Year",medium,1.210,,2.560,
+124060002,103914,1545418800,CAD,CA,"Budget Balance, Fiscal Year",medium,0.090,,1.210,
+124060002,103915,1548442800,CAD,CA,"Budget Balance, Fiscal Year",medium,-2.127,,0.090,
+124060002,103916,1550862000,CAD,CA,"Budget Balance, Fiscal Year",medium,0.324,,-2.127,
+124060002,103917,1553882400,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.212,,0.324,
+124060002,103918,1556301600,CAD,CA,"Budget Balance, Fiscal Year",medium,3.094,,-1.212,
+124060002,103919,1559325600,CAD,CA,"Budget Balance, Fiscal Year",medium,-11.806,,3.094,
+124060002,103920,1564164000,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.413,,-11.806,
+124060002,105220,1567188000,CAD,CA,"Budget Balance, Fiscal Year",medium,-0.456,3.147,-1.413,
+124060002,105222,1569607200,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.557,3.028,-0.456,
+124060002,108939,1572026400,CAD,CA,"Budget Balance, Fiscal Year",medium,-5.223,-3.724,-1.557,
+124060002,108941,1575054000,CAD,CA,"Budget Balance, Fiscal Year",medium,-5.801,-1.184,-5.223,
+124060002,108943,1576868400,CAD,CA,"Budget Balance, Fiscal Year",medium,-9.054,-0.368,-5.801,
+124060002,117657,1580497200,CAD,CA,"Budget Balance, Fiscal Year",medium,-11.754,-13.870,-9.054,
+124060002,117659,1582916400,CAD,CA,"Budget Balance, Fiscal Year",medium,-10.970,-7.028,-11.754,
+124060002,117661,1585332000,CAD,CA,"Budget Balance, Fiscal Year",medium,-10.555,-8.670,-10.970,
+124060002,117663,1587751200,CAD,CA,"Budget Balance, Fiscal Year",medium,-6.978,-2.932,-10.555,
+124060002,117665,1590775200,CAD,CA,"Budget Balance, Fiscal Year",medium,-21.772,-18.712,-6.978,
+124060002,134141,1596218400,CAD,CA,"Budget Balance, Fiscal Year",medium,-86.769,-15.221,-21.772,
+124060002,134143,1598637600,CAD,CA,"Budget Balance, Fiscal Year",medium,-120.350,-93.167,-86.769,
+124060002,134145,1601056800,CAD,CA,"Budget Balance, Fiscal Year",medium,-148.579,-114.718,-120.350,
+124060002,134244,1604080800,CAD,CA,"Budget Balance, Fiscal Year",medium,-170.517,-180.900,-148.579,
+124060002,142981,1606762800,CAD,CA,"Budget Balance, Fiscal Year",medium,-198.110,-203.647,-170.517,
+124060002,134248,1608318000,CAD,CA,"Budget Balance, Fiscal Year",medium,-216.616,-212.323,-198.110,
+124060002,145574,1611946800,CAD,CA,"Budget Balance, Fiscal Year",medium,-232.020,-213.246,-216.616,
+124060002,145575,1614366000,CAD,CA,"Budget Balance, Fiscal Year",medium,-248.172,-266.208,-232.020,
+124060002,145576,1616781600,CAD,CA,"Budget Balance, Fiscal Year",medium,-268.181,-283.042,-248.172,
+124060002,145577,1619805600,CAD,CA,"Budget Balance, Fiscal Year",medium,-282.555,-230.475,-268.181,
+124060002,145578,1622224800,CAD,CA,"Budget Balance, Fiscal Year",medium,-313.999,-255.488,-282.555,
+124060002,145579,1627668000,CAD,CA,"Budget Balance, Fiscal Year",medium,-23.762,-355.701,-313.999,
+124060002,145580,1630087200,CAD,CA,"Budget Balance, Fiscal Year",medium,-36.471,22.118,-23.762,
+124060002,145581,1632506400,CAD,CA,"Budget Balance, Fiscal Year",medium,-48.452,10.378,-36.471,
+124060002,145582,1635530400,CAD,CA,"Budget Balance, Fiscal Year",medium,-57.154,73.282,-48.452,
+124060002,145583,1637953200,CAD,CA,"Budget Balance, Fiscal Year",medium,-68.568,-53.063,-57.154,
+124060002,145584,1639767600,CAD,CA,"Budget Balance, Fiscal Year",medium,-72.252,-63.312,-68.568,
+124060002,157347,1643396400,CAD,CA,"Budget Balance, Fiscal Year",medium,-73.695,-70.955,-72.252,
+124060002,157348,1645815600,CAD,CA,"Budget Balance, Fiscal Year",medium,-70.113,-73.553,-73.695,
+124060002,157349,1648231200,CAD,CA,"Budget Balance, Fiscal Year",medium,-75.289,-72.408,-70.113,
+124060002,157350,1651255200,CAD,CA,"Budget Balance, Fiscal Year",medium,-69.819,-73.297,-75.289,
+124060002,157351,1653674400,CAD,CA,"Budget Balance, Fiscal Year",medium,-95.566,-73.046,-69.819,
+124060002,157352,1659117600,CAD,CA,"Budget Balance, Fiscal Year",medium,5.323,-83.817,-95.566,
+124060002,157353,1661536800,CAD,CA,"Budget Balance, Fiscal Year",medium,10.200,-45.116,5.323,
+124060002,170979,1663956000,CAD,CA,"Budget Balance, Fiscal Year",medium,6.332,7.761,10.200,
+124060002,157355,1666980000,CAD,CA,"Budget Balance, Fiscal Year",medium,3.878,8.265,6.332,
+124060002,157356,1669402800,CAD,CA,"Budget Balance, Fiscal Year",medium,1.722,5.104,3.878,
+124060002,157357,1671822000,CAD,CA,"Budget Balance, Fiscal Year",medium,-0.174,2.799,1.722,
+124060002,174864,1674846000,CAD,CA,"Budget Balance, Fiscal Year",medium,-3.554,0.774,-0.174,
+124060002,174865,1677265200,CAD,CA,"Budget Balance, Fiscal Year",medium,-5.536,-1.863,-3.554,
+124060002,182196,1680026400,CAD,CA,"Budget Balance, Fiscal Year",medium,-6.442,-4.544,-5.536,
+124060002,174867,1682704800,CAD,CA,"Budget Balance, Fiscal Year",medium,3.091,-5.988,-6.442,
+124060002,174868,1685124000,CAD,CA,"Budget Balance, Fiscal Year",medium,-41.314,-1.675,3.091,
+124060002,174869,1690567200,CAD,CA,"Budget Balance, Fiscal Year",medium,1.519,-19.170,-41.314,
+124060002,174870,1692986400,CAD,CA,"Budget Balance, Fiscal Year",medium,3.624,-19.895,1.519,
+124060002,174871,1696010400,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.236,2.571,3.624,
+124060002,174872,1698429600,CAD,CA,"Budget Balance, Fiscal Year",medium,-4.287,1.194,-1.236,
+124060002,174873,1700852400,CAD,CA,"Budget Balance, Fiscal Year",medium,-8.170,-2.761,-4.287,
+124060002,174874,1703271600,CAD,CA,"Budget Balance, Fiscal Year",medium,-15.131,-6.228,-8.170,
+124060002,189383,1706295600,CAD,CA,"Budget Balance, Fiscal Year",medium,-19.141,-4.955,-15.131,
+124060002,189384,1708714800,CAD,CA,"Budget Balance, Fiscal Year",medium,-23.613,-9.131,-19.141,
+124060002,189385,1711130400,CAD,CA,"Budget Balance, Fiscal Year",medium,-25.673,-10.786,-23.613,
+124060002,189386,1714154400,CAD,CA,"Budget Balance, Fiscal Year",medium,-17.334,,-25.673,
+124060002,189387,1717178400,CAD,CA,"Budget Balance, Fiscal Year",medium,-50.928,-10.820,-17.334,
+124060002,189388,1722016800,CAD,CA,"Budget Balance, Fiscal Year",medium,-3.893,-18.685,-50.928,
+124060002,189389,1725040800,CAD,CA,"Budget Balance, Fiscal Year",medium,-2.882,-13.271,-3.893,
+124060002,189390,1727460000,CAD,CA,"Budget Balance, Fiscal Year",medium,-7.294,-2.596,-2.882,
+124060002,189391,1729879200,CAD,CA,"Budget Balance, Fiscal Year",medium,-9.841,5.596,-7.294,
+124060002,189392,1732906800,CAD,CA,"Budget Balance, Fiscal Year",medium,-13.010,3.599,-9.841,
+124060002,189393,1734721200,CAD,CA,"Budget Balance, Fiscal Year",medium,-14.504,-6.283,-13.010,
+124060002,220238,1738350000,CAD,CA,"Budget Balance, Fiscal Year",medium,-22.717,-18.163,-14.504,
+124060002,220239,1740769200,CAD,CA,"Budget Balance, Fiscal Year",medium,-21.715,-16.661,-22.717,
+124060002,220240,1743184800,CAD,CA,"Budget Balance, Fiscal Year",medium,-26.849,-12.346,-21.715,
+124060002,220241,1745604000,CAD,CA,"Budget Balance, Fiscal Year",medium,-19.274,-9.147,-26.849,
+124060002,220242,1748628000,CAD,CA,"Budget Balance, Fiscal Year",medium,-43.154,-9.594,-19.274,
+124060002,220243,1753466400,CAD,CA,"Budget Balance, Fiscal Year",medium,-6.500,-13.057,-43.154,-43.154
+124060002,220244,1756490400,CAD,CA,"Budget Balance, Fiscal Year",medium,-3.338,,-6.500,
+124060002,220245,1758909600,CAD,CA,"Budget Balance, Fiscal Year",medium,-7.790,-10.718,-3.338,-3.338
+124060002,220246,1761933600,CAD,CA,"Budget Balance, Fiscal Year",medium,-11.070,-14.456,-7.790,-7.790
+124060002,220247,1764356400,CAD,CA,"Budget Balance, Fiscal Year",medium,-16.091,-6.901,-11.070,
+124060002,220248,1766602800,CAD,CA,"Budget Balance, Fiscal Year",medium,-18.369,-14.599,-16.091,
+124060002,267451,1769799600,CAD,CA,"Budget Balance, Fiscal Year",medium,-26.386,-14.665,-18.369,
+124060002,267452,1772218800,CAD,CA,"Budget Balance, Fiscal Year",medium,-26.140,-17.847,-26.386,
+124060002,267453,1774634400,CAD,CA,"Budget Balance, Fiscal Year",medium,-31.209,-20.139,-26.140,
+124060002,267454,1777053600,CAD,CA,"Budget Balance, Fiscal Year",medium,-25.549,,-31.209,
+124060002,267455,1780077600,CAD,CA,"Budget Balance, Fiscal Year",medium,-55.277,-14.937,-25.549,
+124060002,267456,1785520800,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.359,-16.315,-1.046,
+124060002,314266,1785520800,CAD,CA,"Budget Balance, Fiscal Year",medium,-1.046,-29.118,-55.277,
+124060002,267457,1787940000,CAD,CA,"Budget Balance, Fiscal Year",medium,-0.370,-17.633,-1.359,
+124060002,267458,1790359200,CAD,CA,"Budget Balance, Fiscal Year",medium,,-17.718,-0.370,
+124060002,267459,1793383200,CAD,CA,"Budget Balance, Fiscal Year",medium,,,,
+124060002,267460,1795806000,CAD,CA,"Budget Balance, Fiscal Year",medium,,,,
+124060002,267461,1798138800,CAD,CA,"Budget Balance, Fiscal Year",medium,,,,
+124060002,289667,1801249200,CAD,CA,"Budget Balance, Fiscal Year",medium,,,,
+124060002,316907,1803668400,CAD,CA,"Budget Balance, Fiscal Year",medium,,,,
 124070001,103921,1510850400,CAD,CA,ADP Nonfarm Employment Change,medium,-5.7,,,
 124070001,103922,1513873800,CAD,CA,ADP Nonfarm Employment Change,medium,59.2,,-5.7,
 124070001,103923,1516293000,CAD,CA,ADP Nonfarm Employment Change,medium,-7.1,,59.2,
@@ -124792,33 +124792,33 @@ event_id,value_id,timestamp,currency,country_code,event_name,importance,actual,f
 554030001,312490,1765854000,NZD,NZ,OBEGAL Forecast,medium,-16.934,,-14.740,
 554030001,285556,1779944400,NZD,NZ,OBEGAL Forecast,medium,-15.060,-14.740,-16.934,
 554030001,308585,1790650800,NZD,NZ,OBEGAL Forecast,medium,,-15.060,-15.060,
-554030002,63496,1432184400,NZD,NZ,Net Debt Forecast, % GDP,medium,26.3,,26.5,
-554030002,63497,1450152000,NZD,NZ,Net Debt Forecast, % GDP,medium,26.9,,26.3,
-554030002,63498,1464238800,NZD,NZ,Net Debt Forecast, % GDP,medium,24.9,,26.9,
-554030002,63499,1481167800,NZD,NZ,Net Debt Forecast, % GDP,medium,24.3,,24.9,
-554030002,63500,1495688400,NZD,NZ,Net Debt Forecast, % GDP,medium,23.2,,24.3,
-554030002,63501,1503457200,NZD,NZ,Net Debt Forecast, % GDP,medium,22.5,,23.2,
-554030002,63502,1513220400,NZD,NZ,Net Debt Forecast, % GDP,medium,21.7,,22.5,
-554030002,63503,1526533200,NZD,NZ,Net Debt Forecast, % GDP,medium,20.8,,21.7,
-554030002,80370,1544670000,NZD,NZ,Net Debt Forecast, % GDP,medium,20.9,20.4,20.8,
-554030002,96639,1559192400,NZD,NZ,Net Debt Forecast, % GDP,medium,20.1,16.4,20.9,
-554030002,111974,1576033200,NZD,NZ,Net Debt Forecast, % GDP,medium,19.6,25.1,20.1,
-554030002,130400,1589432400,NZD,NZ,Net Debt Forecast, % GDP,medium,30.2,19.1,19.6,
-554030002,136819,1600228800,NZD,NZ,Net Debt Forecast, % GDP,medium,27.6,29.4,30.2,
-554030002,144485,1608087600,NZD,NZ,Net Debt Forecast, % GDP,medium,39.7,26.8,27.6,
-554030002,150463,1621486800,NZD,NZ,Net Debt Forecast, % GDP,medium,34.0,36.5,39.7,
-554030002,157047,1639537200,NZD,NZ,Net Debt Forecast, % GDP,medium,37.6,38.1,34.0,
-554030002,165256,1652936400,NZD,NZ,Net Debt Forecast, % GDP,medium,36.9,37.6,37.6,
-554030002,172394,1670986800,NZD,NZ,Net Debt Forecast, % GDP,medium,39.2,38.7,36.9,
-554030002,181486,1684386000,NZD,NZ,Net Debt Forecast, % GDP,medium,38.5,39.8,39.2,
-554030002,184771,1694491200,NZD,NZ,Net Debt Forecast, % GDP,medium,39.5,40.3,38.5,
-554030002,192189,1703041200,NZD,NZ,Net Debt Forecast, % GDP,medium,43.5,,39.5,
-554030002,196514,1717045200,NZD,NZ,Net Debt Forecast, % GDP,medium,43.1,43.5,43.5,
-554030002,222629,1734404400,NZD,NZ,Net Debt Forecast, % GDP,medium,45.1,43.1,43.1,
-554030002,246291,1747890000,NZD,NZ,Net Debt Forecast, % GDP,medium,42.7,45.1,45.1,
-554030002,312491,1765854000,NZD,NZ,Net Debt Forecast, % GDP,medium,43.3,,42.7,
-554030002,285557,1779944400,NZD,NZ,Net Debt Forecast, % GDP,medium,42.4,42.7,43.3,
-554030002,308586,1790650800,NZD,NZ,Net Debt Forecast, % GDP,medium,,42.4,42.4,
+554030002,63496,1432184400,NZD,NZ,"Net Debt Forecast, % GDP",medium,26.3,,26.5,
+554030002,63497,1450152000,NZD,NZ,"Net Debt Forecast, % GDP",medium,26.9,,26.3,
+554030002,63498,1464238800,NZD,NZ,"Net Debt Forecast, % GDP",medium,24.9,,26.9,
+554030002,63499,1481167800,NZD,NZ,"Net Debt Forecast, % GDP",medium,24.3,,24.9,
+554030002,63500,1495688400,NZD,NZ,"Net Debt Forecast, % GDP",medium,23.2,,24.3,
+554030002,63501,1503457200,NZD,NZ,"Net Debt Forecast, % GDP",medium,22.5,,23.2,
+554030002,63502,1513220400,NZD,NZ,"Net Debt Forecast, % GDP",medium,21.7,,22.5,
+554030002,63503,1526533200,NZD,NZ,"Net Debt Forecast, % GDP",medium,20.8,,21.7,
+554030002,80370,1544670000,NZD,NZ,"Net Debt Forecast, % GDP",medium,20.9,20.4,20.8,
+554030002,96639,1559192400,NZD,NZ,"Net Debt Forecast, % GDP",medium,20.1,16.4,20.9,
+554030002,111974,1576033200,NZD,NZ,"Net Debt Forecast, % GDP",medium,19.6,25.1,20.1,
+554030002,130400,1589432400,NZD,NZ,"Net Debt Forecast, % GDP",medium,30.2,19.1,19.6,
+554030002,136819,1600228800,NZD,NZ,"Net Debt Forecast, % GDP",medium,27.6,29.4,30.2,
+554030002,144485,1608087600,NZD,NZ,"Net Debt Forecast, % GDP",medium,39.7,26.8,27.6,
+554030002,150463,1621486800,NZD,NZ,"Net Debt Forecast, % GDP",medium,34.0,36.5,39.7,
+554030002,157047,1639537200,NZD,NZ,"Net Debt Forecast, % GDP",medium,37.6,38.1,34.0,
+554030002,165256,1652936400,NZD,NZ,"Net Debt Forecast, % GDP",medium,36.9,37.6,37.6,
+554030002,172394,1670986800,NZD,NZ,"Net Debt Forecast, % GDP",medium,39.2,38.7,36.9,
+554030002,181486,1684386000,NZD,NZ,"Net Debt Forecast, % GDP",medium,38.5,39.8,39.2,
+554030002,184771,1694491200,NZD,NZ,"Net Debt Forecast, % GDP",medium,39.5,40.3,38.5,
+554030002,192189,1703041200,NZD,NZ,"Net Debt Forecast, % GDP",medium,43.5,,39.5,
+554030002,196514,1717045200,NZD,NZ,"Net Debt Forecast, % GDP",medium,43.1,43.5,43.5,
+554030002,222629,1734404400,NZD,NZ,"Net Debt Forecast, % GDP",medium,45.1,43.1,43.1,
+554030002,246291,1747890000,NZD,NZ,"Net Debt Forecast, % GDP",medium,42.7,45.1,45.1,
+554030002,312491,1765854000,NZD,NZ,"Net Debt Forecast, % GDP",medium,43.3,,42.7,
+554030002,285557,1779944400,NZD,NZ,"Net Debt Forecast, % GDP",medium,42.4,42.7,43.3,
+554030002,308586,1790650800,NZD,NZ,"Net Debt Forecast, % GDP",medium,,42.4,42.4,
 554030003,65486,1432184400,NZD,NZ,Budget Release,high,,,,
 554030003,65487,1464238800,NZD,NZ,Budget Release,high,,,,
 554030003,65488,1495688400,NZD,NZ,Budget Release,high,,,,
